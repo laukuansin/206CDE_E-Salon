@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Screens/GoogleMap/viewModel.dart';
+import 'Components/map_navigation_panel.dart';
+import 'package:gps_tracking_system/Screens/GoogleMap/viewModel.dart';
 
 class GoogleMapScreen extends StatefulWidget{
   final Position destination;
@@ -13,12 +14,12 @@ class GoogleMapScreen extends StatefulWidget{
 
 class _GoogleMapScreenState extends State<GoogleMapScreen>{
 
-  ViewModel _viewModel;
+  ViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = ViewModel(
+    viewModel = ViewModel(
       destination:LatLng(widget.destination.latitude, widget.destination.longitude),
       notifyChanges: (){setState(() {});},
       showAlertDialog: showAlertDialog,
@@ -27,22 +28,28 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery.of(context).size;
+    Size bottomBarSize = Size(screenSize.width, screenSize.height * 0.18);
+
     return Scaffold(
       body:Container(
-        width :size.width,
-        height:size.height,
+        width :screenSize.width,
+        height:screenSize.height,
         child:Stack(
           alignment: Alignment.center,
           children: <Widget>[
             SizedBox(
-              child:_viewModel.getMap()
+              child:viewModel.getMap()
             ),
 
             Positioned(
-              bottom: 0,
-              child: _viewModel.getNavigationButton()
-            )
+              bottom:0,
+              child: MapNavigationPanel(
+                bottomBarSize: bottomBarSize,
+                navigationButton: viewModel.getNavigationButton(),
+                totalDistance: viewModel.getTotalDistance(),
+                totalDuration: viewModel.getTotalDurations(),)
+            ),
           ]
         )
       )

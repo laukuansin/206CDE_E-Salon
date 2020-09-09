@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as debug;
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,48 +7,40 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/AppLauncher.dart';
+import 'package:gps_tracking_system/Utility/RestApi.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:math';
 
 class ViewModel
 {
-  final String _apiKey;
-  final double _initialZoomRatio;
-  final Set<Polyline> _polyLine;
+  static const String _API_KEY =  "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM";
+  static const double _INITIAL_CAMERA_ZOOM_RATIO = 14.0;
+
   final GoogleMapPolyline _googleMapPolyLine;
-  final List<Marker> _marker;
   final Completer<GoogleMapController> _mapControllerCompleter;
   final Function _callBackNotifyChanges;
   final Function(String, String) _callBackShowAlertDialog;
 
+  GoogleMap _googleMap;
+  RoundedButton _navigationButton;
   LatLng destination;
-  LatLng currentLocation;
-  List<LatLng> routeCoordinate;
-
-  double get initialZoomRatio => _initialZoomRatio;
+  int _totalDistanceInMeter, _totalDurationInSeconds;
 
   ViewModel({@required this.destination, @required Function notifyChanges, Function showAlertDialog}):
-        _apiKey =  "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM",
-        _initialZoomRatio = 14.0,
-        _polyLine = {},
-        _googleMapPolyLine = new GoogleMapPolyline(apiKey: "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM"),
-        _marker = [],
+        _googleMapPolyLine = new GoogleMapPolyline(apiKey: _API_KEY),
         _mapControllerCompleter = Completer(),
         _callBackNotifyChanges = notifyChanges,
         _callBackShowAlertDialog = showAlertDialog,
-        currentLocation = destination
-  {
+        _totalDurationInSeconds = 0,
+        _totalDistanceInMeter = 0 {
     this.initRoute();
   }
 
-  String get apiKey => _apiKey;
-  Set<Polyline> get polyLine => _polyLine;
-  GoogleMapPolyline get googleMapPolyLine => _googleMapPolyLine;
-  List<Marker> get marker => _marker;
-
+  // Draw polyline, calculate time, calculate distance
   Future<void> initRoute() async
   {
+    // Get permission
     if (!await Permission.location
         .request()
         .isGranted)
@@ -55,35 +48,35 @@ class ViewModel
 
     // Get current location
     final Position position = await getCurrentPosition();
-    currentLocation = LatLng(
+    LatLng currentLocation = LatLng(
         position.latitude,
         position.longitude
     );
 
-    // Find list of coordinate for route
-    routeCoordinate = await _googleMapPolyLine
+    // Get route
+    List<LatLng> routeCoordinate = await _googleMapPolyLine
         .getCoordinatesWithLocation(
         origin: currentLocation,
         destination: destination,
         mode: RouteMode.driving
     );
 
+    // Check if route is valid
     if (routeCoordinate == null || routeCoordinate.length <= 0) {
         _callBackShowAlertDialog("Oops!",
             "We could not calculate driving directions from your current location to destination.");
     }
     else {
       GoogleMapController controller = await _mapControllerCompleter.future;
-      _animateCameraToRouteBound(controller, routeCoordinate);
-
-      _marker.add(
+      final List<Marker> marker = [];
+      marker.add(
           Marker(
             markerId: MarkerId(destination.toString()),
             position: destination,
           )
       );
 
-      _marker.add(
+      marker.add(
           Marker(
               markerId: MarkerId(currentLocation.toString()),
               position: currentLocation,
@@ -93,6 +86,39 @@ class ViewModel
           )
       );
 
+      /*
+      Sample Json (Duration)                 Way to read the json
+      +------------------------------+       +----------+------+------+
+      |   {                          |       |   |   A  |   B  |   C  |
+      |    "durations":[             |       +---+------+------+------+    Data interested: A->B->C
+      |       [                      |       | A | A->A | A->B | A->C |    A->B : row 0 col1
+      |          0.0,                |       | B | B->A | B->B | B->C |    B->C : row 1 col2
+      |          1181.7              |       | C | C->A | C->B | C->C |    col = row + 1
+      |       ],                     |       +---+------+------+------+
+      |       [                      |
+      |          1167.1,             |       Refer https://docs.mapbox.com/help/glossary/matrix-api/
+      |          0.0                 |
+      |       ]                      |
+      |     ]                        |
+      |   }                          |
+      +------------------------------+
+      */
+
+      Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi.getTimeTaken([currentLocation,destination]);
+      List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
+      List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
+
+      int row = timeTaken.length;
+      _totalDurationInSeconds = 0;
+      _totalDistanceInMeter   = 0;
+      for(int i = 0 ; i < row - 1; i++){
+        double second = timeTaken[i][i + 1];
+        double d = distance[i][i+1] ;
+        _totalDurationInSeconds += second.toInt();
+        _totalDistanceInMeter += d.toInt();
+      }
+
+      Set<Polyline> polyLine = {};
       polyLine.add(
         Polyline(
             polylineId: PolylineId("routeFromSrcToDest"),
@@ -104,8 +130,35 @@ class ViewModel
             endCap: Cap.buttCap
       ));
 
+      _constructView(marker, polyLine, currentLocation);
+      _animateCameraToRouteBound(controller, routeCoordinate);
       _callBackNotifyChanges();
     }
+  }
+
+  String getTotalDistance()
+  {
+    int totalDistance = _totalDistanceInMeter;
+    int kiloMeter = totalDistance ~/ 1000;
+    totalDistance %= 1000;
+    int meter = totalDistance;
+
+    if(kiloMeter > 0)
+      return kiloMeter.toString() + " km";
+    else
+      return meter.toString() + " m";
+  }
+
+  String getTotalDurations()
+  {
+    int minute = _totalDurationInSeconds ~/ 60;
+    int hour = minute ~/ 60;
+    minute %= 60;
+
+    if(hour > 0)
+      return hour.toString() +  " h " + minute.toString() + " min";
+    else
+      return minute.toString() + " min";
   }
 
   void setGoogleMapController(GoogleMapController controller)
@@ -143,9 +196,10 @@ class ViewModel
     );
   }
 
-  GoogleMap getMap()
+  void _constructView(List<Marker>marker, Set<Polyline> polyLine, LatLng currentLocation)
   {
-    return GoogleMap(
+    debug.log("Constructing google map");
+    _googleMap = GoogleMap(
         mapType: MapType.normal,
         markers: Set.from(marker),
         polylines:polyLine,
@@ -153,20 +207,16 @@ class ViewModel
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
           target:currentLocation,
-          zoom:initialZoomRatio,
+          zoom:_INITIAL_CAMERA_ZOOM_RATIO,
         )
     );
-  }
 
-  RoundedButton getNavigationButton()
-  {
-    return RoundedButton(
+    _navigationButton = RoundedButton(
         text: "Navigation",
         press: (){
           try {
             AppLauncher.openMap(
-              address: '38,Lorong 7 / SS9, Bandar Tasek Mutiara, 14120, Simpang Ampat, Pulau Pinang',
-              // latLng: destination
+                latLng: [currentLocation.latitude, currentLocation.longitude, destination.latitude, destination.longitude]
             );
           }
           catch(e){
@@ -175,5 +225,31 @@ class ViewModel
         }
     );
   }
-}
 
+  GoogleMap getMap()
+  {
+    if(_googleMap == null) {
+      debug.log("Map is null");
+      return GoogleMap(
+          onMapCreated:setGoogleMapController,
+          initialCameraPosition: CameraPosition(
+            target: destination,
+            zoom: _INITIAL_CAMERA_ZOOM_RATIO,
+          )
+      );
+    }
+    return _googleMap;
+  }
+
+
+  RoundedButton getNavigationButton()
+  {
+    if(_navigationButton == null) {
+      debug.log("Navigation button is null");
+      return RoundedButton(
+        text: "Navigation",
+      );
+    }
+    return _navigationButton;
+  }
+}
