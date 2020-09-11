@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'font.dart';
 import 'Screens/Welcome.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -25,10 +24,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
 
