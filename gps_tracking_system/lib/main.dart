@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
-import 'package:gps_tracking_system/constants.dart';
+import 'package:flutter/services.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
+import 'font.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -9,23 +10,20 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final Position customerAddress = new Position(
-      latitude: 5.341860,
-      longitude: 100.281946
-  );
-
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primaryColor: kPrimaryColor,
-          scaffoldBackgroundColor: Colors.white,
-        ),
-        home: GoogleMapScreen(
-          destination:customerAddress
-        )
+      theme: ThemeData(
+        fontFamily: mainFont
+      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
+

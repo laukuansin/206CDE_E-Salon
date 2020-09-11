@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'package:gps_tracking_system/constants.dart';
+import 'package:gps_tracking_system/color.dart';
 
 class MapNavigationPanel extends StatelessWidget {
   const MapNavigationPanel({
@@ -25,7 +25,7 @@ class MapNavigationPanel extends StatelessWidget {
         width: bottomBarSize.width,
         height: bottomBarSize.height,
         decoration: BoxDecoration(
-            border: Border.all(color: kPrimaryColor),
+            border: Border.all(color: primaryColor),
             color:Colors.white.withOpacity(0.9),
             borderRadius:BorderRadius.circular(10)
         ),
@@ -40,7 +40,7 @@ class MapNavigationPanel extends StatelessWidget {
                     totalDuration,
                     style: TextStyle(
                       fontSize: 20,
-                      color: kPrimaryColor,
+                      color: primaryColor,
                     ),
                   ),
 

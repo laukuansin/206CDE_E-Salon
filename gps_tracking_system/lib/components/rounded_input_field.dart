@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/components/text_field_container.dart';
-import 'package:gps_tracking_system/constants.dart';
+import 'package:gps_tracking_system/color.dart';
+
 
 class RoundedInputField extends StatelessWidget {
   final String hintText;
@@ -23,7 +24,7 @@ class RoundedInputField extends StatelessWidget {
             border: InputBorder.none,
             icon: Icon(
               icon,
-              color: kPrimaryColor,
+              color: primaryColor,
             ),
           ),
         )
