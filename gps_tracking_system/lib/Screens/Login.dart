@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../color.dart';
+import 'package:gps_tracking_system/color.dart';
 
 class LoginPage extends StatefulWidget {
   @override
