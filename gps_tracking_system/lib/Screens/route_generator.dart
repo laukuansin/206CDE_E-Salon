@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/Screens/Login/Login.dart';
+import 'package:gps_tracking_system/Screens/Login/login.dart';
 import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
 
 class RouteGenerator{

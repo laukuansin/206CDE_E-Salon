@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Components/map_navigation_panel.dart';
-import 'package:gps_tracking_system/Screens/GoogleMap/viewModel.dart';
+import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
 
 class GoogleMapScreen extends StatefulWidget{
   final Position destination;
