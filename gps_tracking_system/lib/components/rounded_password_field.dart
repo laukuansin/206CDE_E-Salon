@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/components/text_field_container.dart';
-import 'package:gps_tracking_system/constants.dart';
+import 'package:gps_tracking_system/color.dart';
 
 class RoundedPasswordField extends StatelessWidget {
   final ValueChanged<String> onChanged;
@@ -18,11 +18,11 @@ class RoundedPasswordField extends StatelessWidget {
               hintText:"Password",
               icon: Icon(
                 Icons.lock,
-                color:kPrimaryColor,
+                color:primaryColor,
               ),
               suffixIcon: Icon(
                   Icons.visibility,
-                  color:kPrimaryColor
+                  color:primaryColor
               ),
               border:InputBorder.none
           ),
