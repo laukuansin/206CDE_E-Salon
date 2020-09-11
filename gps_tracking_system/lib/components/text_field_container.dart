@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/constants.dart';
+import 'package:gps_tracking_system/color.dart';
 
 class TextFieldContainer extends StatelessWidget {
   final Widget child;
@@ -16,7 +16,7 @@ class TextFieldContainer extends StatelessWidget {
       padding:EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       width:size.width * 0.8,
       decoration: BoxDecoration(
-        color:kPrimaryLightColor,
+        color:primaryLightColor,
         borderRadius: BorderRadius.circular(29),
       ),
       child: child,
