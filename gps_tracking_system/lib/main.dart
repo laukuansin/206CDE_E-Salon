@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         fontFamily: mainFont
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/",
+      initialRoute: "/debug",
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

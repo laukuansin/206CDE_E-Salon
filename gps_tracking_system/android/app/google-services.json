@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1007834937534:android:a0d196d1afa6f6d64ec6ef",
+        "mobilesdk_app_id": "1:1007834937534:android:0503217d627877994ec6ef",
         "android_client_info": {
-          "package_name": "com.GPS_Tracking_System"
+          "package_name": "com.example.gps_tracking_system"
         }
       },
       "oauth_client": [
