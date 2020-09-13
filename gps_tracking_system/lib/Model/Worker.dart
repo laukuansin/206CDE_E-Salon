@@ -47,4 +47,8 @@ class Worker{
     RealTimeDb.saveWorkerChanges(this);
   }
 
+  void remove(){
+    RealTimeDb.removeWorker(workerId);
+  }
+
 }

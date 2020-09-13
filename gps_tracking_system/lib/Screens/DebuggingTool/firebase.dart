@@ -12,7 +12,7 @@ class _FirebaseState extends State<Firebase>{
   final latitudeController = TextEditingController();
   final longitudeController = TextEditingController();
   final customerIdController = TextEditingController();
-  final Worker worker = Worker(workerId: "P18010220");
+  final Worker worker = Worker(workerId: "P18010220", syncDB: true);
 
 
   @override
@@ -68,7 +68,7 @@ class _FirebaseState extends State<Firebase>{
                   child: Text(
                     "Remove",
                   ),
-                  onPressed: saveDataChanges
+                  onPressed: removeData
               ),
               FlatButton(
                   child: Text(
@@ -115,4 +115,32 @@ class _FirebaseState extends State<Firebase>{
       );
     }
   }
+
+  void removeData(){
+    worker.latitude = double.parse(latitudeController.text);
+    worker.longitude = double.parse(longitudeController.text);
+    worker.customerId = customerIdController.text;
+    try {
+      worker.remove();
+    } catch (error) {
+      showDialog(
+          context:context,
+          builder: (BuildContext context){
+            return AlertDialog(
+              title: Text("Data save changes error"),
+              content: Text(error.toString()),
+              actions: [
+                FlatButton(
+                  child: Text("Ok"),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          }
+      );
+    }
+  }
+
 }

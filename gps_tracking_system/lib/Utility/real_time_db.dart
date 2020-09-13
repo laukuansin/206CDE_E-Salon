@@ -31,4 +31,7 @@ class RealTimeDb{
     });
   }
 
+  static void removeWorker(String workerId){
+    _db.child(workerId).remove();
+  }
 }
