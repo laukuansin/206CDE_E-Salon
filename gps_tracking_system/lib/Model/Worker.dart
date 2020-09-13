@@ -9,9 +9,10 @@ class Worker{
   static const String KEY_CUSTOMER_ID   = "CustomerID";
 
   final String workerId;
-  double latitude;
-  double longitude;
-  String customerId;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String customerId = "";
+  Function callback;
 
   /*
   READ ME
@@ -23,15 +24,12 @@ class Worker{
   Worker({
     @required workerId,
     @required syncDB,
-    latitude = 0.0,
-    longitude=0.0,
-    customerId="",
+    this.latitude,
+    this.longitude,
+    this.customerId,
+    this.callback
   }):
-    workerId = workerId,
-    latitude = latitude,
-    longitude = longitude,
-    customerId = customerId{
-
+    workerId = workerId{
     if(syncDB){
       RealTimeDb.onWorkerLocationChanges(workerId, _updateLatLonFromDB);
     }
@@ -41,6 +39,8 @@ class Worker{
     log("Latitude and longitude updated to ${latitude.toString()} , ${longitude.toString()}");
     latitude = latitude;
     longitude = longitude;
+    if(callback != null)
+      callback();
   }
 
   void save() {

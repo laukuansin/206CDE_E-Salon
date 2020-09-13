@@ -1,31 +1,48 @@
 import 'dart:async';
 import 'dart:developer' as debug;
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
+import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 class ViewModel
 {
-  static const double _INITIAL_CAMERA_ZOOM_RATIO = 14.0;
+  // Config
+  static const double _INITIAL_CAMERA_ZOOM_RATIO  = 14.0;
+  static const double _MAP_BOUNDS_PADDING         = 30.0;
+  static const int _CAR_MARKER_SIZE               = 75;
+  static const String _MARKER_DESTINATION_ID      = "destination";
+  static const String _MARKER_ORIGIN_ID           = "origin";
 
-  final Completer<GoogleMapController> _mapControllerCompleter;
+  final Map<String, Marker> markerList = {
+    _MARKER_DESTINATION_ID:  Marker(markerId: MarkerId(_MARKER_DESTINATION_ID)),
+    _MARKER_ORIGIN_ID: Marker(markerId: MarkerId(_MARKER_ORIGIN_ID))
+  };
+
+  final String _apiKey = "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM";
   final Function _callBackNotifyChanges;
   final Function(String, String) _callBackShowAlertDialog;
+  final Completer<GoogleMapController> _mapControllerCompleter = Completer();
 
   GoogleMap _googleMap;
   RoundedButton _navigationButton;
-  LatLng destination;
+  Uint8List _carMarkerIcon;
+  String destAddress;
+  LatLng _customerLatLng, _workerLatLng;
   int _totalDistanceInMeter, _totalDurationInSeconds;
 
-  ViewModel({@required this.destination, @required Function notifyChanges, Function showAlertDialog}):
-        _mapControllerCompleter = Completer(),
+  ViewModel({@required this.destAddress, @required Function notifyChanges, Function showAlertDialog}):
+        _customerLatLng = LatLng(0,0),
         _callBackNotifyChanges = notifyChanges,
         _callBackShowAlertDialog = showAlertDialog,
         _totalDurationInSeconds = 0,
@@ -33,7 +50,14 @@ class ViewModel
     this.initRoute();
   }
 
-  // calculate time, calculate distance
+  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
+  }
+
+
   Future<void> initRoute() async
   {
     // Get permission
@@ -42,67 +66,45 @@ class ViewModel
         .isGranted)
       exit(-1);
 
-    // Get current location
-    final Position position = await getCurrentPosition();
-    LatLng currentLocation = LatLng(
-        position.latitude,
-        position.longitude
-    );
+    final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
+    final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(destAddress, _apiKey);
 
+    _workerLatLng= MapHelper.positionToLatLng(await getCurrentPosition());
+    _customerLatLng = await destLatLngFuture;
+    final Future<void> calculateDistanceFuture = _calcDurationDistance();
+
+    // Wait map created
+    _carMarkerIcon = await carMarkerIconFuture;
+    updateMarkerLocation(_workerLatLng);
     GoogleMapController controller = await _mapControllerCompleter.future;
-    final List<Marker> marker = [];
-    marker.add(
-        Marker(
-          markerId: MarkerId(destination.toString()),
-          position: destination,
-        )
-    );
 
-    marker.add(
-        Marker(
-            markerId: MarkerId(currentLocation.toString()),
-            position: currentLocation,
-            icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(40, 40)),
-                "assets/images/car.png")
-        )
-    );
-
-    /*
-    Sample Json (Duration)                 Way to read the json
-    +------------------------------+       +----------+------+------+
-    |   {                          |       |   |   A  |   B  |   C  |
-    |    "durations":[             |       +---+------+------+------+    Data interested: A->B->C
-    |       [                      |       | A | A->A | A->B | A->C |    A->B : row 0 col1
-    |          0.0,                |       | B | B->A | B->B | B->C |    B->C : row 1 col2
-    |          1181.7              |       | C | C->A | C->B | C->C |    col = row + 1
-    |       ],                     |       +---+------+------+------+
-    |       [                      |
-    |          1167.1,             |       Refer https://docs.mapbox.com/help/glossary/matrix-api/
-    |          0.0                 |
-    |       ]                      |
-    |     ]                        |
-    |   }                          |
-    +------------------------------+
-    */
-
-    Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi.getTimeTaken([currentLocation,destination]);
-    List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
-    List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
-
-    int row = timeTaken.length;
-    _totalDurationInSeconds = 0;
-    _totalDistanceInMeter   = 0;
-    for(int i = 0 ; i < row - 1; i++){
-      double second = timeTaken[i][i + 1];
-      double d = distance[i][i+1] ;
-      _totalDurationInSeconds += second.toInt();
-      _totalDistanceInMeter += d.toInt();
-    }
-
-    _constructView(marker, currentLocation);
-    _animateCameraToRouteBound(controller, currentLocation);
+    
+    await calculateDistanceFuture;
+    _constructView();
+    _animateCameraToRouteBound(controller);
     _callBackNotifyChanges();
+  }
+
+
+  void updateMarkerLocation(LatLng originLocation){
+    // Add dest marker
+    markerList[_MARKER_DESTINATION_ID] = Marker(
+      markerId: MarkerId(_MARKER_DESTINATION_ID),
+      position: _customerLatLng,
+    );
+
+    // Add src marker
+    markerList[_MARKER_ORIGIN_ID] = Marker(
+      markerId: MarkerId("origin"),
+      rotation: bearingBetween(_workerLatLng.latitude, _workerLatLng.longitude, originLocation.latitude, originLocation.longitude),
+      position: originLocation,
+      draggable: false,
+      zIndex: 2,
+      flat: true,
+      icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
+    );
+
+    _workerLatLng = originLocation;
   }
 
   String getTotalDistance()
@@ -135,13 +137,46 @@ class ViewModel
     _mapControllerCompleter.complete(controller);
   }
 
-  void _animateCameraToRouteBound(GoogleMapController controller, LatLng currentLocation)
+  Future<void> _calcDurationDistance() async{
+    /*
+    Sample Json (Duration)                 Way to read the json
+    +------------------------------+       +----------+------+------+
+    |   {                          |       |   |   A  |   B  |   C  |
+    |    "durations":[             |       +---+------+------+------+    Data interested: A->B->C
+    |       [                      |       | A | A->A | A->B | A->C |    A->B : row 0 col1
+    |          0.0,                |       | B | B->A | B->B | B->C |    B->C : row 1 col2
+    |          1181.7              |       | C | C->A | C->B | C->C |    col = row + 1
+    |       ],                     |       +---+------+------+------+
+    |       [                      |
+    |          1167.1,             |       Refer https://docs.mapbox.com/help/glossary/matrix-api/
+    |          0.0                 |
+    |       ]                      |
+    |     ]                        |
+    |   }                          |
+    +------------------------------+
+    */
+    Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi.getRouteTimeDistance([_workerLatLng,_customerLatLng]);
+    List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
+    List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
+
+    int row = timeTaken.length;
+    _totalDurationInSeconds = 0;
+    _totalDistanceInMeter   = 0;
+    for(int i = 0 ; i < row - 1; i++){
+      double second = timeTaken[i][i + 1];
+      double d = distance[i][i+1] ;
+      _totalDurationInSeconds += second.toInt();
+      _totalDistanceInMeter += d.toInt();
+    }
+  }
+
+  void _animateCameraToRouteBound(GoogleMapController controller)
   {
     double maxLat, minLat, maxLon, minLon;
-    maxLat = max(currentLocation.latitude, destination.latitude);
-    maxLon = max(currentLocation.longitude, destination.longitude);
-    minLat = min(currentLocation.latitude, destination.latitude);
-    minLon = min(currentLocation.longitude, destination.longitude);
+    maxLat = max(_workerLatLng.latitude, _customerLatLng.latitude);
+    maxLon = max(_workerLatLng.longitude, _customerLatLng.longitude);
+    minLat = min(_workerLatLng.latitude, _customerLatLng.latitude);
+    minLon = min(_workerLatLng.longitude, _customerLatLng.longitude);
 
     controller.animateCamera(
         CameraUpdate.newLatLngBounds(
@@ -155,21 +190,25 @@ class ViewModel
                     maxLon
                 )
             ),
-            17 // Padding
+            _MAP_BOUNDS_PADDING // Padding
         )
     );
   }
 
-  void _constructView(List<Marker>marker, LatLng currentLocation)
+  void _constructView()
   {
     debug.log("Constructing google map");
+
+    Set<Marker>markerSet = {};
+    markerList.forEach((key, value) {markerSet.add(value);});
+
     _googleMap = GoogleMap(
         mapType: MapType.normal,
-        markers: Set.from(marker),
+        markers: markerSet,
         onMapCreated:setGoogleMapController,
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
-          target:currentLocation,
+          target:_workerLatLng,
           zoom:_INITIAL_CAMERA_ZOOM_RATIO,
         )
     );
@@ -179,7 +218,8 @@ class ViewModel
         press: (){
           try {
             AppLauncher.openMap(
-                latLng: [currentLocation.latitude, currentLocation.longitude, destination.latitude, destination.longitude]
+              srcLatLng: [_workerLatLng.latitude, _workerLatLng.longitude],
+              destAddress: destAddress
             );
           }
           catch(e){
@@ -189,14 +229,14 @@ class ViewModel
     );
   }
 
-  GoogleMap getMap()
+  GoogleMap buildMap()
   {
     if(_googleMap == null) {
       debug.log("Map is null");
       return GoogleMap(
           onMapCreated:setGoogleMapController,
           initialCameraPosition: CameraPosition(
-            target: destination,
+            target: _customerLatLng,
             zoom: _INITIAL_CAMERA_ZOOM_RATIO,
           )
       );
@@ -205,7 +245,7 @@ class ViewModel
   }
 
 
-  RoundedButton getNavigationButton()
+  RoundedButton buildNavigationButton()
   {
     if(_navigationButton == null) {
       debug.log("Navigation button is null");

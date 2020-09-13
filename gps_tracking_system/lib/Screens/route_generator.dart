@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Screens/DebuggingTool/firebase.dart';
+import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/Login/login.dart';
 import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
 
@@ -27,6 +28,12 @@ class RouteGenerator{
         return MaterialPageRoute(
           builder: (_)=>Scaffold(
             body: Firebase(),
+          )
+        );
+      case "/map":
+        return MaterialPageRoute(
+          builder:(_)=>Scaffold(
+            body: GoogleMapScreen(destAddr: "Sunshine Farlim"),
           )
         );
     }

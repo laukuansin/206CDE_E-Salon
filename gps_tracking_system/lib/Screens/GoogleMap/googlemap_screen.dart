@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Components/map_navigation_panel.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
 
 class GoogleMapScreen extends StatefulWidget{
-  final Position destination;
+  final String destAddr;
 
   @override
   State<StatefulWidget> createState() => _GoogleMapScreenState();
-  GoogleMapScreen({Key key, @required this.destination}): super(key:key);
+  GoogleMapScreen({Key key, @required this.destAddr}): super(key:key);
 }
 
 class _GoogleMapScreenState extends State<GoogleMapScreen>{
@@ -20,7 +18,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
   void initState() {
     super.initState();
     viewModel = ViewModel(
-      destination:LatLng(widget.destination.latitude, widget.destination.longitude),
+      destAddress:widget.destAddr,
       notifyChanges: (){setState(() {});},
       showAlertDialog: showAlertDialog,
     );
@@ -39,14 +37,14 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
           alignment: Alignment.center,
           children: <Widget>[
             SizedBox(
-              child:viewModel.getMap()
+              child:viewModel.buildMap()
             ),
 
             Positioned(
               bottom:0,
               child: MapNavigationPanel(
                 bottomBarSize: bottomBarSize,
-                navigationButton: viewModel.getNavigationButton(),
+                navigationButton: viewModel.buildNavigationButton(),
                 totalDistance: viewModel.getTotalDistance(),
                 totalDuration: viewModel.getTotalDurations(),)
             ),

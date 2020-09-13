@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/Worker.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Firebase extends StatefulWidget{
 
@@ -13,7 +14,6 @@ class _FirebaseState extends State<Firebase>{
   final longitudeController = TextEditingController();
   final customerIdController = TextEditingController();
   final Worker worker = Worker(workerId: "P18010220", syncDB: true);
-
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +141,11 @@ class _FirebaseState extends State<Firebase>{
           }
       );
     }
+  }
+
+  void requestLocationUpdate()
+  {
+
   }
 
 }
