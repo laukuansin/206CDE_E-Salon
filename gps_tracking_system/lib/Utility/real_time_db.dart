@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +24,20 @@ class RealTimeDb{
 
   static void onWorkerLocationChanges(String workerId, Function(double,double) callBack)
   {
-    _db.child(workerId).onValue.listen((event) {
-      var snapshot = event.snapshot;
-      callBack(
-          double.parse(snapshot.value[MyWorker.Worker.KEY_LATITUDE].toString()),
-          double.parse(snapshot.value[MyWorker.Worker.KEY_LONGITUDE].toString())
-      );
-    });
+    if(callBack != null) {
+      _db
+          .child(workerId)
+          .onValue
+          .listen((event) {
+        var snapshot = event.snapshot;
+        callBack(
+            double.parse(
+                snapshot.value[MyWorker.Worker.KEY_LATITUDE].toString()),
+            double.parse(
+                snapshot.value[MyWorker.Worker.KEY_LONGITUDE].toString())
+        );
+      });
+    }
   }
 
   static void removeWorker(String workerId){

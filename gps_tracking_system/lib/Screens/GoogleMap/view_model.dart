@@ -5,13 +5,13 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/Worker.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:math';
 import 'dart:ui' as ui;
 
@@ -37,12 +37,15 @@ class ViewModel
   GoogleMap _googleMap;
   RoundedButton _navigationButton;
   Uint8List _carMarkerIcon;
-  String destAddress;
-  LatLng _customerLatLng, _workerLatLng;
+  double _carMarkerIconRotation;
+  String customerAddress;
+  LatLng _customerLatLng;
+  LatLng workerLatLng;
   int _totalDistanceInMeter, _totalDurationInSeconds;
 
-  ViewModel({@required this.destAddress, @required Function notifyChanges, Function showAlertDialog}):
+  ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
         _customerLatLng = LatLng(0,0),
+        _carMarkerIconRotation = 0,
         _callBackNotifyChanges = notifyChanges,
         _callBackShowAlertDialog = showAlertDialog,
         _totalDurationInSeconds = 0,
@@ -57,36 +60,36 @@ class ViewModel
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-
-  Future<void> initRoute() async
+  Future<void> initRoute({bool animateCamera = true}) async
   {
-    // Get permission
-    if (!await Permission.location
-        .request()
-        .isGranted)
-      exit(-1);
-
     final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
-    final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(destAddress, _apiKey);
+    final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(customerAddress, _apiKey);
 
-    _workerLatLng= MapHelper.positionToLatLng(await getCurrentPosition());
     _customerLatLng = await destLatLngFuture;
     final Future<void> calculateDistanceFuture = _calcDurationDistance();
 
     // Wait map created
     _carMarkerIcon = await carMarkerIconFuture;
-    updateMarkerLocation(_workerLatLng);
+    updateMarkerLocation();
     GoogleMapController controller = await _mapControllerCompleter.future;
 
     
     await calculateDistanceFuture;
     _constructView();
-    _animateCameraToRouteBound(controller);
+    if(animateCamera) {
+      _animateCameraToRouteBound(controller);
+    }
     _callBackNotifyChanges();
   }
 
+  Future<void> updateWorkerLocation(LatLng newWorkerLatLng)async{
+    _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
+    this.workerLatLng = newWorkerLatLng;
+    await initRoute(animateCamera: false);
+  }
 
-  void updateMarkerLocation(LatLng originLocation){
+
+  void updateMarkerLocation(){
     // Add dest marker
     markerList[_MARKER_DESTINATION_ID] = Marker(
       markerId: MarkerId(_MARKER_DESTINATION_ID),
@@ -96,15 +99,13 @@ class ViewModel
     // Add src marker
     markerList[_MARKER_ORIGIN_ID] = Marker(
       markerId: MarkerId("origin"),
-      rotation: bearingBetween(_workerLatLng.latitude, _workerLatLng.longitude, originLocation.latitude, originLocation.longitude),
-      position: originLocation,
+      rotation: _carMarkerIconRotation,
+      position: workerLatLng,
       draggable: false,
       zIndex: 2,
       flat: true,
       icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
     );
-
-    _workerLatLng = originLocation;
   }
 
   String getTotalDistance()
@@ -137,7 +138,7 @@ class ViewModel
     _mapControllerCompleter.complete(controller);
   }
 
-  Future<void> _calcDurationDistance() async{
+  Future<void> _calcDurationDistance() async {
     /*
     Sample Json (Duration)                 Way to read the json
     +------------------------------+       +----------+------+------+
@@ -155,28 +156,35 @@ class ViewModel
     |   }                          |
     +------------------------------+
     */
-    Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi.getRouteTimeDistance([_workerLatLng,_customerLatLng]);
-    List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
-    List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
+    Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi
+        .getRouteTimeDistance([workerLatLng, _customerLatLng]);
 
-    int row = timeTaken.length;
-    _totalDurationInSeconds = 0;
-    _totalDistanceInMeter   = 0;
-    for(int i = 0 ; i < row - 1; i++){
-      double second = timeTaken[i][i + 1];
-      double d = distance[i][i+1] ;
-      _totalDurationInSeconds += second.toInt();
-      _totalDistanceInMeter += d.toInt();
+    try {
+      List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
+      List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
+
+      int row = timeTaken.length;
+      _totalDurationInSeconds = 0;
+      _totalDistanceInMeter = 0;
+      for (int i = 0; i < row - 1; i++) {
+        double second = timeTaken[i][i + 1];
+        double d = distance[i][i + 1];
+        _totalDurationInSeconds += second.toInt();
+        _totalDistanceInMeter += d.toInt();
+      }
+    }
+    catch (error) {
+      debug.log(error.toString());
     }
   }
 
   void _animateCameraToRouteBound(GoogleMapController controller)
   {
     double maxLat, minLat, maxLon, minLon;
-    maxLat = max(_workerLatLng.latitude, _customerLatLng.latitude);
-    maxLon = max(_workerLatLng.longitude, _customerLatLng.longitude);
-    minLat = min(_workerLatLng.latitude, _customerLatLng.latitude);
-    minLon = min(_workerLatLng.longitude, _customerLatLng.longitude);
+    maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
+    maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);
+    minLat = min(workerLatLng.latitude, _customerLatLng.latitude);
+    minLon = min(workerLatLng.longitude, _customerLatLng.longitude);
 
     controller.animateCamera(
         CameraUpdate.newLatLngBounds(
@@ -208,7 +216,7 @@ class ViewModel
         onMapCreated:setGoogleMapController,
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
-          target:_workerLatLng,
+          target:workerLatLng,
           zoom:_INITIAL_CAMERA_ZOOM_RATIO,
         )
     );
@@ -218,8 +226,8 @@ class ViewModel
         press: (){
           try {
             AppLauncher.openMap(
-              srcLatLng: [_workerLatLng.latitude, _workerLatLng.longitude],
-              destAddress: destAddress
+              srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
+              destAddress: customerAddress
             );
           }
           catch(e){

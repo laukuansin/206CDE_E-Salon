@@ -1,16 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'Components/map_navigation_panel.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
 
 class GoogleMapScreen extends StatefulWidget{
-  final String destAddr;
+  final String customerAddress;
+  final LatLng workerLatLng;
 
   @override
-  State<StatefulWidget> createState() => _GoogleMapScreenState();
-  GoogleMapScreen({Key key, @required this.destAddr}): super(key:key);
+  State<StatefulWidget> createState() => GoogleMapScreenState();
+  GoogleMapScreen({Key key, @required this.customerAddress, @required this.workerLatLng}): super(key:key);
 }
 
-class _GoogleMapScreenState extends State<GoogleMapScreen>{
+class GoogleMapScreenState extends State<GoogleMapScreen>{
 
   ViewModel viewModel;
 
@@ -18,7 +22,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
   void initState() {
     super.initState();
     viewModel = ViewModel(
-      destAddress:widget.destAddr,
+      customerAddress:widget.customerAddress,
+      workerLatLng: widget.workerLatLng,
       notifyChanges: (){setState(() {});},
       showAlertDialog: showAlertDialog,
     );
@@ -39,7 +44,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
             SizedBox(
               child:viewModel.buildMap()
             ),
-
             Positioned(
               bottom:0,
               child: MapNavigationPanel(
@@ -70,5 +74,11 @@ class _GoogleMapScreenState extends State<GoogleMapScreen>{
         );
       }
     );
+  }
+
+  // Call this function using key to update worker location
+  void updateWorkerLocation(LatLng workerLocation)async{
+    await viewModel.updateWorkerLocation(workerLocation);
+    setState(() {});
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 import 'dart:developer';
 
@@ -12,7 +14,8 @@ class Worker{
   double latitude = 0.0;
   double longitude = 0.0;
   String customerId = "";
-  Function callback;
+  Function(double, double) callback;
+  bool syncDB;
 
   /*
   READ ME
@@ -23,24 +26,25 @@ class Worker{
    */
   Worker({
     @required workerId,
-    @required syncDB,
-    this.latitude,
-    this.longitude,
-    this.customerId,
+    @required this.syncDB,
+    this.latitude = 4.2105,
+    this.longitude = 101.9758,
+    this.customerId = "",
     this.callback
   }):
     workerId = workerId{
     if(syncDB){
       RealTimeDb.onWorkerLocationChanges(workerId, _updateLatLonFromDB);
+      save();
     }
   }
 
   void _updateLatLonFromDB(double latitude, double longitude){
     log("Latitude and longitude updated to ${latitude.toString()} , ${longitude.toString()}");
-    latitude = latitude;
-    longitude = longitude;
+    this.latitude = latitude;
+    this.longitude = longitude;
     if(callback != null)
-      callback();
+      callback(latitude, longitude);
   }
 
   void save() {
@@ -49,6 +53,13 @@ class Worker{
 
   void remove(){
     RealTimeDb.removeWorker(workerId);
+  }
+
+  LatLng latLng()=>LatLng(latitude, longitude);
+  void setLatLng(Position latLng){
+    this.latitude = latLng.latitude; this.longitude = latLng.longitude;
+    if(syncDB)
+      save();
   }
 
 }

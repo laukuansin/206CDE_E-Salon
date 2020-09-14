@@ -21,10 +21,9 @@ class RestApi
     }
 
     url = url.substring(0, url.length - 1);
-
     url += accessToken;
-    log(url);
-    var response = await  http.get(url);
+    log("Calling MapBox distance API : " + url);
+    var response = await http.get(url);
     return jsonDecode(response.body);
   }
 
