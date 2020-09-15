@@ -23,6 +23,7 @@ class ViewModel
   static const int _CAR_MARKER_SIZE               = 75;
   static const String _MARKER_DESTINATION_ID      = "destination";
   static const String _MARKER_ORIGIN_ID           = "origin";
+  static const int _REFRESH_RATE                  = 120;
 
   final Map<String, Marker> markerList = {
     _MARKER_DESTINATION_ID:  Marker(markerId: MarkerId(_MARKER_DESTINATION_ID)),
@@ -42,9 +43,11 @@ class ViewModel
   LatLng _customerLatLng;
   LatLng workerLatLng;
   int _totalDistanceInMeter, _totalDurationInSeconds;
+  int _timer;
 
   ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
         _customerLatLng = LatLng(0,0),
+        _timer = 0,
         _carMarkerIconRotation = 0,
         _callBackNotifyChanges = notifyChanges,
         _callBackShowAlertDialog = showAlertDialog,
@@ -60,32 +63,40 @@ class ViewModel
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-  Future<void> initRoute({bool animateCamera = true}) async
+  Future<void> initRoute({bool animateCamera = true, bool updateCustomerLatLng = true}) async
   {
-    final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
-    final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(customerAddress, _apiKey);
-    blablabla
-    _customerLatLng = await destLatLngFuture;
-    final Future<void> calculateDistanceFuture = _calcDurationDistance();
+    if(updateCustomerLatLng) {
+      final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset(
+          'assets/images/car.png', _CAR_MARKER_SIZE);
+      final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(
+          customerAddress, _apiKey);
 
-    // Wait map created
-    _carMarkerIcon = await carMarkerIconFuture;
+      _customerLatLng = await destLatLngFuture;
+      _carMarkerIcon = await carMarkerIconFuture;
+    }
+
+    if(updateCustomerLatLng ||  _timer % _REFRESH_RATE == 0) {
+      final Future<void> calculateDistanceFuture = _calcDurationDistance();
+      await calculateDistanceFuture;
+    }
+    
     updateMarkerLocation();
+    // Wait map created
     GoogleMapController controller = await _mapControllerCompleter.future;
 
-    
-    await calculateDistanceFuture;
+
     _constructView();
     if(animateCamera) {
       _animateCameraToRouteBound(controller);
     }
+    _timer ++;
     _callBackNotifyChanges();
   }
 
   Future<void> updateWorkerLocation(LatLng newWorkerLatLng)async{
     _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
     this.workerLatLng = newWorkerLatLng;
-    await initRoute(animateCamera: false);
+    await initRoute(animateCamera: false, updateCustomerLatLng: false);
   }
 
 
