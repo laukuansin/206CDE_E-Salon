@@ -64,7 +64,7 @@ class ViewModel
   {
     final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
     final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(customerAddress, _apiKey);
-
+    blablabla
     _customerLatLng = await destLatLngFuture;
     final Future<void> calculateDistanceFuture = _calcDurationDistance();
 
