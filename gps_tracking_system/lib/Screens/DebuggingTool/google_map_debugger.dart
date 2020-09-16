@@ -1,53 +1,88 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/User.dart';
 import 'package:gps_tracking_system/Model/Worker.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
-import 'package:gps_tracking_system/Utility/map_helper.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:gps_tracking_system/Utility/real_time_db.dart';
 
 class GoogleMapDebugger extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() =>_GoogleMapDebuggerState();
+  State<StatefulWidget> createState() =>_GoogleMapDebuggerState(Worker(workerId: "P18010220"));
+}
+
+class _GoogleMapController{
+  final Worker _worker;
+  final Function(double, double) _workerLocationUpdated;
+  Timer _timer;
+
+  _GoogleMapController({
+    @required Worker worker,
+    @required Function(double, double)workerLocationUpdated,
+    Duration refreshRate = const Duration(seconds: 5)
+  })
+      :_worker = worker,
+      _workerLocationUpdated = workerLocationUpdated
+  {
+    if(User.isAuthenticated()) {
+      switch(User.getRole()){
+        case Role.CUSTOMER:
+          RealTimeDb.onWorkerLocationChanges(worker.workerId, _locationReceived);
+          break;
+
+        case Role.WORKER:
+          _timer = Timer.periodic(refreshRate, (timer) {
+            _sendRealtimeLocation();
+          });
+          break;
+
+        case Role.OWNER:
+          break;
+      }
+    }
+  }
+
+  void _locationReceived(double latitude, double longitude){
+    _worker.latitude = latitude;
+    _worker.longitude = longitude;
+    _workerLocationUpdated(latitude, longitude);
+  }
+
+  void _sendRealtimeLocation() async{
+    Position position = await getCurrentPosition();
+    _worker.latitude = position.latitude;
+    _worker.longitude = position.longitude;
+    _workerLocationUpdated(position.latitude, position.longitude);
+    RealTimeDb.saveWorkerChanges(_worker);
+  }
 }
 
 class _GoogleMapDebuggerState extends State<GoogleMapDebugger>{
 
-  Worker worker;
-  final GlobalKey<GoogleMapScreenState> _key = GlobalKey();
+  Worker _worker;
+  _GoogleMapController _googleMapController;
+  GlobalKey<GoogleMapScreenState> _key;
+
+  _GoogleMapDebuggerState(Worker worker)
+  {
+    _worker = worker;
+    _googleMapController = _GoogleMapController(worker: worker, workerLocationUpdated: onLocationReceived);
+    _key = GlobalKey();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMapScreen(
         key: _key,
-        workerLatLng: worker.latLng(),
+        workerLatLng: LatLng(_worker.latitude, _worker.longitude),
         customerAddress: "Sunshine Farlim",
       ),
     );
   }
 
-
-  @override
-  void initState() {
-    super.initState();
-    worker = Worker(workerId: "P18010220", syncDB: true, callback: callBackFromModel);
-    initRealTimeLocationUpdate();
-  }
-
-  void initRealTimeLocationUpdate() async{
-    Timer timer = Timer.periodic(Duration(seconds: 5), (timer) async{
-      Position position = await getCurrentPosition();
-      worker.setLatLng(position);
-    });
-  }
-
-  void callBackFromModel(double latitude, double longitude){
+  void onLocationReceived(double latitude, double longitude){
     _key.currentState.updateWorkerLocation(LatLng(latitude, longitude));
   }
 }

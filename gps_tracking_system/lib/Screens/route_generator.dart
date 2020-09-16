@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/Screens/DebuggingTool/firebase_debugger.dart';
 import 'package:gps_tracking_system/Screens/DebuggingTool/google_map_debugger.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/Login/login.dart';
@@ -15,13 +14,13 @@ class RouteGenerator{
 
     if(_DEBUG_MODE){
       switch(settings.name) {
-        case "/firebaseDebug":
-          return MaterialPageRoute(
-              builder: (_) =>
-                  Scaffold(
-                    body: Firebase(),
-                  )
-          );
+        // case "/firebaseDebug":
+        //   return MaterialPageRoute(
+        //       builder: (_) =>
+        //           Scaffold(
+        //             body: Firebase(),
+        //           )
+        //   );
         case "/mapDebug":
           return MaterialPageRoute(
               builder: (_) =>

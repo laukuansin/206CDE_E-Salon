@@ -15,7 +15,6 @@ class GoogleMapScreen extends StatefulWidget{
 }
 
 class GoogleMapScreenState extends State<GoogleMapScreen>{
-
   ViewModel viewModel;
 
   @override

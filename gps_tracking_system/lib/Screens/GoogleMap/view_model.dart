@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:developer' as debug;
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_tracking_system/Model/Worker.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
@@ -23,27 +21,22 @@ class ViewModel
   static const int _CAR_MARKER_SIZE               = 75;
   static const String _MARKER_DESTINATION_ID      = "destination";
   static const String _MARKER_ORIGIN_ID           = "origin";
-  static const int _REFRESH_RATE                  = 120;
+  static const int _REFRESH_RATE                  = 30;
 
-  final Map<String, Marker> markerList = {
-    _MARKER_DESTINATION_ID:  Marker(markerId: MarkerId(_MARKER_DESTINATION_ID)),
-    _MARKER_ORIGIN_ID: Marker(markerId: MarkerId(_MARKER_ORIGIN_ID))
+  final Set<Marker> markerSet = {
+    Marker(markerId: MarkerId(_MARKER_DESTINATION_ID)),
+    Marker(markerId: MarkerId(_MARKER_ORIGIN_ID))
   };
 
-  final String _apiKey = "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM";
+
   final Function _callBackNotifyChanges;
   final Function(String, String) _callBackShowAlertDialog;
   final Completer<GoogleMapController> _mapControllerCompleter = Completer();
 
-  GoogleMap _googleMap;
-  RoundedButton _navigationButton;
-  Uint8List _carMarkerIcon;
-  double _carMarkerIconRotation;
+  Uint8List _carMarkerIcon; double _carMarkerIconRotation;
   String customerAddress;
-  LatLng _customerLatLng;
-  LatLng workerLatLng;
-  int _totalDistanceInMeter, _totalDurationInSeconds;
-  int _timer;
+  LatLng _customerLatLng, workerLatLng;
+  int _totalDistanceInMeter, _totalDurationInSeconds, _timer;
 
   ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
         _customerLatLng = LatLng(0,0),
@@ -63,19 +56,15 @@ class ViewModel
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-  Future<void> initRoute({bool animateCamera = true, bool updateCustomerLatLng = true}) async
+  Future<void> initRoute({bool animateCamera = true}) async
   {
-    if(updateCustomerLatLng) {
-      final Future<Uint8List> carMarkerIconFuture = _getBytesFromAsset(
-          'assets/images/car.png', _CAR_MARKER_SIZE);
-      final Future<LatLng> destLatLngFuture = MapHelper.addressToLatLng(
-          customerAddress, _apiKey);
-
-      _customerLatLng = await destLatLngFuture;
-      _carMarkerIcon = await carMarkerIconFuture;
+    if(_carMarkerIcon == null){
+      _carMarkerIcon = await _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
     }
 
-    if(updateCustomerLatLng ||  _timer % _REFRESH_RATE == 0) {
+    _customerLatLng = await MapHelper.addressToLatLng(customerAddress);
+
+    if(_timer % _REFRESH_RATE == 0) {
       final Future<void> calculateDistanceFuture = _calcDurationDistance();
       await calculateDistanceFuture;
     }
@@ -83,12 +72,10 @@ class ViewModel
     updateMarkerLocation();
     // Wait map created
     GoogleMapController controller = await _mapControllerCompleter.future;
-
-
-    _constructView();
     if(animateCamera) {
       _animateCameraToRouteBound(controller);
     }
+
     _timer ++;
     _callBackNotifyChanges();
   }
@@ -96,26 +83,31 @@ class ViewModel
   Future<void> updateWorkerLocation(LatLng newWorkerLatLng)async{
     _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
     this.workerLatLng = newWorkerLatLng;
-    await initRoute(animateCamera: false, updateCustomerLatLng: false);
+    await initRoute(animateCamera: false);
   }
 
-
   void updateMarkerLocation(){
+    markerSet.clear();
+
     // Add dest marker
-    markerList[_MARKER_DESTINATION_ID] = Marker(
-      markerId: MarkerId(_MARKER_DESTINATION_ID),
-      position: _customerLatLng,
+    markerSet.add(
+      Marker(
+        markerId: MarkerId(_MARKER_DESTINATION_ID),
+        position: _customerLatLng,
+      )
     );
 
     // Add src marker
-    markerList[_MARKER_ORIGIN_ID] = Marker(
-      markerId: MarkerId("origin"),
-      rotation: _carMarkerIconRotation,
-      position: workerLatLng,
-      draggable: false,
-      zIndex: 2,
-      flat: true,
-      icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
+    markerSet.add(
+      Marker(
+        markerId: MarkerId("origin"),
+        rotation: _carMarkerIconRotation,
+        position: workerLatLng,
+        draggable: false,
+        zIndex: 2,
+        flat: true,
+        icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
+      )
     );
   }
 
@@ -214,31 +206,26 @@ class ViewModel
     );
   }
 
-  void _constructView()
-  {
-    debug.log("Constructing google map");
-
-    Set<Marker>markerSet = {};
-    markerList.forEach((key, value) {markerSet.add(value);});
-
-    _googleMap = GoogleMap(
-        mapType: MapType.normal,
-        markers: markerSet,
-        onMapCreated:setGoogleMapController,
-        zoomControlsEnabled: false,
-        initialCameraPosition: CameraPosition(
-          target:workerLatLng,
-          zoom:_INITIAL_CAMERA_ZOOM_RATIO,
-        )
+  GoogleMap buildMap()=>
+    GoogleMap(
+      mapType: MapType.normal,
+      markers: markerSet,
+      onMapCreated:setGoogleMapController,
+      zoomControlsEnabled: false,
+      initialCameraPosition: CameraPosition(
+        target:workerLatLng,
+        zoom:_INITIAL_CAMERA_ZOOM_RATIO,
+      )
     );
 
-    _navigationButton = RoundedButton(
+  RoundedButton buildNavigationButton()=>
+    RoundedButton(
         text: "Navigation",
         press: (){
           try {
             AppLauncher.openMap(
-              srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
-              destAddress: customerAddress
+                srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
+                destAddress: customerAddress
             );
           }
           catch(e){
@@ -246,32 +233,4 @@ class ViewModel
           }
         }
     );
-  }
-
-  GoogleMap buildMap()
-  {
-    if(_googleMap == null) {
-      debug.log("Map is null");
-      return GoogleMap(
-          onMapCreated:setGoogleMapController,
-          initialCameraPosition: CameraPosition(
-            target: _customerLatLng,
-            zoom: _INITIAL_CAMERA_ZOOM_RATIO,
-          )
-      );
-    }
-    return _googleMap;
-  }
-
-
-  RoundedButton buildNavigationButton()
-  {
-    if(_navigationButton == null) {
-      debug.log("Navigation button is null");
-      return RoundedButton(
-        text: "Navigation",
-      );
-    }
-    return _navigationButton;
-  }
 }
