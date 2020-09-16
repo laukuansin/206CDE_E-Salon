@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'Components/map_navigation_panel.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
 
 class GoogleMapScreen extends StatefulWidget{
@@ -22,6 +18,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   @override
   void initState() {
     super.initState();
+
     viewModel = ViewModel(
       customerAddress:widget.customerAddress,
       workerLatLng: widget.workerLatLng,
@@ -33,7 +30,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    // Size bottomBarSize = Size(screenSize.width, screenSize.height * 0.18);
 
     return Scaffold(
       body:Container(
@@ -46,28 +42,24 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
               child:viewModel.buildMap()
             ),
             Positioned(
-              right:50,
-              bottom: 50,
-              child: FlatButton(
-                child: Icon(
-                  Icons.location_searching,
-                  color: primaryColor,
+              right:screenSize.width * 0.02,
+              bottom: screenSize.height * 0.05,
+              child:Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: primaryLightColor.withOpacity(0.95)
                 ),
-                onPressed: (){
-                  viewModel.animateCameraToRouteBound();
-                }
+                child: IconButton(
+                  icon: Icon(
+                    Icons.location_searching,
+                    color: primaryColor,
+                  ),
+                  onPressed: (){
+                    viewModel.animateCameraToRouteBound();
+                  }
+                )
               )
             )
-
-            // Too ugly so comment first
-            // Positioned(
-            //   bottom:0,
-            //   child: MapNavigationPanel(
-            //     bottomBarSize: bottomBarSize,
-            //     navigationButton: viewModel.buildNavigationButton(),
-            //     totalDistance: viewModel.getTotalDistance(),
-            //     totalDuration: viewModel.getTotalDurations(),)
-            // ),
           ]
         )
       )
@@ -93,8 +85,8 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   }
 
   // Call this function using key to update worker location
-  void updateWorkerLocation(LatLng workerLocation)async{
-    await viewModel.updateWorkerLocation(workerLocation);
+  void updateWorkerLocation(bool isWorkerReady, LatLng workerLocation){
+    viewModel.updateWorkerLocation(isWorkerReady, workerLocation);
     setState(() {});
   }
 }

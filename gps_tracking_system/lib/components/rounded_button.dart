@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/font.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;

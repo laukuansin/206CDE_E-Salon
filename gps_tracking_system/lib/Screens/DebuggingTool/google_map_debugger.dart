@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -60,12 +61,14 @@ class _GoogleMapController{
 
 class _GoogleMapDebuggerState extends State<GoogleMapDebugger>{
 
+  bool _isWorkerReady;
   Worker _worker;
   _GoogleMapController _googleMapController;
   GlobalKey<GoogleMapScreenState> _key;
 
   _GoogleMapDebuggerState(Worker worker)
   {
+    _isWorkerReady = false;
     _worker = worker;
     _googleMapController = _GoogleMapController(worker: worker, workerLocationUpdated: onLocationReceived);
     _key = GlobalKey();
@@ -82,7 +85,11 @@ class _GoogleMapDebuggerState extends State<GoogleMapDebugger>{
     );
   }
 
+
+  // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
+  // we need to animate the camera
   void onLocationReceived(double latitude, double longitude){
-    _key.currentState.updateWorkerLocation(LatLng(latitude, longitude));
+    _key.currentState.updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
+    _isWorkerReady = true;
   }
 }

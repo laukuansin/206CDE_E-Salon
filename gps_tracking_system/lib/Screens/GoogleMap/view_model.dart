@@ -56,7 +56,7 @@ class ViewModel
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-  Future<void> initRoute({bool animateCamera = true}) async
+  Future<void> initRoute({bool isWorkerReady = true}) async
   {
     if(_carMarkerIcon == null){
       _carMarkerIcon = await _getBytesFromAsset('assets/images/car.png', _CAR_MARKER_SIZE);
@@ -64,11 +64,11 @@ class ViewModel
 
     _customerLatLng = await MapHelper.addressToLatLng(customerAddress);
 
-    _calcDurationDistance(); // Async but i dont care if you slow, so no need await
+    _calcDurationDistance(); // Async but i don't care if you slow, so no need await
     updateMarkerLocation();
-    // Wait map created
 
-    if(animateCamera) {
+    // Animate camera if worker lat lng not ready
+    if(!isWorkerReady) {
       animateCameraToRouteBound();
     }
 
@@ -76,10 +76,10 @@ class ViewModel
     _callBackNotifyChanges();
   }
 
-  Future<void> updateWorkerLocation(LatLng newWorkerLatLng)async{
+  void updateWorkerLocation(bool isWorkerReady, LatLng newWorkerLatLng){
     _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
     this.workerLatLng = newWorkerLatLng;
-    await initRoute(animateCamera: false);
+    initRoute(isWorkerReady: isWorkerReady);
   }
 
   void updateMarkerLocation(){

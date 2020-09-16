@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gps_tracking_system/Model/Worker.dart' as MyWorker;
 import 'package:gps_tracking_system/Utility/rest_api.dart';
@@ -48,6 +50,7 @@ class RealTimeDb{
   {
     if(callBack == null) return;
 
+    // Firebase will automatically call this at first time even without changing value
     _db .child(GROUP_WORKER)
         .child(workerId)
         .onValue

@@ -18,7 +18,7 @@ class User{
 
   static bool authenticate(String email, String password){
     if(_user == null)
-      _user = User._(email, Role.CUSTOMER);
+      _user = User._(email, Role.WORKER);
     return true;
   }
 
