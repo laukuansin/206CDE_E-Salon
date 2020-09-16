@@ -64,16 +64,12 @@ class ViewModel
 
     _customerLatLng = await MapHelper.addressToLatLng(customerAddress);
 
-    if(_timer % _REFRESH_RATE == 0) {
-      final Future<void> calculateDistanceFuture = _calcDurationDistance();
-      await calculateDistanceFuture;
-    }
-    
+    _calcDurationDistance(); // Async but i dont care if you slow, so no need await
     updateMarkerLocation();
     // Wait map created
-    GoogleMapController controller = await _mapControllerCompleter.future;
+
     if(animateCamera) {
-      _animateCameraToRouteBound(controller);
+      animateCameraToRouteBound();
     }
 
     _timer ++;
@@ -181,8 +177,9 @@ class ViewModel
     }
   }
 
-  void _animateCameraToRouteBound(GoogleMapController controller)
+  void animateCameraToRouteBound() async
   {
+    GoogleMapController controller = await _mapControllerCompleter.future;
     double maxLat, minLat, maxLon, minLon;
     maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
     maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);

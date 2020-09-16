@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/color.dart';
+import 'package:gps_tracking_system/components/rounded_button.dart';
 import 'Components/map_navigation_panel.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
 
@@ -31,7 +33,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Size bottomBarSize = Size(screenSize.width, screenSize.height * 0.18);
+    // Size bottomBarSize = Size(screenSize.width, screenSize.height * 0.18);
 
     return Scaffold(
       body:Container(
@@ -44,13 +46,28 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
               child:viewModel.buildMap()
             ),
             Positioned(
-              bottom:0,
-              child: MapNavigationPanel(
-                bottomBarSize: bottomBarSize,
-                navigationButton: viewModel.buildNavigationButton(),
-                totalDistance: viewModel.getTotalDistance(),
-                totalDuration: viewModel.getTotalDurations(),)
-            ),
+              right:50,
+              bottom: 50,
+              child: FlatButton(
+                child: Icon(
+                  Icons.location_searching,
+                  color: primaryColor,
+                ),
+                onPressed: (){
+                  viewModel.animateCameraToRouteBound();
+                }
+              )
+            )
+
+            // Too ugly so comment first
+            // Positioned(
+            //   bottom:0,
+            //   child: MapNavigationPanel(
+            //     bottomBarSize: bottomBarSize,
+            //     navigationButton: viewModel.buildNavigationButton(),
+            //     totalDistance: viewModel.getTotalDistance(),
+            //     totalDuration: viewModel.getTotalDurations(),)
+            // ),
           ]
         )
       )
