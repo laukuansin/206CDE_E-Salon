@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -30,7 +32,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       body:Container(
         width :screenSize.width,
@@ -43,7 +44,7 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
             ),
             Positioned(
               right:screenSize.width * 0.02,
-              bottom: screenSize.height * 0.05,
+              top: screenSize.height * 0.04,
               child:Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),

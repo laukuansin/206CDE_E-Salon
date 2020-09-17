@@ -203,17 +203,17 @@ class ViewModel
     );
   }
 
-  GoogleMap buildMap()=>
-    GoogleMap(
-      mapType: MapType.normal,
-      markers: markerSet,
-      onMapCreated:setGoogleMapController,
-      zoomControlsEnabled: false,
-      initialCameraPosition: CameraPosition(
-        target:workerLatLng,
-        zoom:_INITIAL_CAMERA_ZOOM_RATIO,
-      )
+  GoogleMap buildMap() => GoogleMap(
+        mapType: MapType.normal,
+        markers: markerSet,
+        onMapCreated: setGoogleMapController,
+        zoomControlsEnabled: false,
+        initialCameraPosition: CameraPosition(
+          target: workerLatLng,
+          zoom: _INITIAL_CAMERA_ZOOM_RATIO,
+        )
     );
+
 
   RoundedButton buildNavigationButton()=>
     RoundedButton(
