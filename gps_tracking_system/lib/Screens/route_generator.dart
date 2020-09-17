@@ -7,45 +7,32 @@ import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
 
 class RouteGenerator{
 
-  static const bool _DEBUG_MODE = true;
+  static const bool _DEBUG_MODE = false;
+
+  static MaterialPageRoute _buildWidget(Widget widget, {AppBar appbar})=>MaterialPageRoute(
+      builder: (_)=> Scaffold(
+        appBar: appbar,
+        body: SafeArea(
+        child:widget
+      ),
+    )
+  );
 
   static Route<dynamic> generateRoute(RouteSettings settings)
   {
     final args = settings.arguments;
-
     if(_DEBUG_MODE){
       switch(settings.name) {
-        case "/appointmentList":
-          return MaterialPageRoute(
-            builder: (_)=>Scaffold(
-              body: AppointmentListScreen(),
-            )
-          );
+
       }
     }
     else{
       switch(settings.name)
       {
-        case"/":
-          return MaterialPageRoute(
-              builder: (_)=>Scaffold(
-                body: SplashScreen(),
-              )
-          );
-
-        case "/login":
-          return MaterialPageRoute(
-              builder:(_)=>Scaffold(
-                  body:LoginPage()
-              )
-          );
-        case "/appointmentInfo":
-          return MaterialPageRoute(
-              builder: (_) =>
-                  Scaffold(
-                    body: AppointmentInfo(),
-                  )
-          );
+        case"/"                 :return _buildWidget(SplashScreen());
+        case "/login"           :return _buildWidget(LoginPage());
+        case "/appointmentInfo" :return _buildWidget(AppointmentInfo());
+        case "/appointmentList" :return _buildWidget(AppointmentListScreen());
       }
     }
   }

@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                             return;
                           }
                           _formKey.currentState.save();
-                          Navigator.of(context).pushReplacementNamed("/appointmentInfo");
+                          Navigator.of(context).pushReplacementNamed("/appointmentList");
                         },
                       )
                     ],

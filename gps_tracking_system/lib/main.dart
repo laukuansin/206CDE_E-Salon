@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: mainFont
       ),
-      initialRoute: "/appointmentList",
+      initialRoute: "/",
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

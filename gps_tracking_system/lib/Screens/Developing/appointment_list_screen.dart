@@ -1,10 +1,9 @@
-
+import 'dart:math';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/custom_table_calendar.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class AppointmentListScreen extends StatefulWidget{
@@ -13,73 +12,64 @@ class AppointmentListScreen extends StatefulWidget{
 }
 
 class _AppointmentListState extends State<AppointmentListScreen>{
-  CalendarController _calendarController = CalendarController();
+  //Config
+  static const _TIMELINE_LINE_XY = 0.27;
+  static const _TIMELINE_INDICATOR_WIDTH = 35.0;
+  static const _TIMELINE_INDICATOR_PADDING = 4.0;
+  static const _TIMELINE_MARGIN_BETWEEN_BUBBLE = 10.0;
+  static const _TIMELINE_THICKNESS = 2.0;
+
   final List<Color> colorList = [Colors.cyan, Colors.orangeAccent, Colors.greenAccent, Colors.pinkAccent, Colors.green];
-
-  @override
-  void initState() {
-    super.initState();
-    _calendarController = CalendarController();
-  }
-
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
-  }
+  final List<List<String>> steps = [
+    ["9.00am", "Emilie khor"],
+    ["10.00am", "Jeffrey Tan"],
+    ["11.00am", "Lau Kuan Sin"],
+    ["12.00pm", "Pey Xin Yi"],
+    ["1.00pm", "Chuang Jing Yee"],
+    ["2.00pm", "Yuki Lim Qian Xing"],
+    ["3.00pm", "Kok Heng"],
+    ["4.00pm", "Shahriman"],
+    ["5.00pm", "Tan Hoe Theng"],
+    ["6.00pm", "Anonymous"],
+    ["7.00pm", "Shou Jin"],
+    ["8.00pm", "Leong Yong peng"],
+    ["9.00pm", "Leow Jie Han"],
+    ["10.00pm", "My brother"],
+  ];
 
   @override
   Widget build(BuildContext context) {
-    double statusBarHeight = MediaQuery.of(context).padding.top;
     Size screenSize = MediaQuery.of(context).size;
-    final List<List<String>> steps = [
-      ["9.00am", "Emilie khor"],
-      ["10.00am", "Jeffrey Tan"],
-      ["11.00am", "Lau Kuan Sin"],
-      ["12.00pm", "Pey Xin Yi"],
-      ["1.00pm", "Chuang Jing Yee"],
-      ["2.00pm", "Yuki Lim Qian Xing"],
-      ["3.00pm", "Kok Heng"],
-      ["4.00pm", "Shahriman"],
-      ["5.00pm", "Tan Hoe Theng"],
-      ["6.00pm", "Anonymous"],
-      ["7.00pm", "Shou Jin"],
-      ["8.00pm", "Leong Yong peng"],
-      ["9.00pm", "Leow Jie Han"],
-      ["10.00pm", "My brother"],
-    ];
-
-    return
-      Container(
+    return Container(
         color: primaryBgColor,
         width: screenSize.width,
         height: screenSize.height,
-        margin:EdgeInsets.only(top: statusBarHeight),
+        // margin:EdgeInsets.only(top: statusBarHeight),
         child:Column(
           children: [
             Container(
-                color: primaryLightColor,
-                child: Column(
-                    children: <Widget>[
-                      CustomTableCalendar(event: Map<DateTime, List>(), holiday: Map<DateTime, List>()),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05, vertical: screenSize.height * 0.02),
-                        alignment: Alignment.centerRight,
-                        child:Row(
-                        children:[
-                          Text(
-                            "4 appointments today..",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: primaryColor
-                            ),
+              color: primaryLightColor,
+              child: Column(
+                children: <Widget>[
+                  CustomTableCalendar(event: Map<DateTime, List>(), holiday: Map<DateTime, List>()),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05, vertical: screenSize.height * 0.02),
+                    alignment: Alignment.centerRight,
+                    child:Row(
+                      children:[
+                        Text(
+                          "4 appointments today..",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: primaryColor
                           ),
-                          Icon(Icons.assignment, color: primaryColor,),
-                        ]
-                      )
+                        ),
+                        Icon(Icons.assignment, color: primaryColor,),
+                      ]
                     )
-                  ]
-                )
+                  )
+                ]
+              )
             ),
             Expanded(
               child: ListView.builder(
@@ -89,6 +79,8 @@ class _AppointmentListState extends State<AppointmentListScreen>{
                     final List<String> step = steps[index];
                     if(index == 0)
                       return buildTimeLineTile(index, time: step[0], text: step[1], isFirst: true);
+                    if(index == steps.length - 1)
+                      return buildTimeLineTile(index, time: step[0], text: step[1], isLast: true);
                     return buildTimeLineTile(index, time: step[0], text: step[1]);
                 },
               )
@@ -104,13 +96,13 @@ class _AppointmentListState extends State<AppointmentListScreen>{
       alignment: TimelineAlign.manual,
       isFirst: isFirst,
       isLast: isLast,
-      lineXY: 0.26,
+      lineXY: _TIMELINE_LINE_XY,
 
       indicatorStyle: IndicatorStyle(
-        width: 35,
+        width: _TIMELINE_INDICATOR_WIDTH,
         padding: EdgeInsets.only(
-          left: 4,
-          right: 4,
+          left: _TIMELINE_INDICATOR_PADDING,
+          right: _TIMELINE_INDICATOR_PADDING,
         ),
 
         indicator: Container(
@@ -118,57 +110,59 @@ class _AppointmentListState extends State<AppointmentListScreen>{
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
-            border: Border.all(color: primaryColor)
+            border: Border.all(color: colorList[index % colorList.length])
           ),
 
           child: Text(
             text[0].toUpperCase(),
             style: TextStyle(
-              color: primaryColor,
+              color: colorList[index % colorList.length],
             ),
           ),
         )
       ),
 
       startChild: Container(
-          height: 50,
-          alignment: Alignment.centerRight,
-          child:Text(
-              time,
-              style: TextStyle(
-                color:primaryColor
-            ),
-          )
+        alignment: Alignment.centerRight,
+        child:Text(
+          time,
+          style: TextStyle(
+            color:primaryColor
+          ),
+        )
       ),
 
       endChild:Container(
-        // padding: EdgeInsets.only(top:25),
-        constraints: BoxConstraints(
-            minHeight: 75
-        ),
-        child:Expanded(
-            child:Bubble(
-              margin: BubbleEdges.only(top: 10),
-              nip: BubbleNip.no,
-              child: Text(
-                  text,
-                  style: TextStyle(
-                  color: Colors.white
+        margin: EdgeInsets.symmetric(vertical: _TIMELINE_MARGIN_BETWEEN_BUBBLE),
+        child:Row(
+          children:[
+            Expanded(
+              child:GestureDetector(
+                onTap: (){Navigator.of(context).pushNamed("/appointmentInfo");},
+                child:Bubble(
+                  nip: BubbleNip.no,
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                    color: Colors.white
+                  ),
                 ),
-              ),
-              color: colorList[index % colorList.length],
+                color: colorList[index % colorList.length],
+                ),
+              )
             ),
+          ]
         ),
       ),
 
-      beforeLineStyle: const LineStyle(
-        color:primaryColor,
-        thickness: 2
+      beforeLineStyle: LineStyle(
+        color:colorList[max(0, index - 1) % colorList.length],
+        thickness: _TIMELINE_THICKNESS
       ),
 
-      afterLineStyle: const LineStyle(
-          color: primaryColor,
-        thickness: 2
+      afterLineStyle: LineStyle(
+        color: colorList[index % colorList.length],
+        thickness: _TIMELINE_THICKNESS
       ),
     );
 }
