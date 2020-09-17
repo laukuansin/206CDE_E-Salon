@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
         labelText: "Email"
       ),
       validator: (email){
-        // return null;
+        return null;
         if(email.isEmpty){
           return "Email is required";
         }
@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
         )
       ),
       validator: (password){
-        // return null;
+        return null;
         if(password.isEmpty){
           return "Password is required";
         }
