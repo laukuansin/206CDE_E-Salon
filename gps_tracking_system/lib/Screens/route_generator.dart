@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Screens/Login/login.dart';
 import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
+import 'package:gps_tracking_system/Screens/Calendar/calendar.dart';
 
 class RouteGenerator{
   static Route<dynamic> generateRoute(RouteSettings settings)
@@ -19,7 +20,7 @@ class RouteGenerator{
       case "/login":
         return MaterialPageRoute(
           builder:(_)=>Scaffold(
-            body:LoginPage()
+            body:CalendarPage(),
           )
         );
     }
