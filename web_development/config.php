@@ -1,16 +1,16 @@
 <?php
 // HTTP
-//define('HTTP_SERVER', 'http://localhost/upload/');
-define('HTTP_SERVER', '');
+define('HTTP_SERVER', 'http://localhost/');
+// define('HTTP_SERVER', '');
 
 // HTTPS
-// define('HTTPS_SERVER', 'http://localhost/upload/');
-define('HTTPS_SERVER', '');
+define('HTTPS_SERVER', 'http://localhost/');
+// define('HTTPS_SERVER', '');
 
 // DIR
-define('DIR_APPLICATION', '/opt/lampp/htdocs/upload/catalog/');
-define('DIR_SYSTEM', '/opt/lampp/htdocs/upload/system/');
-define('DIR_IMAGE', '/opt/lampp/htdocs/upload/image/');
+define('DIR_APPLICATION', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/catalog/');
+define('DIR_SYSTEM', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/system/');
+define('DIR_IMAGE', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/image/');
 define('DIR_STORAGE', DIR_SYSTEM . 'storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
