@@ -1,41 +1,59 @@
 <?php
 namespace Template;
 final class Twig {
+	private $twig;
 	private $data = array();
-
+	
+	public function __construct() {
+		// // include and register Twig auto-loader
+		// include_once(DIR_SYSTEM . 'library/template/Twig/Autoloader.php');
+		
+		// \Twig_Autoloader::register();	
+	}
+	
 	public function set($key, $value) {
 		$this->data[$key] = $value;
 	}
 	
-	public function render($filename, $code = '') {
-		if (!$code) {
-			$file = DIR_TEMPLATE . $filename . '.twig';
-
-			if (is_file($file)) {
-				$code = file_get_contents($file);
-			} else {
-				throw new \Exception('Error: Could not load template ' . $file . '!');
-				exit();
-			}
+	public function render($template, $cache = false, $template_name) {
+		$file = DIR_TEMPLATE . $template . '.tpl';
+		
+		if($template_name == 'fastor') {
+			$file = str_replace("default/","fastor/",$file);
 		}
+		
+		if (is_file($file)) {
+			
+			extract($this->data);
 
-		// initialize Twig environment
-		$config = array(
-			'autoescape'  => false,
-			'debug'       => false,
-			'auto_reload' => true,
-			'cache'       => DIR_CACHE . 'template/'
-		);
+			ob_start();
 
-		try {
-			$loader = new \Twig\Loader\ArrayLoader(array($filename . '.twig' => $code));
+			require($file);
 
-			$twig = new \Twig\Environment($loader, $config);
-
-			return $twig->render($filename . '.twig', $this->data);
-		} catch (Exception $e) {
-			trigger_error('Error: Could not load template ' . $filename . '!');
-			exit();
-		}	
+			return ob_get_clean();
+		} else {
+			// specify where to look for templates
+			$loader = new \Twig_Loader_Filesystem(DIR_TEMPLATE);	
+			
+			// initialize Twig environment
+			$config = array('autoescape' => false);
+			
+			// initialize Twig environment
+			if ($cache) {
+				$config['cache'] = DIR_CACHE;
+			}
+			
+			$this->twig = new \Twig_Environment($loader, $config);
+			
+			try {
+				// load template
+				$template = $this->twig->loadTemplate($template . '.twig');
+				
+				return $template->render($this->data);
+			} catch (Exception $e) {
+				trigger_error('Error: Could not load template ' . $template . '!');
+				exit();	
+			}	
+		}
 	}	
 }

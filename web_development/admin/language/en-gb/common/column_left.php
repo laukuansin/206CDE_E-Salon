@@ -42,7 +42,6 @@ $_['text_option']               = 'Options';
 $_['text_order']                = 'Orders';
 $_['text_order_status']         = 'Order Statuses';
 $_['text_online']               = 'Who\'s Online';
-$_['text_on_site_services']     = 'On Site Service';
 $_['text_product']              = 'Products';
 $_['text_reports']              = 'Reports';
 $_['text_review']               = 'Reviews';

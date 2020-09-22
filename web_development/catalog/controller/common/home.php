@@ -9,17 +9,13 @@ class ControllerCommonHome extends Controller {
 			$this->document->addLink($this->config->get('config_url'), 'canonical');
 		}
 
-		$data['hairService'] = DIR_IMAGE."services/hairService.jpg";
-		// $data['column_left'] = $this->load->controller('common/column_left');
-		// $data['column_right'] = $this->load->controller('common/column_right');
-		// $data['content_top'] = $this->load->controller('common/content_top');
-		// $data['content_bottom'] = $this->load->controller('common/content_bottom');
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['content_top'] = $this->load->controller('common/content_top');
+		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
-		$data['header'] = $this->load->controller('common/header_home');
-		$data['img_hair_service'] = DIR_IMAGE."services/hairService.jpg";
-		$data['img_scalp_service'] = DIR_IMAGE."services/scalpservices.png";
-		$data['img_nail_service'] = DIR_IMAGE."services/nailservice.jpeg";
-		$data['appointment'] = $this->url->link('appointment/make_appointment', '', true);
+		$data['header'] = $this->load->controller('common/header');
+
 		$this->response->setOutput($this->load->view('common/home', $data));
 	}
 }

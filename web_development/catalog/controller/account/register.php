@@ -214,6 +214,7 @@ class ControllerAccountRegister extends Controller {
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
 
+		// echo "<pre>". var_dump($data) ."</pre>";
 		$this->response->setOutput($this->load->view('account/register', $data));
 	}
 
