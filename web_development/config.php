@@ -10,7 +10,7 @@ define('HTTPS_SERVER', 'http://localhost/');
 // DIR
 define('DIR_APPLICATION', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/catalog/');
 define('DIR_SYSTEM', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/system/');
-define('DIR_IMAGE', 'C:/Users/Jeffrey Tan/Desktop/GPSTracker/RealWorldProject/web_development/image/');
+define('DIR_IMAGE', '/image/');
 define('DIR_STORAGE', DIR_SYSTEM . 'storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');

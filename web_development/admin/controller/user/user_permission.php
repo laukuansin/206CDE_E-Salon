@@ -337,7 +337,7 @@ class ControllerUserUserPermission extends Controller {
 				// Add the file to the files to be deleted array
 				if (is_file($file)) {
 					$files[] = $file;
-				}
+				} 
 			}
 		}
 

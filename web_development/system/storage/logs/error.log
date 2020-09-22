@@ -53,3 +53,106 @@
 2020-09-19 14:31:03 - PHP Notice:  Trying to access array offset on value of type bool in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\startup\startup.php on line 166
 2020-09-19 14:33:24 - PHP Notice:  Trying to access array offset on value of type bool in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\startup\startup.php on line 166
 2020-09-19 14:33:24 - PHP Notice:  Trying to access array offset on value of type bool in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\startup\startup.php on line 166
+2020-09-20 2:24:42 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\common\home.php on line 19
+2020-09-20 2:24:51 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\common\home.php on line 19
+2020-09-20 2:24:53 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\common\home.php on line 19
+2020-09-20 14:32:26 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\appointment\make_appointment.php on line 11
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'code' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'direction' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'date_format_short' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'date_format_long' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'time_format' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'datetime_format' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'decimal_point' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'thousand_point' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_home' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_yes' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_no' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_none' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_select' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_all_zones' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_pagination' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_loading' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'text_no_results' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_address_add' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_back' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_continue' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_cart' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_cancel' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_compare' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_wishlist' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_checkout' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_confirm' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_coupon' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_delete' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_download' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_edit' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_filter' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_new_address' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_change_address' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_reviews' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_write' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_login' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_update' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_remove' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_reorder' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_return' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_shopping' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_search' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_shipping' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_submit' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_guest' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_view' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_voucher' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_upload' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_reward' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_quote' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_list' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_grid' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'button_map' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_exception' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_1' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_2' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_3' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_4' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_6' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_7' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_8' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_upload_999' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'error_curl' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'datepicker' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Illegal string offset 'backup' in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Notice:  Array to string conversion in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\event\language.php on line 6
+2020-09-20 14:32:40 - PHP Warning:  Invalid argument supplied for foreach() in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\system\storage\modification\system\engine\loader.php on line 121
+2020-09-20 14:32:59 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\appointment\make_appointment.php on line 10
+2020-09-20 14:32:59 - PHP Notice:  Trying to access array offset on value of type null in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\appointment\make_appointment.php on line 10
+2020-09-20 14:32:59 - PHP Notice:  Undefined variable: data in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\appointment\make_appointment.php on line 11
+2020-09-21 4:11:42 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:11:42 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:11:42 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:11:42 - PHP Notice:  Undefined index: password in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:11:42 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 177
+2020-09-21 4:11:52 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:11:52 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:11:52 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:11:52 - PHP Notice:  Undefined index: password in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:11:52 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 177
+2020-09-21 4:12:29 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:12:29 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:12:29 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:29 - PHP Notice:  Undefined index: password in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:29 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 177
+2020-09-21 4:12:35 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:12:35 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:12:35 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:35 - PHP Notice:  Undefined index: password in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:35 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 177
+2020-09-21 4:12:37 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:12:37 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:12:37 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:37 - PHP Notice:  Undefined index: password in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 174
+2020-09-21 4:12:37 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 177
+2020-09-21 4:13:15 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:13:15 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167
+2020-09-21 4:13:24 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 160
+2020-09-21 4:13:24 - PHP Notice:  Undefined index: email in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\catalog\controller\account\login.php on line 167

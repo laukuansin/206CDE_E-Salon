@@ -9,7 +9,7 @@
   {% if error_warning %}
   <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
   {% endif %}
-  <div class="row">{{ column_left }}
+  <div class="row">
     {% if column_left and column_right %}
     {% set class = 'col-sm-6' %}
     {% elseif column_left or column_right %}
@@ -17,7 +17,7 @@
     {% else %}
     {% set class = 'col-sm-12' %}
     {% endif %}
-    <div id="content" class="{{ class }}">{{ content_top }}
+    <div id="content" class="{{ class }}">
       <h1>{{ heading_title }}</h1>
       <p>{{ text_account_already }}</p>
       <form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
@@ -256,27 +256,7 @@
               {% endif %} </div>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>{{ text_newsletter }}</legend>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">{{ entry_newsletter }}</label>
-            <div class="col-sm-10"> {% if newsletter %}
-              <label class="radio-inline">
-                <input type="radio" name="newsletter" value="1" checked="checked" />
-                {{ text_yes }}</label>
-              <label class="radio-inline">
-                <input type="radio" name="newsletter" value="0" />
-                {{ text_no }}</label>
-              {% else %}
-              <label class="radio-inline">
-                <input type="radio" name="newsletter" value="1" />
-                {{ text_yes }}</label>
-              <label class="radio-inline">
-                <input type="radio" name="newsletter" value="0" checked="checked" />
-                {{ text_no }}</label>
-              {% endif %} </div>
-          </div>
-        </fieldset>
+        
         {{ captcha }}
         {% if text_agree %}
         <div class="buttons">
@@ -299,7 +279,7 @@
         {% endif %}
       </form>
       {{ content_bottom }}</div>
-    {{ column_right }}</div>
+    </div>
 </div>
 <script type="text/javascript"><!--
 // Sort the custom fields

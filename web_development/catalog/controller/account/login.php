@@ -151,7 +151,7 @@ class ControllerAccountLogin extends Controller {
 		$data['content_bottom'] = $this->load->controller('common/content_bottom');
 		$data['footer'] = $this->load->controller('common/footer');
 		$data['header'] = $this->load->controller('common/header');
-
+		$data['bg_image'] = DIR_IMAGE.'bg/hair-salon-bg.jpg';
 		$this->response->setOutput($this->load->view('account/login', $data));
 	}
 

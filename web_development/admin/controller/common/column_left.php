@@ -236,6 +236,15 @@ class ControllerCommonColumnLeft extends Controller {
 			
 			// Sales
 			$sale = array();
+
+			if ($this->user->hasPermission('access', 'sale/on_site_service')) {
+				$sale[] = array(
+					'name'	   => $this->language->get('text_on_site_services'),
+					'href'     => $this->url->link('sale/on_site_service', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			
 			
 			if ($this->user->hasPermission('access', 'sale/order')) {
 				$sale[] = array(
