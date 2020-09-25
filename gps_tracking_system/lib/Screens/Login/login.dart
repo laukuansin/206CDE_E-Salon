@@ -117,12 +117,37 @@ class _LoginPageState extends State<LoginPage> {
                           }
                           _formKey.currentState.save();
                         },
-                      )
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Don't have an account ? ",
+                            style: TextStyle(
+                                color: Colors.grey[400],
+                                fontSize: 12
+                            )
+                          ),
+                          GestureDetector(
+                            onTap : (){
+                              Navigator.of(context).pushReplacementNamed("/signUp");
+                            },
+                            child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold
+                                )
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   )
                 )
               )
-            ],
+            ], // children
           ),
         )
       )
