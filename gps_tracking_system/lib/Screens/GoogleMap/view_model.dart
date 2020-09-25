@@ -36,11 +36,10 @@ class ViewModel
   Uint8List _carMarkerIcon; double _carMarkerIconRotation;
   String customerAddress;
   LatLng _customerLatLng, workerLatLng;
-  int _totalDistanceInMeter, _totalDurationInSeconds, _timer;
+  int _totalDistanceInMeter, _totalDurationInSeconds;
 
   ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
         _customerLatLng = LatLng(0,0),
-        _timer = 0,
         _carMarkerIconRotation = 0,
         _callBackNotifyChanges = notifyChanges,
         _callBackShowAlertDialog = showAlertDialog,
@@ -72,7 +71,6 @@ class ViewModel
       animateCameraToRouteBound();
     }
 
-    _timer ++;
     _callBackNotifyChanges();
   }
 
@@ -96,7 +94,7 @@ class ViewModel
     // Add src marker
     markerSet.add(
       Marker(
-        markerId: MarkerId("origin"),
+        markerId: MarkerId(_MARKER_ORIGIN_ID),
         rotation: _carMarkerIconRotation,
         position: workerLatLng,
         draggable: false,

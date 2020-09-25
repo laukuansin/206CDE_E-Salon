@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Model/Location.dart';
-import 'package:gps_tracking_system/Screens/Developing/add_appointment_select_location.dart';
+import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Screens/LocationPicker/location_picker.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -106,14 +109,9 @@ class AddAppointmentState extends State<AddAppointment> {
                   Icon(Icons.chevron_right)
                 ])),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return AddAppointmentSelectLocation(location: this.location);
-              })).then((value) {
-                if (value != null) {
-                  setState(() {
-                    this.location = value;
-                  });
-                }
+              Navigator.of(context).pushNamed('/add_appointment_select_location', arguments: this.location).
+              then((value){
+                setState(() {});
               });
             },
           ),

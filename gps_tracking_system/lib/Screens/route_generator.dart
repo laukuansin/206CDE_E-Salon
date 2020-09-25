@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/Screens/Developing/add_appointment.dart';
-import 'package:gps_tracking_system/Screens/Developing/add_appointment_select_location.dart';
+import 'package:gps_tracking_system/Model/Location.dart';
 import 'package:gps_tracking_system/Screens/Developing/appointment_info_screen.dart';
 import 'package:gps_tracking_system/Screens/Developing/appointment_list_screen.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
+import 'package:gps_tracking_system/Screens/AddAppointment/add_appointment.dart';
+import 'package:gps_tracking_system/Screens/LocationPicker/location_picker.dart';
 import 'package:gps_tracking_system/Screens/Login/login.dart';
 import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
 
@@ -31,11 +32,14 @@ class RouteGenerator{
     else{
       switch(settings.name)
       {
-        case"/"                 :return _buildWidget(SplashScreen());
-        case "/login"           :return _buildWidget(LoginPage());
-        case "/appointmentInfo" :return _buildWidget(AppointmentInfo());
-        case "/appointmentList" :return _buildWidget(AppointmentListScreen());
-        case "/add_appointment_select_location": return _buildWidget(AddAppointmentSelectLocation());
+        case"/"                                 :return _buildWidget(SplashScreen());
+        case "/login"                           :return _buildWidget(LoginPage());
+        case "/appointmentInfo"                 :return _buildWidget(AppointmentInfo());
+        case "/appointmentList"                 :return _buildWidget(AppointmentListScreen());
+        case "/add_appointment"                 :return _buildWidget(AddAppointment());
+        case "/add_appointment_select_location" :
+          if(args is Location)
+            return _buildWidget(LocationPicker(args));
       }
     }
   }
