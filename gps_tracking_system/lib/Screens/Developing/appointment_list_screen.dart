@@ -254,5 +254,4 @@ class _AppointmentListState extends State<AppointmentListScreen>{
 
     );
   }
-
 }

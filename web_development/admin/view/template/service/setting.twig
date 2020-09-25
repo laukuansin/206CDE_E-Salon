@@ -1,0 +1,90 @@
+{{ header }}{{ column_left }}
+
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" id="button-save" form="form-setting" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+  	<div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+	    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-setting" class="form-horizontal">
+        <div class='form-group'>
+          <label class="col-sm-2 control-label">Business hour</label>
+          <div class='col-sm-10'>
+            <div class='well well-sm' style='overflow:auto;'>
+              {% for day,data in business_hour %}
+              <div class='checkbox form-inline' id='{{'container-'~day}}'>
+                  <div class='col-md-2'>
+                    {% if data['is_open'] == true %}
+                      <input type='checkbox' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]' checked onclick="
+                      $('#{{'container-'~day}} *').prop('disabled', !this.checked);
+                      $(this).prop('disabled', false);
+                      " 
+                      />
+                    {% else %}
+                      <input type='checkbox' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]'
+                      onclick="
+                      $('#{{'container-'~day}} *').prop('disabled', !this.checked);
+                      $(this).prop('disabled', false);
+                      " />
+                    {% endif %}
+                    <label class='control-label' for='{{'checkBox-'~day}}'>{{day}}</label>
+                  </div>
+                  <input type='text' class='form-control'name='business_hour[{{day}}][start_time]'  value='{{data["start_time"]}}'/>
+                  <select class='form-control' name='business_hour[{{day}}][start_meridiem]'>
+                    {% if data['start_meridiem'] == text_am %}
+                      <option value='{{text_am}}' selected>{{text_am}}</option>
+                      <option value='{{text_pm}}'>{{text_pm}}</option>
+                    {% else %}
+                      <option value='{{text_am}}'>{{text_am}}</option>
+                      <option value='{{text_pm}}'selected>{{text_pm}}</option>
+                    {% endif %}
+                  </select>
+                  <label class='control-label' style="margin-right:12px">{{text_to}}</label>
+                  <input type='text' class='form-control' name='business_hour[{{day}}][end_time]' value='{{data['end_time']}}' />
+                  <select class='form-control' name='business_hour[{{day}}][end_meridiem]'>
+                    {% if data['end_meridiem'] == text_am %}
+                      <option value='{{text_am}}' selected>{{text_am}}</option>
+                      <option value='{{text_pm}}'>{{text_pm}}</option>
+                    {% else %}
+                      <option value='{{text_am}}'>{{text_am}}</option>
+                      <option value='{{text_pm}}'selected>{{text_pm}}</option>
+                    {% endif %}
+                  </select>
+              </div>
+              {% endfor %}
+            </div>
+
+            <button type="button" onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="btn btn-link">{{ text_select_all }}</button> / 
+            <button type="button" onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="btn btn-link">{{ text_unselect_all }}</button>
+          </div>
+        </div>
+
+	    	<div class='form-group required'>
+	    		<label class="control-label col-sm-2" for="input-cancellation-time">Cancellation Time </label>
+	    		<div class='col-sm-10'>
+	    			<input type='text' id="input-cancellation-time" name="cancellation_time" value='{{cancellation_time}}' class='form-control'>
+             {% if error_cancellation_time %}
+                <div class="text-danger">{{ error_cancellation_time }}</div>
+              {% endif %}
+	    		</div>
+	    	</div>
+
+	    </form>
+    </div>
+  </div>
+</div>
+
+{{ footer }}

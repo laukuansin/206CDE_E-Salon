@@ -32,6 +32,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     _key = GlobalKey();
   }
 
+<<<<<<< HEAD
   Widget indicator(){
     return Container(
       color: primaryLightColor,
@@ -53,6 +54,8 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     );
   }
 
+=======
+>>>>>>> development
   Widget buildDateDay(Size screenSize){
     return Expanded(
       flex: 1,
@@ -82,7 +85,11 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     return Container(
       width: screenSize.width,
       color: primaryLightColor,
+<<<<<<< HEAD
       padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.021),
+=======
+      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.02),
+>>>>>>> development
       child:Row(
         children: <Widget>[
           buildDateDay(screenSize),
@@ -215,7 +222,10 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
           color: primaryBgColor,
           child:Column(
             children: [
+<<<<<<< HEAD
               indicator(),
+=======
+>>>>>>> development
               buildTopPanel(screenSize),
               SizedBox(height: screenSize.height * 0.01,),
               buildPanelBasicInformation(screenSize),
@@ -225,14 +235,22 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
           ),
         ),
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> development
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24.0),
             topRight: Radius.circular(24.0),
           ),
+<<<<<<< HEAD
           maxHeight: screenSize.height * 0.75,
           minHeight: screenSize.height * 0.15,
+=======
+          maxHeight: screenSize.height,
+          minHeight: screenSize.height * 0.12,
+>>>>>>> development
           defaultPanelState: PanelState.OPEN,
         )
       );
