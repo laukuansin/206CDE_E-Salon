@@ -128,6 +128,33 @@ class ControllerCommonColumnLeft extends Controller {
 				);		
 			}
 			
+			// Service
+			$service = array();
+			if ($this->user->hasPermission('access', 'service/setting')) {		
+				$service[] = array(
+					'name'	   => $this->language->get('text_setting'),
+					'href'     => $this->url->link('service/setting', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);					
+			}
+
+			if ($this->user->hasPermission('access', 'service/services')) {		
+				$service[] = array(
+					'name'	   => $this->language->get('text_services'),
+					'href'     => $this->url->link('service/services', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);					
+			}
+			if ($service) {					
+				$data['menus'][] = array(
+					'id'       => 'menu-service',
+					'icon'	   => 'fa-puzzle-piece', 
+					'name'	   => $this->language->get('text_on_site_service'),
+					'href'     => '',
+					'children' => $service
+				);		
+			}
+
 			// Extension
 			$marketplace = array();
 			
@@ -571,13 +598,14 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}
 			
-			if ($localisation) {																
-				$system[] = array(
-					'name'	   => $this->language->get('text_localisation'),
-					'href'     => '',
-					'children' => $localisation	
-				);
-			}
+			// Hide localisation, cannot disable, will cause error in user settingpage as trying  to get country
+			// if ($localisation) {																
+			// 	$system[] = array(
+			// 		'name'	   => $this->language->get('text_localisation'),
+			// 		'href'     => '',
+			// 		'children' => $localisation	
+			// 	);
+			// }
 			
 			// Tools	
 			$maintenance = array();
@@ -653,45 +681,46 @@ class ControllerCommonColumnLeft extends Controller {
 				);
 			}	
 			
-			$data['menus'][] = array(
-				'id'       => 'menu-report',
-				'icon'	   => 'fa-bar-chart-o', 
-				'name'	   => $this->language->get('text_reports'),
-				'href'     => '',
-				'children' => $report
-			);	
+			if(!empty($report)){
+				$data['menus'][] = array(
+					'id'       => 'menu-report',
+					'icon'	   => 'fa-bar-chart-o', 
+					'name'	   => $this->language->get('text_reports'),
+					'href'     => '',
+					'children' => $report
+				);	
 			
-			// Stats
-			$this->load->model('sale/order');
-	
-			$order_total = $this->model_sale_order->getTotalOrders();
-			
-			$this->load->model('report/statistics');
-			
-			$complete_total = $this->model_report_statistics->getValue('order_complete');
-			
-			if ((float)$complete_total && $order_total) {
-				$data['complete_status'] = round(($complete_total / $order_total) * 100);
-			} else {
-				$data['complete_status'] = 0;
-			}
+				// Stats
+				$this->load->model('sale/order');
+		
+				$order_total = $this->model_sale_order->getTotalOrders();
+				
+				$this->load->model('report/statistics');
+				
+				$complete_total = $this->model_report_statistics->getValue('order_complete');
+				
+				if ((float)$complete_total && $order_total) {
+					$data['complete_status'] = round(($complete_total / $order_total) * 100);
+				} else {
+					$data['complete_status'] = 0;
+				}
 
-			$processing_total = $this->model_report_statistics->getValue('order_processing');
-	
-			if ((float)$processing_total && $order_total) {
-				$data['processing_status'] = round(($processing_total / $order_total) * 100);
-			} else {
-				$data['processing_status'] = 0;
+				$processing_total = $this->model_report_statistics->getValue('order_processing');
+		
+				if ((float)$processing_total && $order_total) {
+					$data['processing_status'] = round(($processing_total / $order_total) * 100);
+				} else {
+					$data['processing_status'] = 0;
+				}
+		
+				$other_total = $this->model_report_statistics->getValue('order_other');
+		
+				if ((float)$other_total && $order_total) {
+					$data['other_status'] = round(($other_total / $order_total) * 100);
+				} else {
+					$data['other_status'] = 0;
+				}
 			}
-	
-			$other_total = $this->model_report_statistics->getValue('order_other');
-	
-			if ((float)$other_total && $order_total) {
-				$data['other_status'] = round(($other_total / $order_total) * 100);
-			} else {
-				$data['other_status'] = 0;
-			}
-			
 			return $this->load->view('common/column_left', $data);
 		}
 	}

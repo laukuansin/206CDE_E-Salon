@@ -42,10 +42,10 @@
                 <div class="checkbox">
                   <label>
                     {% if permission in access %}
-                    <input type="checkbox" name="permission[access][]" value="{{ permission }}" checked="checked" />
+                      <input type="checkbox" name="permission[access][]" value="{{ permission }}" checked="checked" />
                     {{ permission }}
                     {% else %}
-                    <input type="checkbox" name="permission[access][]" value="{{ permission }}" />
+                      <input type="checkbox" name="permission[access][]" value="{{ permission }}" />
                     {{ permission }}
                     {% endif %}
                   </label>
