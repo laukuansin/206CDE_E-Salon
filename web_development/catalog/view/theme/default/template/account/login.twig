@@ -1,0 +1,55 @@
+{{ header }}
+<div class="container-fluid mt-1" style="
+  background: url(catalog/view/theme/default/assets/img/hair_salon.jpg) no-repeat center fixed;
+  height:100vh;
+  max-width:100%;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+  z-index:-1;
+  position:fixed;">
+</div>
+<div id="container-fluid account-login" class="text-align-center mt-5" style="max-width:100%; min-height:100vh;">
+  {% if success %}
+    <div class="alert alert-success alert-dismissible">
+      <i class="fa fa-check-circle"></i> 
+      {{ success }}
+    </div>
+  {% endif %}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="card col-sm-4 p-5 text-align-center" data-aos="fade-up">
+        <h2 class="text-center">{{ text_welcome }}</h2>
+         <hr/>
+         <form action="{{ action }}" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label class="control-label" for="input-email">{{ entry_email }}</label>
+            <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="input-password">{{ entry_password }}</label>
+            <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+            <a href="{{ forgotten }}">{{ text_forgotten }}</a>
+          </div>
+
+          {% if error_warning %}
+            <div class="alert alert-danger alert-dismissible">
+              <i class="fa fa-exclamation-circle"></i> 
+              {{ error_warning }}
+            </div>
+          {% endif %}
+
+          <button type="submit" value="submit" class="btn btn-outline-primary w-100 mt-3">{{ button_login }}</button>
+          {% if redirect %}
+            <input type="hidden" name="redirect" value="{{ redirect }}" />
+          {% endif %}
+        </form>
+      </div>
+    </div>
+</div>
+</div>
+{{footer}}
+
+
+      
