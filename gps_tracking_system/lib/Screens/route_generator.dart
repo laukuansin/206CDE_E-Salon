@@ -5,6 +5,8 @@ import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/Login/login.dart';
 import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
 
+import 'Developing/AddWorker.dart';
+
 class RouteGenerator{
 
   static const bool _DEBUG_MODE = false;
@@ -33,6 +35,8 @@ class RouteGenerator{
         case "/login"           :return _buildWidget(LoginPage());
         case "/appointmentInfo" :return _buildWidget(AppointmentInfo());
         case "/appointmentList" :return _buildWidget(AppointmentListScreen());
+        case "/addworker"       :return _buildWidget(AddWorker());
+
       }
     }
   }
