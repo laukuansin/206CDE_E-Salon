@@ -16,6 +16,8 @@ class AddWorker extends StatefulWidget {
 }
 
 class AddWorkerState extends State<AddWorker> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   File fileImg;
   List<String> _listGroup, _listStatus;
   String errorMsgOfEmail, errorMsgPassword, errorMsgConfirmPassword;
@@ -28,14 +30,173 @@ class AddWorkerState extends State<AddWorker> {
       confirmPassword,
       status;
 
-  bool _validUsername,
-      _validFirstName,
-      _validLastName,
-      _validEmail,
-      _validPassword,
-      _validConfirmPassword,
-      _hiddenPassword,
+  bool _hiddenPassword,
       _hiddenConfirmPassword;
+
+  Widget _buildUserName() {
+    return TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return "Username cannot be empty";
+          }
+        },
+        onSaved: (value) {
+          username = value;
+        },
+        decoration: new InputDecoration(
+          icon: Icon(
+            Icons.person,
+            color: primaryColor,
+          ),
+          labelText: "Username",
+          errorStyle: TextStyle(fontSize: 15),
+          labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+        style: TextStyle(fontSize: 18));
+  }
+
+  Widget _buildFirstName() {
+    return TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return "First Name cannot be empty";
+        }
+      },
+      decoration: new InputDecoration(
+        icon: Icon(
+          Icons.font_download,
+          color: primaryColor,
+        ),
+        labelText: "First Name",
+        errorStyle: TextStyle(fontSize: 15),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      style: TextStyle(fontSize: 18),
+      onSaved: (value) {
+        firstName = value;
+      },
+    );
+  }
+
+  Widget _buildLastName() {
+    return TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Last Name cannot be empty";
+        }
+      },
+      decoration: new InputDecoration(
+        icon: Icon(
+          Icons.font_download,
+          color: primaryColor,
+        ),
+        labelText: "Last Name",
+        errorStyle: TextStyle(fontSize: 15),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      style: TextStyle(fontSize: 18),
+      onSaved: (value) {
+        lastName = value;
+      },
+    );
+  }
+
+  Widget _buildEmail() {
+    return TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Email cannot be empty";
+        } else {
+          if (!RegExp(
+                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(email)) {
+            return "Please enter correct format of email";
+          }
+        }
+      },
+      decoration: new InputDecoration(
+        icon: Icon(
+          Icons.email,
+          color: primaryColor,
+        ),
+        labelText: "Email",
+        errorStyle: TextStyle(fontSize: 15),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      style: TextStyle(fontSize: 18),
+      onSaved: (value) {
+        email = value;
+      },
+    );
+  }
+
+  Widget _buildPassword() {
+    return TextFormField(
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Password cannot be empty";
+        } else {
+          if (value.length < 8) {
+            return "Use 8 characters or more for your password";
+          }
+        }
+      },
+      obscureText: _hiddenPassword,
+      style: TextStyle(fontSize: 18),
+      decoration: new InputDecoration(
+        icon: Icon(
+          Icons.lock,
+          color: primaryColor,
+        ),
+        labelText: "Password",
+        errorStyle: TextStyle(fontSize: 15),
+        suffixIcon: IconButton(
+          onPressed: _toggleVisibilityPassword,
+          icon: _hiddenPassword
+              ? Icon(Icons.visibility_off)
+              : Icon(Icons.visibility),
+        ),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      onSaved: (value) {
+        password = value;
+      },
+    );
+  }
+
+  Widget _buildConfirmPassword() {
+    return TextFormField(
+      onSaved: (value) {
+        confirmPassword = value;
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Confirm Password cannot be empty";
+        } else {
+          if (password != value) {
+            return "Those passwords did not match. Try agin";
+          }
+        }
+      },
+      obscureText: _hiddenConfirmPassword,
+      decoration: new InputDecoration(
+        icon: Icon(
+          Icons.lock,
+          color: primaryColor,
+        ),
+        suffixIcon: IconButton(
+          onPressed: _toggleVisibilityConfirmPassword,
+          icon: _hiddenConfirmPassword
+              ? Icon(Icons.visibility_off)
+              : Icon(Icons.visibility),
+        ),
+        labelText: "Confirm Password",
+        errorStyle: TextStyle(fontSize: 15),
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      style: TextStyle(fontSize: 18),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,284 +217,183 @@ class AddWorkerState extends State<AddWorker> {
         ),
         body: SingleChildScrollView(
             child: Container(
-                child: Column(children: <Widget>[
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.person,
-                          color: primaryColor,
-                        ),
-                        labelText: "Username",
-                        errorText:
-                            _validUsername ? "Username cannot be empty" : null,
-                        errorStyle: TextStyle(fontSize: 15),
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                child: Form(
+                    key: _formKey,
+                    child: Column(children: <Widget>[
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildUserName(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      style: TextStyle(fontSize: 18),
-                      onChanged: (text) {
-                        username = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          new GestureDetector(
-              child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(20),
-                  child: Row(children: <Widget>[
-                    Expanded(
-                        child: Row(children: [
-                      Icon(Icons.people, size: 24, color: primaryColor),
-                      Padding(
-                        child:
-                            Wrap(direction: Axis.vertical, children: <Widget>[
-                          Text(
-                            "User Group",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          Text(
-                            userGroup,
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.grey[500]),
-                          ),
-                        ]),
-                        padding: EdgeInsets.only(left: 15),
-                      )
-                    ])),
-                    Icon(Icons.chevron_right)
-                  ])),
-              onTap: callUserGroupAlertDialog),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.font_download,
-                          color: primaryColor,
-                        ),
-                        labelText: "First Name",
-                        errorText: _validFirstName
-                            ? "First Name cannot be empty"
-                            : null,
-                        errorStyle: TextStyle(fontSize: 15),
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                      new GestureDetector(
+                          child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(20),
+                              child: Row(children: <Widget>[
+                                Expanded(
+                                    child: Row(children: [
+                                  Icon(Icons.people,
+                                      size: 24, color: primaryColor),
+                                  Padding(
+                                    child: Wrap(
+                                        direction: Axis.vertical,
+                                        children: <Widget>[
+                                          Text(
+                                            "User Group",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          Text(
+                                            userGroup,
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.grey[500]),
+                                          ),
+                                        ]),
+                                    padding: EdgeInsets.only(left: 15),
+                                  )
+                                ])),
+                                Icon(Icons.chevron_right)
+                              ])),
+                          onTap: callUserGroupAlertDialog),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      style: TextStyle(fontSize: 18),
-                      onChanged: (text) {
-                        firstName = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.font_download,
-                          color: primaryColor,
-                        ),
-                        labelText: "Last Name",
-                        errorText:
-                            _validLastName ? "Last Name cannot be empty" : null,
-                        errorStyle: TextStyle(fontSize: 15),
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildFirstName(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      style: TextStyle(fontSize: 18),
-                      onChanged: (text) {
-                        lastName = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.email,
-                          color: primaryColor,
-                        ),
-                        labelText: "Email",
-                        errorText: _validEmail ? errorMsgOfEmail : null,
-                        errorStyle: TextStyle(fontSize: 15),
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildLastName(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      style: TextStyle(fontSize: 18),
-                      onChanged: (text) {
-                        email = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(20),
-              child: Row(children: <Widget>[
-                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Icon(Icons.image, size: 24, color: primaryColor),
-                  Padding(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Image",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Padding(
-                              child: imagePick(),
-                              padding: EdgeInsets.only(top: 10, bottom: 10)),
-                          RaisedButton(
-                            onPressed: pickImage,
-                            child: Text(
-                              "Upload",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                            color: primaryColor,
-                          )
-                        ]),
-                    padding: EdgeInsets.only(left: 15),
-                  )
-                ]),
-              ])),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      obscureText: _hiddenPassword,
-                      style: TextStyle(fontSize: 18),
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.lock,
-                          color: primaryColor,
-                        ),
-                        labelText: "Password",
-                        errorText: _validPassword ? errorMsgPassword : null,
-                        errorStyle: TextStyle(fontSize: 15),
-                        suffixIcon: IconButton(
-                          onPressed: _toggleVisibilityPassword,
-                          icon: _hiddenPassword
-                              ? Icon(Icons.visibility_off)
-                              : Icon(Icons.visibility),
-                        ),
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildEmail(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      onChanged: (text) {
-                        password = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      obscureText: _hiddenConfirmPassword,
-                      decoration: new InputDecoration(
-                        icon: Icon(
-                          Icons.lock,
-                          color: primaryColor,
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: _toggleVisibilityConfirmPassword,
-                          icon: _hiddenConfirmPassword
-                              ? Icon(Icons.visibility_off)
-                              : Icon(Icons.visibility),
-                        ),
-                        labelText: "Confirm Password",
-                        errorStyle: TextStyle(fontSize: 15),
-                        errorText: _validConfirmPassword
-                            ? errorMsgConfirmPassword
-                            : null,
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 20),
+                      Container(
+                          color: Colors.white,
+                          padding: EdgeInsets.all(20),
+                          child: Row(children: <Widget>[
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.image,
+                                      size: 24, color: primaryColor),
+                                  Padding(
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Image",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          Padding(
+                                              child: imagePick(),
+                                              padding: EdgeInsets.only(
+                                                  top: 10, bottom: 10)),
+                                          RaisedButton(
+                                            onPressed: pickImage,
+                                            child: Text(
+                                              "Upload",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white),
+                                            ),
+                                            color: primaryColor,
+                                          )
+                                        ]),
+                                    padding: EdgeInsets.only(left: 15),
+                                  )
+                                ]),
+                          ])),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
                       ),
-                      style: TextStyle(fontSize: 18),
-                      onChanged: (text) {
-                        confirmPassword = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(
-            color: Colors.grey[500],
-            thickness: 0.5,
-            height: 0,
-          ),
-          new GestureDetector(
-              child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(20),
-                  child: Row(children: <Widget>[
-                    Expanded(
-                        child: Row(children: [
-                      Icon(Icons.offline_pin, size: 24, color: primaryColor),
-                      Padding(
-                        child:
-                            Wrap(direction: Axis.vertical, children: <Widget>[
-                          Text(
-                            "Status",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          Text(
-                            status,
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.grey[500]),
-                          ),
-                        ]),
-                        padding: EdgeInsets.only(left: 15),
-                      )
-                    ])),
-                    Icon(Icons.chevron_right)
-                  ])),
-              onTap: callStatusAlertDialog)
-        ]))));
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildPassword(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
+                      ),
+                      Container(
+                          color: Colors.white,
+                          child: Padding(
+                              child: _buildConfirmPassword(),
+                              padding: EdgeInsets.only(
+                                  left: 20, top: 10, right: 20, bottom: 20))),
+                      Divider(
+                        color: Colors.grey[500],
+                        thickness: 0.5,
+                        height: 0,
+                      ),
+                      new GestureDetector(
+                          child: Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.all(20),
+                              child: Row(children: <Widget>[
+                                Expanded(
+                                    child: Row(children: [
+                                  Icon(Icons.offline_pin,
+                                      size: 24, color: primaryColor),
+                                  Padding(
+                                    child: Wrap(
+                                        direction: Axis.vertical,
+                                        children: <Widget>[
+                                          Text(
+                                            "Status",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          Text(
+                                            status,
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.grey[500]),
+                                          ),
+                                        ]),
+                                    padding: EdgeInsets.only(left: 15),
+                                  )
+                                ])),
+                                Icon(Icons.chevron_right)
+                              ])),
+                          onTap: callStatusAlertDialog)
+                    ])))));
   }
 
   void callUserGroupAlertDialog() {
@@ -438,12 +498,6 @@ class AddWorkerState extends State<AddWorker> {
     status = "Enabled";
     fileImg = null;
 
-    _validUsername = false;
-    _validFirstName = false;
-    _validLastName = false;
-    _validEmail = false;
-    _validPassword = false;
-    _validConfirmPassword = false;
     _hiddenConfirmPassword = true;
     _hiddenPassword = true;
 
@@ -457,117 +511,20 @@ class AddWorkerState extends State<AddWorker> {
   }
 
   void addWorker() {
-    bool check = true;
     FocusScope.of(context).unfocus();
-    if (username.isEmpty) {
-      check = false;
-      setState(() {
-        _validUsername = true;
-      });
-    } else {
-      check = true;
-      setState(() {
-        _validUsername = false;
-      });
+    
+    if (_formKey.currentState.validate()) {
+      return;
     }
-
-    if (firstName.isEmpty) {
-      check = false;
-      setState(() {
-        _validFirstName = true;
-      });
-    } else {
-      check = true;
-      setState(() {
-        _validFirstName = false;
-      });
-    }
-
-    if (lastName.isEmpty) {
-      check = false;
-      setState(() {
-        _validLastName = true;
-      });
-    } else {
-      check = true;
-      setState(() {
-        _validLastName = false;
-      });
-    }
-    if (email.isEmpty) {
-      check = false;
-      setState(() {
-        errorMsgOfEmail = "Email cannot be empty";
-
-        _validEmail = true;
-      });
-    } else {
-      if (!RegExp(
-              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-          .hasMatch(email)) {
-        check = false;
-        setState(() {
-          errorMsgOfEmail = "Please enter correct format of email";
-          _validEmail = true;
-        });
-      } else {
-        check = true;
-        setState(() {
-          _validEmail = false;
-        });
-      }
-    }
-    if (password.isEmpty) {
-      check = false;
-      setState(() {
-        errorMsgPassword = "Password cannot be empty";
-        _validPassword = true;
-      });
-    } else {
-      if (password.length < 8) {
-        check = false;
-        setState(() {
-          errorMsgPassword = "Use 8 characters or more for your password";
-          _validPassword = true;
-        });
-      } else {
-        check = true;
-        setState(() {
-          _validPassword = false;
-        });
-      }
-    }
-    if (confirmPassword.isEmpty) {
-      check = false;
-      setState(() {
-        _validConfirmPassword = true;
-        errorMsgConfirmPassword = "Confirm Password cannot be empty";
-      });
-    } else {
-      if (password != confirmPassword) {
-        check = false;
-        setState(() {
-          _validConfirmPassword = true;
-          errorMsgConfirmPassword = "Those passwords did not match. Try agin";
-        });
-      } else {
-        check = true;
-        setState(() {
-          _validConfirmPassword = false;
-        });
-      }
-    }
-
-    if (check) {
-      print(username);
-      print(firstName);
-      print(lastName);
-      print(email);
-      print(userGroup);
-      print(password);
-      print(confirmPassword);
-      print(fileImg);
-      print(status);
-    }
+    _formKey.currentState.save();
+    print(username);
+    print(firstName);
+    print(lastName);
+    print(email);
+    print(userGroup);
+    print(password);
+    print(confirmPassword);
+    print(fileImg);
+    print(status);
   }
 }
