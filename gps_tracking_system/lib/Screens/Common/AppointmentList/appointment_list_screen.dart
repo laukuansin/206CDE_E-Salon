@@ -1,17 +1,12 @@
-import 'dart:math';
-import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/custom_table_calendar.dart';
-import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/overall_appointment.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+
 
 class AppointmentListScreen extends StatefulWidget{
   @override
@@ -146,7 +141,7 @@ class _AppointmentListState extends State<AppointmentListScreen>{
                 Container(
                   child:IconButton(
                     icon: Icon(Icons.chrome_reader_mode, color:Colors.green),
-                    onPressed: () {Navigator.of(context).pushNamed("/overall_appointment");},
+                    onPressed: () {Navigator.of(context).pushNamed("/today_appointment");},
                   )
                 )
               ]

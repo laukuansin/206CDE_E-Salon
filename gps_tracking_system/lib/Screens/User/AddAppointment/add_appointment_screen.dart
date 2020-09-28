@@ -1,24 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Model/Location.dart';
-import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Screens/LocationPicker/location_picker.dart';
-import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:numberpicker/numberpicker.dart';
 
-void main() {
-  runApp(AddAppointment());
+class AddAppointmentScreen extends StatefulWidget {
+  AddAppointmentScreenState createState() => AddAppointmentScreenState();
 }
 
-class AddAppointment extends StatefulWidget {
-  AddAppointmentState createState() => AddAppointmentState();
-}
-
-class AddAppointmentState extends State<AddAppointment> {
+class AddAppointmentScreenState extends State<AddAppointmentScreen> {
   DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm');
   DateTime dateTime;
   DateTime selectDate;
@@ -109,7 +101,7 @@ class AddAppointmentState extends State<AddAppointment> {
                   Icon(Icons.chevron_right)
                 ])),
             onTap: () {
-              Navigator.of(context).pushNamed('/add_appointment_select_location', arguments: this.location).
+              Navigator.of(context).pushNamed('/add_appointment', arguments: this.location).
               then((value){
                 setState(() {});
               });

@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/Screens/GoogleMap/view_model.dart';
+import 'package:gps_tracking_system/Screens/Common/GoogleMap/view_model.dart';
 
 class GoogleMapScreen extends StatefulWidget{
   final String customerAddress;

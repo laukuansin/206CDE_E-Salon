@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/Location.dart';
-import 'package:gps_tracking_system/Screens/Developing/appointment_info_screen.dart';
-import 'package:gps_tracking_system/Screens/Developing/appointment_list_screen.dart';
-import 'package:gps_tracking_system/Screens/AddAppointment/add_appointment.dart';
-import 'package:gps_tracking_system/Screens/LocationPicker/location_picker.dart';
-import 'package:gps_tracking_system/Screens/Login/login.dart';
-import 'package:gps_tracking_system/Screens/SplashScreen/splash_screen.dart';
-import 'package:gps_tracking_system/overall_appointment.dart';
+import 'package:gps_tracking_system/Screens/Common/AppointmentInfo/appointment_info_screen.dart';
+import 'package:gps_tracking_system/Screens/Common/AppointmentList/appointment_list_screen.dart';
+import 'package:gps_tracking_system/Screens/User/AddAppointment/add_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart' as AdminLogin;
+import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart' as UserLogin;
+import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 
 class RouteGenerator{
 
   static const bool _DEBUG_MODE = false;
+  static const bool _ADMIN_MODE = true;
 
   static Scaffold buildScaffold(Widget widget, {AppBar appbar})=> Scaffold(
       appBar: appbar,
@@ -34,17 +36,29 @@ class RouteGenerator{
       }
     }
     else{
-      switch(settings.name)
-      {
-        case"/"                                 :return _buildRoute(SplashScreen());
-        case "/login"                           :return _buildRoute(LoginPage());
-        case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
-        case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
-        case "/add_appointment"                 :return _buildRoute(AddAppointment());
-        case "/overall_appointment"             :return _buildRoute(OverallAppointment());
-        case "/add_appointment_select_location" :
-          if(args is Location)
-            return _buildRoute(LocationPicker(args));
+      if(_ADMIN_MODE){
+        switch(settings.name)
+        {
+          case"/"                                 :return _buildRoute(SplashScreen());
+          case "/login"                           :return _buildRoute(AdminLogin.LoginScreen());
+          case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
+          case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
+          case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
+          case "/today_appointment"             :return _buildRoute(TodayAppointmentScreen());
+        }
+      }
+      else{
+        switch(settings.name)
+        {
+          case"/"                                 :return _buildRoute(SplashScreen());
+          case "/login"                           :return _buildRoute(UserLogin.LoginScreen());
+          case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
+          case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
+          case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
+          case "/location_picker" :
+            if(args is Location)
+              return _buildRoute(LocationPickerScreen(args));
+        }
       }
     }
   }

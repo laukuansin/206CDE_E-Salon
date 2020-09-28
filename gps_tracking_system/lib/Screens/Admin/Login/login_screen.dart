@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
 
   String _email;
   String _password;

@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/worker.dart';
-import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
-import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_listener.dart';
+import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
+import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
-import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppointmentInfo extends StatefulWidget{
@@ -70,10 +67,8 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     );
   }
 
-  Widget buildDateDay(Size screenSize){
-    return Expanded(
-      flex: 1,
-      // padding: EdgeInsets.all(screenSize.width * 0.05),
+  Container buildDateDay(Size screenSize){
+    return Container(
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

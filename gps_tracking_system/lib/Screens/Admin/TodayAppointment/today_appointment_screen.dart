@@ -6,9 +6,9 @@ import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class OverallAppointment extends StatefulWidget{
+class TodayAppointmentScreen extends StatefulWidget{
   @override
-  State<StatefulWidget> createState()=>_OverallAppointmentState();
+  State<StatefulWidget> createState()=>_TodayAppointmentScreenState();
 }
 
 enum TaskStatus{
@@ -48,7 +48,7 @@ class Task{
 }
 
 
-class _OverallAppointmentState extends State<OverallAppointment>{
+class _TodayAppointmentScreenState extends State<TodayAppointmentScreen>{
   //Config
   static const _TIMELINE_LINE_XY = 0.27;
   static const _TIMELINE_INDICATOR_WIDTH = 35.0;

@@ -8,16 +8,16 @@ import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:geocoder/geocoder.dart';
 
-class LocationPicker extends StatefulWidget {
+class LocationPickerScreen extends StatefulWidget {
   final Location location;
-  LocationPickerState createState() =>
-      LocationPickerState(location);
+  LocationPickerScreenState createState() =>
+      LocationPickerScreenState(location);
 
-  LocationPicker(this.location, {Key key}):super(key:key);
+  LocationPickerScreen(this.location, {Key key}):super(key:key);
 }
 
-class LocationPickerState
-    extends State<LocationPicker> {
+class LocationPickerScreenState
+    extends State<LocationPickerScreen> {
 
   static const double _INITIAL_CAMERA_ZOOM_RATIO  = 14.0;
   static const String _MARKER_ORIGIN_ID           = "origin";
@@ -31,7 +31,7 @@ class LocationPickerState
   bool _isSearching = false;
   TextEditingController _searchBarController;
 
-  LocationPickerState(Location location):_location = location;
+  LocationPickerScreenState(Location location):_location = location;
 
   @override
   Widget build(BuildContext context) {
