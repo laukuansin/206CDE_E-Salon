@@ -1,26 +1,8 @@
-<<<<<<< HEAD
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 
-class RealTimeDb{
-
-  static DatabaseReference _db;
-
-  RealTimeDb._();
-
-  static void createInstance()
-  {
-    if(_db == null)
-      _db = FirebaseDatabase.instance.reference();
-  }
-
-=======
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:gps_tracking_system/Model/Worker.dart' as MyWorker;
+import 'package:gps_tracking_system/Model/worker.dart' as MyWorker;
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 
 
@@ -58,10 +40,9 @@ class RealTimeDb{
 
   static void saveWorkerChanges(MyWorker.Worker worker)
   {
-    _db.child(GROUP_WORKER).child(worker.workerId).set({
+    _db.child(GROUP_WORKER).child(worker.id).set({
       KEY_LATITUDE: worker.latitude,
       KEY_LONGITUDE: worker.longitude,
-      KEY_CUSTOMER_ID: worker.customerId
     });
   }
 
@@ -107,5 +88,5 @@ class RealTimeDb{
     _localCache[address] = coordinate;
     return coordinate;
   }
->>>>>>> development
+
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   TextFormField _buildEmailTextFormField(){
     return TextFormField(
       decoration: InputDecoration(
-          labelText: "Email"
+          labelText: "Email",
+          labelStyle: TextStyleFactory.p()
       ),
       validator: (email){
         return null;
@@ -45,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
+          labelStyle: TextStyleFactory.p(),
           suffixIcon: IconButton(
             icon: Icon(_isPasswordVisible?Icons.visibility: Icons.visibility_off),
             color:primaryColor,
@@ -92,10 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: size.height * 0.06),
                   Text(
                     "GPS Real Time Tracking System",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: primaryColor,
-                    ),
+                    style: TextStyleFactory.heading4(color:primaryColor)
                   ),
                   SizedBox(height: size.height * 0.02,),
                   Container(

@@ -2,23 +2,27 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_tracking_system/Model/Worker.dart';
+import 'package:gps_tracking_system/Model/worker.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'file:///C:/Users/Jeffrey%20Tan/Desktop/GPSTracker/RealWorldProject/gps_tracking_system/lib/Factory/text_style_factory.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppointmentInfo extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() =>_AppointmentInfoState(Worker(workerId: "P18010220"));
+  State<StatefulWidget> createState() =>_AppointmentInfoState(Worker("P18010220"));
 }
 
 class _AppointmentInfoState extends State<AppointmentInfo>{
 
   final String customerAddress = "Sunshine Farlim";
+  final GlobalKey _keySlidingUpPanel = GlobalKey();
+  double _minHeightOfSlidingUpPanel;
   bool _isWorkerReady;
   Worker _worker;
   GoogleMapListener _googleMapController;
@@ -32,8 +36,20 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     _key = GlobalKey();
   }
 
-<<<<<<< HEAD
-  Widget indicator(){
+
+  @override
+  void initState() {
+    super.initState();
+    _minHeightOfSlidingUpPanel = -1;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _minHeightOfSlidingUpPanel = _keySlidingUpPanel.currentContext.size.height;
+      setState(() {});
+    });
+  }
+
+  Container _buildSlidingUpPanelIndicator(){
+    Size screenSize = MediaQuery.of(context).size;
+    if(_minHeightOfSlidingUpPanel == -1) _minHeightOfSlidingUpPanel = screenSize.height;
     return Container(
       color: primaryLightColor,
       padding: EdgeInsets.only(top: 15),
@@ -42,9 +58,9 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
           Center(
             child: Container(
               height: 7,
-              width: 50,
+              width: screenSize.width * 0.1,
               decoration: BoxDecoration(
-                color: Colors.grey,
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(5),
               ),
             ),
@@ -54,8 +70,6 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     );
   }
 
-=======
->>>>>>> development
   Widget buildDateDay(Size screenSize){
     return Expanded(
       flex: 1,
@@ -65,51 +79,34 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
         children: [
           Text(
             "31",
-            style: TextStyle(
-                color: dateColor,
-                fontSize: 25
-            ),
+            style: TextStyleFactory.heading1(color:dateColor)
           ),
           Text(
             "THU",
-            style: TextStyle(
-                color: primaryColor
-            ),
+            style: TextStyleFactory.p()
           )
         ],
       ),
     );
   }
 
-  Widget buildTopPanel(Size screenSize){
+  Widget _buildTopPanel(Size screenSize){
     return Container(
+      key: _keySlidingUpPanel,
       width: screenSize.width,
       color: primaryLightColor,
-<<<<<<< HEAD
-      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.021),
-=======
-      padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.02),
->>>>>>> development
-      child:Row(
-        children: <Widget>[
-          buildDateDay(screenSize),
-          Expanded(
-            flex: 2,
-            child:Text(
-              "Emilie Khor",
-              style: TextStyle(
-                  color: dayColor,
-                  fontSize: 20
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
-            child: RoundedButton(
+      child:Column(
+        children:<Widget>[
+          _buildSlidingUpPanelIndicator(),
+          ListTile(
+            contentPadding: EdgeInsets.only(bottom: 16.0, left: 16.0, right:16.0),
+            leading: buildDateDay(screenSize),
+            title: Text("Emilie Khor"),
+            trailing: RoundedButton(
               icon: Icons.navigation,
-              horizontalPadding: 6,
+              horizontalPadding: 10,
               text: "Navigate",
-              fontSize: 15,
+              fontSize: 14,
                 press: (){
                   try {
                     AppLauncher.openMap(
@@ -121,55 +118,41 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
 
                   }
                 }
-            )
+            ),
           )
         ]
-      ),
+      )
     );
   }
 
   Widget buildPanelInfo(Size screenSize, IconData icon, String text){
     return Container(
-        padding: EdgeInsets.symmetric(vertical: screenSize.height * 0.015),
-        child:Row(
-          children: [
-            Expanded(
-                flex: 1,
-                child:Icon(
-                  icon,
-                  color: primaryColor,
-                )
-            ),
-            Flexible(
-              flex: 4,
-              child: Text(
-                text,
-                style: TextStyle(
-                    color: dayColor
-                ),
+        child:ListTile(
+          leading: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:<Widget>[
+              Icon(
+                icon,
+                color: primaryColor,
               ),
-            )
-          ],
+            ]
+          ),
+          title: Text(text, style: TextStyleFactory.p(),),
         )
     );
   }
 
   Widget buildPanelInfoHeader(Size screenSize, String header){
-    return Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.only(left: screenSize.width * 0.075, right: screenSize.width * 0.1, top: screenSize.height * 0.02),
-        child: Text(
+    return ListTile(
+        leading: Text(
           header,
-          style: TextStyle(
-            color:Colors.black,
-            fontSize: 18,
-            // decoration: TextDecoration.underline
-          ),
-        )
+          style: TextStyleFactory.heading5(),
+        ),
+        dense: true,
     );
   }
 
-  Widget buildPanelBasicInformation(Size screenSize){
+  Widget _buildPanelBasicInformation(Size screenSize){
     return Container(
       color: primaryLightColor,
       child:Column(
@@ -185,7 +168,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
     );
   }
 
-  Widget buildPanelTravelInformation(Size screenSize){
+  Widget _buildPanelTravelInformation(Size screenSize){
     return Container(
         color: primaryLightColor,
         child:Column(
@@ -222,35 +205,20 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
           color: primaryBgColor,
           child:Column(
             children: [
-<<<<<<< HEAD
-              indicator(),
-=======
->>>>>>> development
-              buildTopPanel(screenSize),
+              _buildTopPanel(screenSize),
               SizedBox(height: screenSize.height * 0.01,),
-              buildPanelBasicInformation(screenSize),
+              _buildPanelBasicInformation(screenSize),
               SizedBox(height: screenSize.height * 0.01,),
-              buildPanelTravelInformation(screenSize),
+              _buildPanelTravelInformation(screenSize),
             ],
           ),
         ),
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> development
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24.0),
             topRight: Radius.circular(24.0),
           ),
-<<<<<<< HEAD
-          maxHeight: screenSize.height * 0.75,
-          minHeight: screenSize.height * 0.15,
-=======
           maxHeight: screenSize.height,
-          minHeight: screenSize.height * 0.12,
->>>>>>> development
+          minHeight: _minHeightOfSlidingUpPanel,
           defaultPanelState: PanelState.OPEN,
         )
       );

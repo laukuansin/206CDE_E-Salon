@@ -1,16 +1,52 @@
-import 'dart:math';
-import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/components/custom_table_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class OverallAppointment extends StatefulWidget{
   @override
   State<StatefulWidget> createState()=>_OverallAppointmentState();
 }
+
+enum TaskStatus{
+  NAVIGATE,
+  ARRIVE,
+  SETTLE
+}
+
+class Task{
+    DateTime time;
+    String taskName;
+    TaskStatus status;
+
+    Task({this.time, this.taskName, this.status});
+
+    IconData getIconData(){
+      switch(status){
+        case TaskStatus.NAVIGATE:
+          return Icons.navigation;
+        case TaskStatus.ARRIVE:
+          return Icons.done;
+        case TaskStatus.SETTLE:
+          return Icons.assignment_turned_in;
+      }
+    }
+
+    Color getColor(){
+      switch(status){
+        case TaskStatus.NAVIGATE:
+          return Colors.blueAccent;
+        case TaskStatus.ARRIVE:
+          return Colors.cyan;
+        case TaskStatus.SETTLE:
+          return Colors.greenAccent;
+      }
+    }
+}
+
 
 class _OverallAppointmentState extends State<OverallAppointment>{
   //Config
@@ -20,112 +56,91 @@ class _OverallAppointmentState extends State<OverallAppointment>{
   static const _TIMELINE_MARGIN_BETWEEN_BUBBLE = 12.0;
   static const _TIMELINE_THICKNESS = 2.0;
 
-  final List<Color> colorList = [ Color(0xFFB76D7C4), Color(0xFFB5DADE2), Color(0xFFBA9DFBF), Color(0xFFB7FB3D5), Color(0xFFBAED6F1)];
-  final List<List<String>> steps = [
-    ["9.00am", "Emilie khor", "1hour 40min (40km)", "done"],
-    ["10.00am", "Jeffrey Tan", "40min (20km)", "miss"],
-    ["11.00am", "Lau Kuan Sin", "1hour 30min (30km)", "done"],
-    ["12.00pm", "Pey Xin Yi", "2hours (50km)", "done"],
-    ["1.00pm", "Chuang Jing Yee", "2hour 10min (55km)", "done"],
-    ["2.00pm", "Yuki Lim Qian Xing", "1hour 10min (28km)", "done"],
-    ["3.00pm", "Kok Heng", "5min (3km)", "miss"],
-    ["4.00pm", "Shahriman", "1hour (25km)", "miss"],
-    ["5.00pm", "Tan Hoe Theng", "45min (22km)", "miss"],
-    ["6.00pm", "Anonymous", "3hour 10min (70km)", "pending"],
-    ["7.00pm", "Shou Jin", "4hour (80km)", "pending"],
-    ["8.00pm", "Leong Yong peng", "1hour (20km)", "pending"],
-    ["9.00pm", "Leow Jie Han", "1hour 15min (42km)", "pending"],
-    ["10.00pm", "My brother", "1hour 55min (45km)", "pending"],
+  final List<Color> colorList = [ primaryLightColor];
+  final List<Task> taskList = [
+    Task(taskName: "Navigate to Emilie Khor site.",time: DateTime.now(), status: TaskStatus.NAVIGATE),
+    Task(taskName: "Arrive at Emilie Khor site.",time: DateTime.now(), status: TaskStatus.ARRIVE),
+    Task(taskName: "Service completed.",time: DateTime.now(), status: TaskStatus.SETTLE),
+    Task(taskName: "Navigate to Emilie Khor site.",time: DateTime.now(), status: TaskStatus.NAVIGATE),
+    Task(taskName: "Arrive at Emilie Khor site.",time: DateTime.now(), status: TaskStatus.ARRIVE),
+    Task(taskName: "Service completed.",time: DateTime.now(), status: TaskStatus.SETTLE),
+    Task(taskName: "Navigate to Emilie Khor site.",time: DateTime.now(), status: TaskStatus.NAVIGATE),
+    Task(taskName: "Arrive at Emilie Khor site.",time: DateTime.now(), status: TaskStatus.ARRIVE),
+    Task(taskName: "Service completed.",time: DateTime.now(), status: TaskStatus.SETTLE),
   ];
+
+  final DateFormat dateFormat = DateFormat('hh:mm a');
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return Container(
+    return RouteGenerator.buildScaffold(
+      Container(
         color: primaryBgColor,
         width: screenSize.width,
         height: screenSize.height,
         child:Column(
             children: [
-              Container(
-                  color: primaryLightColor,
-                  child: Column(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05, vertical: screenSize.height * 0.02),
-                            alignment: Alignment.centerRight,
-                            child:Row(
-                                children:[
-                                  Text(
-                                    "Overall Appointments",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: primaryColor
-                                    ),
-                                  ),
-                                  Icon(Icons.assignment, color: primaryColor,),
-                                ]
-                            )
-                        )
-                      ]
-                  )
-              ),
-              Container(
-                height: screenSize.height * 0.05,
-                width: screenSize.width,
-                color: Colors.white,
-                padding: EdgeInsets.only(bottom: 10),
-                child: SingleChildScrollView(
-                  reverse: true,
-                  child: Text(
-                    "Today, 9 Sep 2020",
-                    style: TextStyle(
-                        fontSize: 20
-                    ),
-                  ),
-                )
-              ),
               Expanded(
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: steps.length,
-                  itemBuilder: (BuildContext context, int index){
-                    final List<String> step = steps[index];
-                    IconData icon = Icons.error;
-                    Color iconColor = Colors.amber;
-
-                    if(step[3] == "done") {
-                      icon = Icons.check_circle;
-                      iconColor = Color(0XFFB9ACD32);
-                    }
-                    else if (step[3] == "pending"){
-                      icon = Icons.error;
-                      iconColor = Colors.amber;
-                    }
-                    else if (step[3] == "miss"){
-                      icon = Icons.cancel;
-                      iconColor = Colors.red;
-                    }
-
-                    if(index == 0)
-                      return buildTimeLineTile(index, icon, iconColor, time: step[0], text: step[1], duration: step[2], isFirst: true);
-                    if(index == steps.length - 1)
-                      return buildTimeLineTile(index, icon, iconColor, time: step[0], text: step[1], duration: step[2], isLast: true);
-                    return buildTimeLineTile(index, icon, iconColor, time: step[0], text: step[1], duration: step[2]);
-                  },
+                  itemCount: taskList.length,
+                  itemBuilder: (BuildContext context, int index)=> buildTimeLineTile(index)
                 ),
               ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                width: screenSize.width,
+                color: primaryLightColor,
+                child:Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Current appointment", style: TextStyleFactory.heading3(),),
+                    Text("Jeffrey Tan", style: TextStyleFactory.p(fontSize: 16),),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child:FlatButton.icon(
+                            color: primaryColor,
+                            textColor: primaryLightColor,
+                            label: Text("Start",),
+                            icon: Icon(Icons.navigation),
+                            onPressed: (){},
+                          )
+                        ),
+                        SizedBox(width: 1,),
+                        Expanded(
+                          child :FlatButton.icon(
+                            color: Colors.redAccent,
+                            textColor: primaryLightColor,
+                            label: Text("Skip",),
+                            icon: Icon(Icons.clear),
+                            onPressed: (){},
+                          )
+                        )
+                      ],
+                    ),
+
+                  ]
+                )
+              )
             ]
         )
+      ),
+      appbar: AppBar(
+        title: Text("Today, Wed 26 Sep", style: TextStyleFactory.heading6(fontWeight: FontWeight.normal),),
+      )
     );
   }
 
-  Widget buildTimeLineTile(int index, IconData icon, var iconColor, {String time, String text, String duration, bool isFirst = false, bool isLast = false})=>
+  Widget buildTimeLineTile(int index)=>
       TimelineTile(
         axis: TimelineAxis.vertical,
         alignment: TimelineAlign.manual,
-        isFirst: isFirst,
-        isLast: isLast,
+        isFirst: index == 0,
+        isLast: index == taskList.length - 1,
         lineXY: _TIMELINE_LINE_XY,
 
         indicatorStyle: IndicatorStyle(
@@ -134,23 +149,19 @@ class _OverallAppointmentState extends State<OverallAppointment>{
             left: _TIMELINE_INDICATOR_PADDING,
             right: _TIMELINE_INDICATOR_PADDING,
           ),
-          color: iconColor,
+          color: taskList[index].getColor(),
           iconStyle: IconStyle(
             color: Colors.white,
-            iconData: icon,
+            iconData: taskList[index].getIconData(),
           ),
         ),
 
         startChild: Container(
+          height: 75,
             alignment: Alignment.centerRight,
             child:Text(
-              time,
-              style: TextStyle(
-                  color:Colors.black,
-                  fontFamily: 'Grandstander',
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w800
-              ),
+              dateFormat.format(taskList[index].time),
+              style: TextStyleFactory.p()
             )
         ),
 
@@ -161,7 +172,7 @@ class _OverallAppointmentState extends State<OverallAppointment>{
                 Expanded(
                     child:GestureDetector(
                       onTap: (){Navigator.of(context).pushNamed("/appointmentInfo");},
-                      child: buildCard(index, text, duration, context),
+                      child: Text(taskList[index].taskName, style: TextStyleFactory.heading6(fontWeight: FontWeight.normal),)
                     )
                 ),
               ]
@@ -169,88 +180,13 @@ class _OverallAppointmentState extends State<OverallAppointment>{
         ),
 
         beforeLineStyle: LineStyle(
-            color: iconColor,
+            color:taskList[(index == 0)?index:index - 1].getColor(),
             thickness: _TIMELINE_THICKNESS
         ),
 
         afterLineStyle: LineStyle(
-            color: iconColor,
+            color: taskList[index].getColor(),
             thickness: _TIMELINE_THICKNESS
         ),
       );
-
-  Widget buildCard(
-      int index,
-      String name,
-      String duration,
-      BuildContext context,
-      ){
-    return Card(
-        elevation: 7,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0)
-        ),
-        color: colorList[index % colorList.length],
-        child: Slidable(
-          delegate: new SlidableStrechDelegate(),
-          actionExtentRatio: 0.30,
-          actions: <Widget>[
-            new IconSlideAction(
-              caption: 'Done',
-              color: Color(0XFFBFFD700),
-              icon: Icons.event_available,
-//              onTap: (){
-
-//              },
-            ),
-          ],
-          child: Container(
-            height: 80.0,
-            padding: EdgeInsets.only(left: 35),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10.0),
-                      Text(
-                        name,
-                        style: TextStyle(
-                            fontFamily: 'Lato',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                        ),
-                      ),
-                      Text(
-                        duration,
-                        style: TextStyle(
-                          //color: Color(0XFFBC71585),
-                            color: Colors.white,
-                            fontFamily: 'Baloo',
-                            //fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w800
-                        ),
-                      ),
-                      SizedBox(height: 3.0),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 1.0),
-                    child: Icon(Icons.arrow_forward_ios,color: Color(0xFFBBC8F8F)),
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
-
-    );
-  }
-
 }

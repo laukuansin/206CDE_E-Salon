@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/color.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -8,6 +9,7 @@ class RoundedButton extends StatelessWidget {
   final double fontSize;
   final double verticalPadding, horizontalPadding;
   final IconData icon;
+  final FontWeight fontWeight;
   const RoundedButton({
     Key key,
     this.text,
@@ -15,6 +17,7 @@ class RoundedButton extends StatelessWidget {
     this.color = primaryColor,
     this.textColor = Colors.white,
     this.fontSize = 20,
+    this.fontWeight = FontWeight.normal,
     this.verticalPadding = 0,
     this.horizontalPadding = 0,
     this.icon
@@ -40,7 +43,8 @@ class RoundedButton extends StatelessWidget {
             onPressed: press,
             child: Text(
                 text,
-                style: TextStyle(
+                style: TextStyleFactory.p(
+                    fontWeight: fontWeight,
                     fontSize: fontSize,
                     color: textColor
                 )

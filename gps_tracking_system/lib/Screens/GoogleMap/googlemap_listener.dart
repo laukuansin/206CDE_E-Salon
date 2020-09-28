@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gps_tracking_system/Model/User.dart';
-import 'package:gps_tracking_system/Model/Worker.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/worker.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 
 class GoogleMapListener{
@@ -21,7 +21,7 @@ class GoogleMapListener{
     if(User.isAuthenticated()) {
       switch(User.getRole()){
         case Role.CUSTOMER:
-          RealTimeDb.onWorkerLocationChanges(worker.workerId, _locationReceived);
+          RealTimeDb.onWorkerLocationChanges(worker.id, _locationReceived);
           break;
 
         case Role.WORKER:
