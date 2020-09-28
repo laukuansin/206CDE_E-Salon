@@ -21,8 +21,7 @@ class AddWorkerState extends State<AddWorker> {
   File fileImg;
   List<String> _listGroup, _listStatus;
   String errorMsgOfEmail, errorMsgPassword, errorMsgConfirmPassword;
-  String username,
-      firstName,
+  String username, firstName,
       lastName,
       userGroup,
       email,
@@ -39,6 +38,7 @@ class AddWorkerState extends State<AddWorker> {
           if (value.isEmpty) {
             return "Username cannot be empty";
           }
+          return null;
         },
         onSaved: (value) {
           username = value;

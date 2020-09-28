@@ -2,12 +2,16 @@ import 'package:gps_tracking_system/Model/appointment.dart';
 
 class EndUser{
   final String id;
-  String name;
+  String firstName;
+  String lastName;
+  String email;
   String contactNo;
   List<Appointment> appointmentList;
 
   EndUser(String id,
-      {this.name = ""
+      {this.firstName = ""
+        ,this.lastName = ""
+        ,this.email = ""
         , this.contactNo = ""
         , this.appointmentList = const []
       })
