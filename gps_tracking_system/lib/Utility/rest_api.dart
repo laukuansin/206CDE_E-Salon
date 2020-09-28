@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +9,8 @@ import 'package:http/http.dart' as http;
 class RestApi
 {
   RestApi._();
-  static const String _GOOGLE_MAP_API_KEY = "AIzaSyDZtEhhzbICEi7JpTlTD9qjfYK1V5NIYmM";
+
+  static const String _GOOGLE_MAP_API_KEY = "AIzaSyBrNE3BrIA9VwrjmlsHo25fVdchca9H04g";
   static Future<Map<String, dynamic>> getRouteTimeDistance(List<LatLng> routeCoordinate) async {
     String url = "https://api.mapbox.com/directions-matrix/v1/mapbox/driving-traffic/";
     String accessToken = "?annotations=duration,distance&access_token=pk.eyJ1IjoiamVmZnJleXRhbiIsImEiOiJja2V2ZGx2NXMwOWRnMzFwOXAxeWJ4OHliIn0.qdcdB0cFAtgG3rvmHAXOGw";
@@ -33,4 +36,11 @@ class RestApi
     var response = await http.get(url);
     return jsonDecode(response.body);
   }
+  static Future<Map<String, dynamic>> latLngToAddress(LatLng position) async{
+    String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+position.toString()+"&key=" + _GOOGLE_MAP_API_KEY;
+    log("Calling google map API : " + url);
+    var response = await http.get(url);
+    return jsonDecode(response.body);
+  }
+
 }

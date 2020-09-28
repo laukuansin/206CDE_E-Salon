@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Model/User.dart';
-import 'font.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/color.dart';
 
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: mainFont
+        primaryColor: primaryLightColor,
       ),
       initialRoute: "/",
       onGenerateRoute: RouteGenerator.generateRoute,
