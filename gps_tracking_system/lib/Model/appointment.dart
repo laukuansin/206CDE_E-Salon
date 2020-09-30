@@ -1,8 +1,7 @@
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/service.dart';
-
-import 'Worker.dart';
-import 'customer.dart';
+import 'package:gps_tracking_system/Model/worker.dart';
+import 'package:gps_tracking_system/Model/customer.dart';
 
 class Appointment{
   final EndUser customer;

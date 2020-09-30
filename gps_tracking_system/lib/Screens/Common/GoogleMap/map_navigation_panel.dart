@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/color.dart';
 
 class MapNavigationPanel extends StatelessWidget {

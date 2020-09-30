@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gps_tracking_system/Model/Location.dart';
+import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Screens/Common/AppointmentInfo/appointment_info_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/AppointmentList/appointment_list_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/add_appointment_screen.dart';
