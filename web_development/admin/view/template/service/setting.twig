@@ -4,7 +4,10 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="pull-right">
-        <button type="submit" id="button-save" form="form-setting" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button></div>
+        <button type="submit" id="button-save" form="form-setting" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary">
+          <i class="fa fa-save"></i>
+        </button>
+      </div>
       <h1>{{ heading_title }}</h1>
       <ul class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
@@ -19,31 +22,37 @@
         <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
       </div>
       <div class="panel-body">
-	    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-setting" class="form-horizontal">
+	    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-setting" class="form-horizontal" onsubmit="
+        $(this).find('*').prop('readonly', false);
+        $(this).find('*').prop('disabled', false);
+      ">
         <div class='form-group'>
           <label class="col-sm-2 control-label">Business hour</label>
           <div class='col-sm-10'>
-            <div class='well well-sm' style='overflow:auto;'>
+            <div class='well well-sm' id='container-form' style='overflow:auto;'>
               {% for day,data in business_hour %}
               <div class='checkbox form-inline' id='{{'container-'~day}}'>
                   <div class='col-md-2'>
                     {% if data['is_open'] == true %}
-                      <input type='checkbox' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]' checked onclick="
-                      $('#{{'container-'~day}} *').prop('disabled', !this.checked);
-                      $(this).prop('disabled', false);
+                      <input type='hidden' name='business_hour[{{day}}][is_open]' value='0'/>
+                      <input type='checkbox' value='1' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]' checked 
+                      onclick="
+                        $('#{{'container-'~day}} *').prop('readonly', !$(this).prop('checked'));
+                        $(this).parent().parent().children('select').prop('disabled', !$(this).prop('checked'));
                       " 
                       />
                     {% else %}
-                      <input type='checkbox' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]'
+                      <input type='hidden' name='business_hour[{{day}}][is_open]' value='0'/>
+                      <input type='checkbox' value='1' style='margin-left:8px;' id='{{'checkBox-'~day}}' class='form-control' name='business_hour[{{day}}][is_open]'
                       onclick="
-                      $('#{{'container-'~day}} *').prop('disabled', !this.checked);
-                      $(this).prop('disabled', false);
+                        $('#{{'container-'~day}} *').prop('readonly', !$(this).prop('checked'));
+                        $(this).parent().parent().children('select').prop('disabled', !$(this).prop('checked'));
                       " />
                     {% endif %}
                     <label class='control-label' for='{{'checkBox-'~day}}'>{{day}}</label>
                   </div>
                   <input type='text' class='form-control'name='business_hour[{{day}}][start_time]'  value='{{data["start_time"]}}'/>
-                  <select class='form-control' name='business_hour[{{day}}][start_meridiem]'>
+                  <select class='form-control' id='{{'select-am-'~day}}' name='business_hour[{{day}}][start_meridiem]'>
                     {% if data['start_meridiem'] == text_am %}
                       <option value='{{text_am}}' selected>{{text_am}}</option>
                       <option value='{{text_pm}}'>{{text_pm}}</option>
@@ -64,27 +73,41 @@
                     {% endif %}
                   </select>
               </div>
+              <script type="text/javascript">
+                $('#{{'container-'~day}} *').prop('readonly', {{data['is_open'] ? false: true}});
+                $('#{{'container-'~day}}').children('select').prop('disabled', {{data['is_open'] ? false: true}});
+              </script>
               {% endfor %}
             </div>
 
-            <button type="button" onclick="$(this).parent().find(':checkbox').prop('checked', true);" class="btn btn-link">{{ text_select_all }}</button> / 
-            <button type="button" onclick="$(this).parent().find(':checkbox').prop('checked', false);" class="btn btn-link">{{ text_unselect_all }}</button>
+            <button type="button" onclick="
+              $(this).parent().find(':checkbox').prop('checked', true);
+              $(this).parent().find('*').prop('readonly', false);
+              $(this).parent().find('*').prop('disabled', false);
+            " class="btn btn-link">{{ text_select_all }}</button> / 
+            <button type="button" onclick="
+              $(this).parent().find(':checkbox').prop('checked', false);
+              $(this).parent().find('*').prop('readonly', true);
+              $(this).parent().find('select').prop('disabled', true);
+            " class="btn btn-link">{{ text_unselect_all }}</button>
           </div>
         </div>
 
-	    	<div class='form-group required'>
-	    		<label class="control-label col-sm-2" for="input-cancellation-time">Cancellation Time </label>
+    	  <div class='form-group required'>
+  		    <label class="control-label col-sm-2" for="input-cancellation-time">Cancellation Time </label>
 	    		<div class='col-sm-10'>
 	    			<input type='text' id="input-cancellation-time" name="cancellation_time" value='{{cancellation_time}}' class='form-control'>
              {% if error_cancellation_time %}
                 <div class="text-danger">{{ error_cancellation_time }}</div>
               {% endif %}
-	    		</div>
-	    	</div>
-
-	    </form>
+		      </div>
+    	  </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
+<script>
+  
+</script>
 {{ footer }}
