@@ -145,6 +145,15 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);					
 			}
+
+			if($this->user->hasPermission('access', 'service/appointment')){
+				$service[] = array(
+					'name' 		=> $this->language->get('text_appointment'),
+					'href'		=> $this->url->link('service/appointment', 'user_token='.$this->session->data['user_token'], true),
+					'children' 	=> array()
+				);
+			}
+
 			if ($service) {					
 				$data['menus'][] = array(
 					'id'       => 'menu-service',

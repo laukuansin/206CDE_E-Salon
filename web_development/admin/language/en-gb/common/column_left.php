@@ -76,3 +76,4 @@ $_['text_processing_status']    = 'Orders Processing';
 $_['text_other_status']         = 'Other Statuses';
 $_['text_on_site_service']		= 'On Site Service';
 $_['text_services']				= 'Services';
+$_['text_appointment']			= 'Appointment';

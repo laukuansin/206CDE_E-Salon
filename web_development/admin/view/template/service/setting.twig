@@ -26,8 +26,9 @@
         $(this).find('*').prop('readonly', false);
         $(this).find('*').prop('disabled', false);
       ">
+<!--Business hour-->
         <div class='form-group'>
-          <label class="col-sm-2 control-label">Business hour</label>
+          <label class="col-sm-2 control-label">{{label_business_hour}}</label>
           <div class='col-sm-10'>
             <div class='well well-sm' id='container-form' style='overflow:auto;'>
               {% for day,data in business_hour %}
@@ -92,9 +93,9 @@
             " class="btn btn-link">{{ text_unselect_all }}</button>
           </div>
         </div>
-
+<!--Cancellation time-->
     	  <div class='form-group required'>
-  		    <label class="control-label col-sm-2" for="input-cancellation-time">Cancellation Time </label>
+  		    <label class="control-label col-sm-2" for="input-cancellation-time">{{label_cancellation_time}}</label>
 	    		<div class='col-sm-10'>
 	    			<input type='text' id="input-cancellation-time" name="cancellation_time" value='{{cancellation_time}}' class='form-control'>
              {% if error_cancellation_time %}
@@ -102,6 +103,28 @@
               {% endif %}
 		      </div>
     	  </div>
+
+<!--Travel time-->
+        <div class='form-group required'>
+          <label class="control-label col-sm-2" for="input-travel-time">{{label_travel_time}}</label>
+          <div class='col-sm-10'>
+            <input type='text' id="input-travel-time" name="travel_time" value='{{travel_time}}' class='form-control'>
+             {% if error_travel_time %}
+                <div class="text-danger">{{ error_travel_time }}</div>
+              {% endif %}
+          </div>
+        </div>
+
+<!--Appointment interval-->
+        <div class='form-group required'>
+          <label class="control-label col-sm-2" for="input-appointment_interval">{{label_appointment_interval}}</label>
+          <div class='col-sm-10'>
+            <input type='text' id="input-appointment_interval-time" name="appointment_interval" value='{{appointment_interval}}' class='form-control'>
+             {% if error_appointment_interval %}
+                <div class="text-danger">{{ error_appointment_interval }}</div>
+              {% endif %}
+          </div>
+        </div>
         </form>
       </div>
     </div>
