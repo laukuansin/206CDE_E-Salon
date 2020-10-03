@@ -14,7 +14,7 @@ class Worker extends EndUser{
         String name,
       }):
     super(workerId,
-      name: name,
+          firstName: name,
       contactNo: contactNo);
 
 }

@@ -9,6 +9,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 import 'package:gps_tracking_system/components/rounded_button.dart';
 
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -24,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _password;
   bool _isPasswordVisible;
 
-  TextFormField _buildUsernameTextFormField(){
+  TextFormField _buildUserssnameTextFormField(){
     return TextFormField(
       decoration: InputDecoration(
           labelText: "Username",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/components/custom_table_calendar.dart';
+import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 

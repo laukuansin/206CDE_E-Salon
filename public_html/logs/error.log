@@ -90,39 +90,17 @@
 2020-09-24 14:39:38 - PHP Notice:  Undefined variable: url in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\admin\controller\service\setting.php on line 25
 2020-09-24 14:40:35 - PHP Notice:  Undefined variable: url in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\admin\controller\service\setting.php on line 25
 2020-09-24 14:40:53 - PHP Notice:  Undefined variable: url in C:\Users\Jeffrey Tan\Desktop\GPSTracker\RealWorldProject\web_development\admin\controller\service\setting.php on line 25
-2020-09-28 15:13:48 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:13:48 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:13:48 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:41 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:41 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:41 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:42 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:42 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:42 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:43 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:51 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:15:51 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:15:51 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:22:33 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:22:33 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:22:33 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:35:29 - PHP Warning:  mysqli::__construct(): (HY000/1049): Unknown database 'opencart' in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 7
-2020-09-28 15:35:29 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-28 15:35:29 - PHP Warning:  DB\MySQLi::__construct(): Couldn't fetch mysqli in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\db\mysqli.php on line 10
-2020-09-29 12:57:12 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\mail\mail.php on line 77
-2020-09-29 13:19:52 - PHP Notice:  Undefined index: key in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\controller\api\login.php on line 14
-2020-10-01 14:20:32 - PHP Warning:  openssl_encrypt() expects parameter 1 to be string, array given in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\encryption.php on line 23
-2020-10-01 14:20:52 - PHP Warning:  openssl_encrypt() expects parameter 1 to be string, array given in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\encryption.php on line 23
-2020-10-01 14:21:51 - PHP Warning:  Use of undefined constant SECURITY_API_KEY_PASS - assumed 'SECURITY_API_KEY_PASS' (this will throw an Error in a future version of PHP) in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\encryption.php on line 14
-2020-10-01 14:21:51 - PHP Warning:  Use of undefined constant SECURITY_DEFAULT_IV - assumed 'SECURITY_DEFAULT_IV' (this will throw an Error in a future version of PHP) in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\system\library\encryption.php on line 17
+2020-09-30 7:15:25 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 8:44:29 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:39:59 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:48:00 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:52:36 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:52:43 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:52:46 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:53:59 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 11:55:39 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 12:25:46 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 12:26:05 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 12:27:33 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 12:32:17 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-09-30 12:32:22 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25

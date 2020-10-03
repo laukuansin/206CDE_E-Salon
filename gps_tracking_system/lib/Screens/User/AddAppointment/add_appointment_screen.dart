@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gps_tracking_system/Model/Location.dart';
+import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';

@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     // Redirect to login after 1 second
     Timer(Duration(seconds: 1), (){
-      Navigator.of(context).pushReplacementNamed("/login");
+      Navigator.of(context).pushReplacementNamed("/add_worker");
     });
   }
 
