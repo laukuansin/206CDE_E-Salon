@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _password;
   bool _isPasswordVisible;
 
-  TextFormField _buildUserssnameTextFormField(){
+  TextFormField _buildUsernameTextFormField(){
     return TextFormField(
       decoration: InputDecoration(
           labelText: "Username",
