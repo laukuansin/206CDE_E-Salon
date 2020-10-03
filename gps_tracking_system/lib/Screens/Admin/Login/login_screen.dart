@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Response/LoginResponse.dart';
+import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:gps_tracking_system/components/rounded_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,35 +15,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  FToast fToast;
+  static const String APP_TOKEN="app-token";
+  static const String USER_ID="user-id";
 
-  String _email;
+
+  String _username;
   String _password;
   bool _isPasswordVisible;
 
-  TextFormField _buildEmailTextFormField(){
+  TextFormField _buildUsernameTextFormField(){
     return TextFormField(
       decoration: InputDecoration(
-          labelText: "Email",
+          labelText: "Username",
           labelStyle: TextStyleFactory.p()
       ),
-      validator: (email){
-        return null;
-        if(email.isEmpty){
-          return "Email is required";
+      validator: (username){
+        if(username.isEmpty){
+          return "Username is required";
         }
 
-        if(email == "a") {
-          return null;
-        }
 
-        if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)){
-          return "Invalid email";
-        }
 
         return null;
       },
-      onSaved: (email){
-        _email = email;
+      onSaved: (username){
+        _username = username;
       },
     );
   }
@@ -59,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
           )
       ),
       validator: (password){
-        return null;
         if(password.isEmpty){
           return "Password is required";
         }
@@ -106,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              _buildEmailTextFormField(),
+                              _buildUsernameTextFormField(),
                               _buildPasswordTextFormField(),
                               SizedBox(height: size.height * 0.05,),
                               RoundedButton(
@@ -118,7 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return;
                                   }
                                   _formKey.currentState.save();
-                                  Navigator.of(context).pushReplacementNamed("/appointmentList");
+                                  login(_username,_password);
+
                                 },
                               )
                             ],
@@ -132,9 +135,69 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void login(String username,String password)async
+  {
+    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
+
+    LoginResponse result=await RestApi.login(username, password);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    progressDialog.hide();
+    if(result.errorCode.error==0)
+    {
+      successMessage(result.errorCode.msj);
+      Navigator.of(context).pushReplacementNamed("/appointmentList");
+      await prefs.setString(APP_TOKEN, result.response.key);
+      await prefs.setString(USER_ID, result.response.userId);
+
+    }
+    else{
+      errorMessage(result.errorCode.msj);
+    }
+
+  }
+  void errorMessage(String errMsg) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0), color: Colors.red),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.error_outline, color: Colors.white),
+          SizedBox(width: 12.0),
+          Expanded(
+              child: Text(errMsg,
+                  style: TextStyle(color: Colors.white, fontSize: 12))),
+        ]));
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        gravity: ToastGravity.BOTTOM);
+  }
+
+  void successMessage(String scsMsg) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: Colors.greenAccent),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.check, color: Colors.white),
+          SizedBox(width: 12.0),
+          Expanded(
+              child: Text(scsMsg,
+                  style: TextStyle(color: Colors.white, fontSize: 12)))
+        ]));
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        gravity: ToastGravity.BOTTOM);
+  }
   @override
   void initState() {
     super.initState();
     _isPasswordVisible = false;
+    fToast = FToast();
+    fToast.init(context);
   }
 }
