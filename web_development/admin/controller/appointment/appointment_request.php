@@ -190,6 +190,29 @@
 			$this->refresh();
 		}
 
+		public function save(){
+
+			// TODO valiate
+			if($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validateForm()){
+				$this->load->model('appointment/appointment');
+
+				$data = array(
+					'appointment_id'		=>$this->request->post['appointment_id'],
+					'appointment_date'		=>date('Y-m-d g:ia', strtotime($this->request->post['appointment_date'].' '.$this->request->post['appointment_time'])),
+					'user_id'				=>$this->request->post['worker'],
+					'appointment_address'	=>$this->request->post['appointment_address']
+				);
+				$this->model_appointment_appointment->updateAppointmentInfo($data);				
+				$this->response->redirect($this->url->link('appointment/appointment_request', 'user_token='.$this->session->data['user_token'].$url, true));
+			}
+		}
+
+		private function validateForm(){
+
+			//TODO
+			return true;
+		}
+
 
 		public function getForm(){
 			$data = array();
@@ -254,6 +277,8 @@
 				'appointment_time'	=> date('g:ia', strtotime($appointmentResult['appointment_date'])),
 				'services'			=> $current_service		
 			);
+
+			$data['action_save'] = $this->url->link('appointment/appointment_request/save', 'user_token='.$this->session->data['user_token'], true);
 
 			$this->load->model('user/user');
 			$userResults = $this->model_user_user->getEnableUsersByGroupId(10);

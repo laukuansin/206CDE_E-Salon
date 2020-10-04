@@ -811,3 +811,15 @@
 2020-10-04 14:50:49 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/vendor/twig/twig/src/Environment.php(418) : eval()'d code on line 269
 2020-10-04 14:51:49 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/vendor/twig/twig/src/Environment.php(418) : eval()'d code on line 269
 2020-10-04 14:52:09 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/vendor/twig/twig/src/Environment.php(418) : eval()'d code on line 269
+2020-10-04 16:43:29 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 208
+2020-10-04 16:43:58 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 208
+2020-10-04 16:45:15 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 208
+2020-10-04 16:48:32 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 208
+2020-10-04 16:49:08 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 208
+2020-10-04 16:52:14 - PHP Warning:  sprintf(): Too few arguments in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/appointment/appointment.php on line 170
+2020-10-04 16:52:14 - PHP Warning:  mysqli::query(): Empty query in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/library/db/mysqli.php on line 18
+2020-10-04 16:52:14 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 206
+2020-10-04 16:52:58 - PHP Warning:  sprintf(): Too few arguments in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/appointment/appointment.php on line 170
+2020-10-04 16:52:58 - PHP Warning:  mysqli::query(): Empty query in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/library/db/mysqli.php on line 18
+2020-10-04 16:53:59 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 206
+2020-10-04 16:54:09 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 206

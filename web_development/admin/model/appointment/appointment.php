@@ -154,6 +154,25 @@
 			return $this->db->query($sql)->rows;
 		}
 
+		public function updateAppointmentInfo($data){
+			$sql = sprintf("
+					UPDATE oc_appointment
+					SET 
+						appointment_address='%s',
+						appointment_date=str_to_date('%s', '%s'),
+						user_id=%d
+					WHERE
+						appointment_id=%d
+				"
+				,$this->db->escape($data['appointment_address'])
+				,$this->db->escape($data['appointment_date'])
+				,'%Y-%m-%d %l:%i%p'
+				,$this->db->escape($data['user_id'])
+				,$this->db->escape($data['appointment_id']));
+
+			$this->db->query($sql);
+		}
+
 		public function getAllAppointmentByDate($date){
 		$sql = sprintf("
 			SELECT 
