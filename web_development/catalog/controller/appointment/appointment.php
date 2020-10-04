@@ -20,52 +20,73 @@
 			$this->response->setOutput($this->load->view('appointment/appointment', $data));
 		}
 
-		public function getAvailableTimeSlot(){
+		public function makeAppointment(){
 			if($this->request->server['REQUEST_METHOD'] != 'POST')
 				return;
 
-			$workerGroupId 					= 10;
-			$durationForCurrentAppointment 	= 0;
-			
-			$this->load->model('user/user');
-			$this->load->model('appointment/appointment');
-			$this->load->model('service/setting');
-			$this->load->model('service/service');
+			$postData 			= json_decode(file_get_contents('php://input'),true);
+			$data  				= array();
 
-			$serviceList 					= $this->model_service_service->getServices();
-			$data 							= json_decode(file_get_contents('php://input'),true);
-			$date 							= date('Y/m/d', strtotime($data['appointment_date']));
-			$serviceDurationMap			 	= array();
-
-			foreach($serviceList as $service){
-				$serviceDurationMap[$service['service_id']] = $service['service_duration'];
-			}
-
-			foreach ($data['services'] as $service) {
-				$durationForCurrentAppointment += $service['qty'] * $serviceDurationMap[$service['service_id']];
-			}
-
-			// Remember do open and close
-			$users 			= $this->model_user_user->getEnableUsersByGroupId($workerGroupId);
-			$appointments 	= $this->model_appointment_appointment->getAllAppointmentByDate($date);
-
-
-			// Get day of appointment
-			$appointmentDay = date('l', strtotime($date));
+			// TODO Validation
+			$date 					= date('Y/m/d', strtotime($postData['appointment_date'])); 
 
 			// Get business hour of the day
-			$serviceSetting 		= json_decode($this->model_service_setting->getSetting()['service_setting'], true);
-			$businessHour			= $serviceSetting['business_hour'][$appointmentDay];
-			$travelDuration 		= $serviceSetting['travel_time'];
-			$appointmentInterval 	= $serviceSetting['appointment_interval'];
-			$startTime      		= strtotime($businessHour['start_time'].$businessHour['start_meridiem']);
-			$endTime 				= strtotime($businessHour['end_time'].$businessHour['end_meridiem']);
+			$travelDuration 		= 0;
+			$appointmentInterval 	= 0;
+			$startTime      		= '';
+			$endTime 				= '';
+			$this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration);
 
-			$timeline 		= array();
+			$data['customer_id'] 		= $this->customer->getId();
+			$data['user_id']			= 0;
+			$data['appointment_date'] 	= date('Y-m-d g:ia', strtotime($postData['appointment_date'].$postData['appointment_time']));
+			$data['appointment_address']= $postData['address'];
+			$data['services']			= array();
+
+			foreach($postData['services'] as $service){
+				$data['services'][$service['service_id']] = $service['qty'];
+			}
+
+			
+			$workers = $this->getWorkersTimetable(
+				10
+				, $date
+				, $startTime
+				, $endTime
+				, $appointmentInterval
+				, $travelDuration);
+
+			// Assign worker to the appointment
+			foreach($workers as $workerId => $timeTable){
+				if($timeTable[$postData['appointment_time']]){
+					$data['user_id'] = $workerId;
+					break;
+				}
+			}
+
+			$this->load->model('appointment/appointment');
+			$this->model_appointment_appointment->insertAppointment($data);
+			echo 'Success'; // Temporary because lazy
+		}
+
+		private function getServiceDurationMap(){
+			$this->load->model('service/service');
+			$serviceDurationMap			 	= array();
+			$serviceList 					= $this->model_service_service->getServices();
+
+			foreach($serviceList as $service)
+				$serviceDurationMap[$service['service_id']] = $service['service_duration'];
+			
+			return $serviceDurationMap;
+		}
+
+		private function getWorkersTimetable($workerGroupId,$date, $startTime, $endTime, $appointmentInterval, $travelDuration){
+			$this->load->model('user/user');
+			$this->load->model('appointment/appointment');
+
 			$workers 		= array();
-
-			if(!$businessHour['is_open'])
-				return array();
+			$appointments 	= $this->model_appointment_appointment->getAllAppointmentByDate($date);
+			$users 			= $this->model_user_user->getEnableUsersByGroupId($workerGroupId);
 
 			// Init workers timetable to true 
 			foreach ($users as $user) {
@@ -74,7 +95,6 @@
 					$workers[$user['user_id']][date('g:ia', $time)] = true;
 				}
 			}
-
 
 			// Set workers unavailable slot to false
 			foreach ($appointments as $appointment) {
@@ -88,6 +108,46 @@
 				}	
 			}
 
+			return $workers;
+		}
+
+		private function initServiceSetting($date, &$startTime, &$endTime,&$appointmentInterval, &$travelDuration){
+			$this->load->model('service/setting');
+			$serviceSetting 		= json_decode($this->model_service_setting->getSetting()['service_setting'], true);
+			$businessHour			= $serviceSetting['business_hour'][date('l', strtotime($date))];
+			$travelDuration 		= $serviceSetting['travel_time'];
+			$appointmentInterval 	= $serviceSetting['appointment_interval'];
+			$startTime      		= strtotime($businessHour['start_time'].$businessHour['start_meridiem']);
+			$endTime 				= strtotime($businessHour['end_time'].$businessHour['end_meridiem']);
+			return $businessHour['is_open'];
+		}
+
+		public function getAvailableTimeSlot(){
+			if($this->request->server['REQUEST_METHOD'] != 'POST')
+				return;
+
+			$workerGroupId 					= 10;
+			$durationForCurrentAppointment 	= 0;
+			
+			$this->load->model('user/user');			
+			// Process post data
+			$data 							= json_decode(file_get_contents('php://input'),true);
+			$date 							= date('Y/m/d', strtotime($data['appointment_date']));
+			$serviceDurationMap 			= $this->getServiceDurationMap();
+
+			foreach ($data['services'] as $service) 
+				$durationForCurrentAppointment += $service['qty'] * $serviceDurationMap[$service['service_id']];
+			
+
+			// Get business hour of the day
+			$travelDuration 		= 0;
+			$appointmentInterval 	= 0;
+			$startTime      		= '';
+			$endTime 				= '';
+			$this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration);
+
+			$timeline 		= array();
+			$workers 		= $this->getWorkersTimetable($workerGroupId,$date, $startTime, $endTime, $appointmentInterval, $travelDuration);
 
 			// Find time slot which allow for curent appointment duration 
 			foreach($workers as $workerId => $workerTimetable){

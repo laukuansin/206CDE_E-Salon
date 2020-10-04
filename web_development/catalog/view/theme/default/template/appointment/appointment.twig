@@ -73,7 +73,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-12" for="address">{{text_address}}</label>
                             <div class="col-sm-12">
-                              <textarea class="form-control" rows='3' id="address" placeholder="Enter address"></textarea>
+                              <textarea class="form-control" rows='3' id="address" ng-model='address' placeholder="Enter address"></textarea>
                             </div>
                           </div>
 
@@ -100,7 +100,7 @@
                             <div class ='p-3 rounded' style="background-color:#E9ECEF; min-height:170px; max-height:170px; overflow:auto;">
                             <div class="form-check" ng-repeat='time in availableTimeSlots'>
                               <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="optradio">{[{time}]}
+                                <input type="radio" class="form-check-input" name="optradio" value='{[{time}]}' ng-model='model.selectedTime'>{[{time}]}
                               </label>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                   </div>
                   <div class="form-group mt-5">
                     <div class="col-sm-offset-2 col-sm-12">
-                      <button type="submit" class="btn btn-primary">Make appointment</button>
+                      <button type="button" class="btn btn-primary" ng-click='postMakeAppointment()'>Make appointment</button>
                     </div>
                   </div>
                 </form>
@@ -132,10 +132,14 @@
             {% endfor %}
         ];
 
-        $scope.availableTimeSlots = [];
-        $scope.appointmentDate = null;
-        $scope.selectedServiceList = [];
-        $scope.selectedItemName = '{{text_select_service}}';
+        $scope.model                = {};
+        $scope.model.selectedTime   = '';
+        $scope.address              = '';
+        $scope.appointmentDate      = null;
+        $scope.availableTimeSlots   = [];
+        $scope.selectedServiceList  = [];
+        $scope.selectedItemName     = '{{text_select_service}}';
+
         $scope.addItem = function(){
             if($scope.selectedItem == null)
                 return;
@@ -185,6 +189,36 @@
                 );
             }
         }
+
+        $scope.postMakeAppointment = function(){
+            if($scope.selectedServiceList.length > 0 
+                && $scope.appointmentDate !== null
+                && $scope.address.length > 0
+                && $scope.model.selectedTime.length > 0){
+
+                var data = {
+                    appointment_date: $scope.appointmentDate,
+                    services        : $scope.selectedServiceList,
+                    address         : $scope.address,
+                    appointment_time: $scope.model.selectedTime
+                };
+
+                var url = window.location.href;
+                if(url[url.length - 1] === '#')
+                    url = url.slice(0, url.length - 1) 
+
+                $http.post(url + '/makeAppointment',data).then(
+                    function(response){
+                        alert(response.data);
+                        $scope.availableTimeSlots = response.data;
+                    },function(response){
+                        alert('Hailat' + response.data);
+                    }
+                );
+            }
+            else
+                alert('No ' + $scope.model.selectedTime);
+        } 
 
     });
     </script>

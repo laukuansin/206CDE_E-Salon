@@ -127,6 +127,36 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => $catalog
 				);		
 			}
+
+			$appointment = array();
+			if($this->user->hasPermission('access', 'appointment/appointment_request')){
+				$appointment[] = array(
+					'name' 		=> $this->language->get('text_appointment_request'),
+					'href'		=> $this->url->link('appointment/appointment_request', 'user_token='.$this->session->data['user_token'], true),
+					'children' 	=> array()
+				);
+			}
+
+			if($this->user->hasPermission('access', 'appointment/appointment_all')){
+				$appointment[] = array(
+					'name' 		=> $this->language->get('text_appointment_all'),
+					'href'		=> $this->url->link('appointment/appointment_all', 'user_token='.$this->session->data['user_token'], true),
+					'children' 	=> array()
+				);
+			}
+
+
+			if ($appointment) {					
+				$data['menus'][] = array(
+					'id'       => 'menu-service',
+					'icon'	   => 'fa-tasks', 
+					'name'	   => $this->language->get('text_appointment'),
+					'href'     => '',
+					'children' => $appointment
+				);		
+			}
+
+
 			
 			// Service
 			$service = array();
@@ -146,13 +176,6 @@ class ControllerCommonColumnLeft extends Controller {
 				);					
 			}
 
-			if($this->user->hasPermission('access', 'service/appointment')){
-				$service[] = array(
-					'name' 		=> $this->language->get('text_appointment'),
-					'href'		=> $this->url->link('service/appointment', 'user_token='.$this->session->data['user_token'], true),
-					'children' 	=> array()
-				);
-			}
 
 			if ($service) {					
 				$data['menus'][] = array(
