@@ -2,9 +2,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Response/AddStaffResponse.dart';
+import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class AddWorker extends StatefulWidget {
   AddWorkerState createState() => AddWorkerState();
@@ -18,6 +22,7 @@ class AddWorkerState extends State<AddWorker> {
   String errorMsgOfEmail, errorMsgPassword, errorMsgConfirmPassword;
   String username, firstName, lastName, userGroup, email, password, confirmPassword, status;
   bool _hiddenPassword, _hiddenConfirmPassword;
+  FToast fToast;
 
   @override
   Widget build(BuildContext context) {
@@ -400,6 +405,8 @@ class AddWorkerState extends State<AddWorker> {
   @override
   void initState() {
     super.initState();
+    fToast = FToast();
+    fToast.init(context);
 
     _listGroup = List();
     _listGroup.add("Owner");
@@ -424,11 +431,75 @@ class AddWorkerState extends State<AddWorker> {
   }
 
   void addWorker() {
+
     FocusScope.of(context).unfocus();
+    _formKey.currentState.save();
 
     if (_formKey.currentState.validate()) {
-      return;
+      String imagePath;
+      if(fileImg==null)
+      {
+        imagePath="";
+      }
+      else{
+        imagePath=fileImg.path;
+
+      }
+      addStaff(username,firstName,lastName,email,password,imagePath,status,userGroup);
+    return;
     }
-    _formKey.currentState.save();
+
+  }
+
+  void addStaff(String username,String firstname,String lastname,String email,String password,String imagePath,String status,String userGroup)async{
+    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
+    AddStaffResponse result =await RestApi.addStaff(username, userGroup, firstName, lastName, email, imagePath, password, status);
+    progressDialog.hide();
+
+    if(result.errorCode.error==0)
+    {
+      successMessage(result.errorCode.msj);
+
+    }
+    else{
+      errorMessage(result.errorCode.msj);
+    }
+  }
+  void errorMessage(String errMsg) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0), color: Colors.red),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.error_outline, color: Colors.white),
+          SizedBox(width: 12.0),
+          Expanded(
+              child: Text(errMsg,
+                  style: TextStyle(color: Colors.white, fontSize: 12))),
+        ]));
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        gravity: ToastGravity.BOTTOM);
+  }
+
+  void successMessage(String scsMsg) {
+    Widget toast = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: Colors.greenAccent),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(Icons.check, color: Colors.white),
+          SizedBox(width: 12.0),
+          Expanded(
+              child: Text(scsMsg,
+                  style: TextStyle(color: Colors.white, fontSize: 12)))
+        ]));
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        gravity: ToastGravity.BOTTOM);
   }
 }
