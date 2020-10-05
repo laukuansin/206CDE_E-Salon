@@ -209,8 +209,8 @@
 
                 $http.post(url + '/makeAppointment',data).then(
                     function(response){
-                        alert(response.data);
-                        $scope.availableTimeSlots = response.data;
+                        if(response.data == 'Success')
+                            window.location.href = "/index.php?route=common/home";
                     },function(response){
                         alert('Hailat' + response.data);
                     }

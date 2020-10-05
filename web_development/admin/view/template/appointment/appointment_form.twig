@@ -1,6 +1,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 {{ header }}
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -59,6 +59,47 @@
               </select>
 	    		</div>
 	    	</div>
+        <div class='form-group'>
+          <label class="control-label col-sm-2" for="input-worker">{{entry_services}}</label>
+          <div class='col-sm-10'>
+            <div class='well well-sm' id='container-form' style='overflow:auto'>
+              <div class='col-sm-6'>
+                <table class='table mb-0 pb-0' id="table-service">
+                  <thead>
+                      <tr>
+                          <th style="width:50%">Service name</th>
+                          <th class='text-right' style="width:10%">Pax</th>
+                          <th class='text-right' style="width:30%">Service price</th>
+                          <th class='text-center' style="width:10%">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody id='table-service-content'>
+                      <tr ng-repeat='(serviceId, serviceQty) in model.selectedServiceList'>
+                          <td style="width:50%">{[{serviceList[serviceId]['service_name']}]}</td>
+                          <td class='text-right' style='width:10%'>
+                            <input type='text' class='form-control text-right'name="service[{[{serviceId}]}]" ng-model='model.selectedServiceList[serviceId]' ng-change='requestAvailableTimeSlot()'/>
+                          </td>
+                          <td class='text-right' style='width:30%'>{[{serviceList[serviceId]['service_price']}]}</td>
+                          <td style="width:10%" class='text-center'>
+                              <i class="fa fa-trash text-danger btn" ng-click="removeService(serviceId)"></i>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%">
+                            <select class="form-control" id="service" name='service' ng-model='selected_service_text' ng-options="serviceId as serviceInfo['service_name']  for (serviceId, serviceInfo) in getSelectableServiceList()" >
+                              <option value="" selected disabled>Select service</option>
+                            </select>
+                          </td>
+                          <td style="width:50%" colspan="4" class='text-right'>
+                              <button type='button' ng-click="addService()" class='btn btn-primary' id='btn-add-service'><i class="fa fa-plus"></i>  Add service</button>
+                          </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+             </div>
+          </div>
+        </div>
         <div class='form-group required'>
           <label class='control-label col-sm-2'>{{entry_date}}</label>
             <div class='col-sm-2'>
@@ -112,12 +153,14 @@
       this.workerName     = workerName;
       this.appointmentId  = appointmentId;
       this.workerId       = workerId;
+      this.services       = services;
   }
 
   function Worker(workerId, workerTimetable){
     this.workerId = workerId;
     this.workerTimetable = workerTimetable;
   }
+
 
   Worker.prototype.populateData = function(){
     var data = [];
@@ -139,16 +182,26 @@
       ,'{{appointment.address}}'
       ,'{{appointment.worker_id}}'
       ,'{{appointment.worker_name}}'
-      ,'{{appointment.appointment_id}}');
+      ,'{{appointment.appointment_id}}'
+      , {{appointment.services}});
 
-    $scope.workerList = {{worker}};
-    console.log($scope.workerList);
+
+    $scope.serviceList  = {{serviceList}};
+    $scope.workerList   = {{worker}};
 
     $scope.worker = null;
-    $scope.model = {};
-    $scope.model.selectedDate   = '{{appointment.appointment_date}}';
-    $scope.model.selectedWorker = '{{appointment.worker_id}}';
-    $scope.model.selectedTime = '{{appointment.appointment_time}}';
+    $scope.model  = {};
+    $scope.model.selectedServiceList  = {{appointment.services}};
+    $scope.model.selectedDate         = '{{appointment.appointment_date}}';
+    $scope.model.selectedWorker       = '{{appointment.worker_id}}';
+    $scope.model.selectedTime         = '{{appointment.appointment_time}}';
+
+    $scope.getSelectableServiceList = function(){
+
+      return Object.keys($scope.serviceList)
+      .filter((serviceId) => {return (!(serviceId in $scope.model.selectedServiceList));})
+      .reduce((obj, key)  =>{obj[key] = $scope.serviceList[key]; return obj;},{});
+    }
 
     $scope.requestWorkerTimeSlot = function(){
       if($scope.appointment.date != $scope.model.selectedDate)
@@ -156,13 +209,13 @@
       else
         $scope.model.selectedTime = $scope.appointment.time;
       var data = {
-        worker_id: $scope.model.selectedWorker,
-        date     : $scope.model.selectedDate,
-        appointment_id: $scope.appointment.appointmentId
+        worker_id     : $scope.model.selectedWorker,
+        date          : $scope.model.selectedDate,
+        appointment_id: $scope.appointment.appointmentId,
+        services      : $scope.model.selectedServiceList
       }
 
       var url = '/admin/index.php?route=appointment/appointment_request/getWorkerTimetable&user_token={{user_token}}';
-      console.log($scope.model.selectedDate);
       $http.post(url, data).then(
         function(response){
           console.log(response.data);
@@ -174,7 +227,22 @@
       );
     }
 
-    $scope.requestWorkerTimeSlot();
+
+    $scope.addService = function(){
+      if($scope.selected_service_text in $scope.serviceList && !($scope.selected_service_text in $scope.model.selectedServiceList)){
+        $scope.model.selectedServiceList[$scope.selected_service_text] = 1;
+      }
+    }
+
+    $scope.removeService = function(serviceId){
+      delete $scope.model.selectedServiceList[serviceId];
+    }
+
+    $scope.$watch('model.selectedServiceList', function(){
+      $scope.requestWorkerTimeSlot();
+    }, true);
+
+    
     
 
   });

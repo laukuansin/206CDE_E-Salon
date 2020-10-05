@@ -66,7 +66,7 @@
 
 			$this->load->model('appointment/appointment');
 			$this->model_appointment_appointment->insertAppointment($data);
-			echo 'Success'; // Temporary because lazy
+			echo 'Success'; // TO DO validation
 		}
 
 		private function getServiceDurationMap(){
@@ -152,7 +152,6 @@
 			// Find time slot which allow for curent appointment duration 
 			foreach($workers as $workerId => $workerTimetable){
 				$counter 	= 0;
-				$timeSlot 	= array_keys($workerTimetable);
 				foreach($workerTimetable as $time => $isAvailable){
 					if($isAvailable){
 						$counter+=$appointmentInterval;

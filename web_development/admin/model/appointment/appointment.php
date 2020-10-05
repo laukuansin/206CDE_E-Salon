@@ -171,6 +171,19 @@
 				,$this->db->escape($data['appointment_id']));
 
 			$this->db->query($sql);
+
+			$sql = "DELETE FROM oc_appointment_service WHERE appointment_id=".$this->db->escape($data['appointment_id']);
+			$this->db->query($sql);
+
+			$sql = "INSERT INTO oc_appointment_service(appointment_id, service_id, qty) VALUES ";
+			foreach($data['services'] as $serviceId => $qty){
+				$sql .= sprintf("(%d,%d,%d),"
+								, $this->db->escape($data['appointment_id'])
+								, $this->db->escape($serviceId)
+								, $this->db->escape($qty));
+			}
+			$sql = rtrim($sql, ',');
+			$this->db->query($sql);
 		}
 
 		public function getAllAppointmentByDate($date){

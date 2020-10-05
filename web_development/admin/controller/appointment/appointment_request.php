@@ -196,12 +196,15 @@
 			if($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validateForm()){
 				$this->load->model('appointment/appointment');
 
+				
 				$data = array(
 					'appointment_id'		=>$this->request->post['appointment_id'],
 					'appointment_date'		=>date('Y-m-d g:ia', strtotime($this->request->post['appointment_date'].' '.$this->request->post['appointment_time'])),
 					'user_id'				=>$this->request->post['worker'],
-					'appointment_address'	=>$this->request->post['appointment_address']
+					'appointment_address'	=>$this->request->post['appointment_address'],
+					'services'				=>$this->request->post['service']
 				);
+
 				$this->model_appointment_appointment->updateAppointmentInfo($data);				
 				$this->response->redirect($this->url->link('appointment/appointment_request', 'user_token='.$this->session->data['user_token'].$url, true));
 			}
@@ -217,15 +220,10 @@
 		public function getForm(){
 			$data = array();
 			$this->load->language('appointment/appointment_form');
-
-			if(!isset($this->request->get['appointment_id'])){
-				throw new Exception("Error Processing Request", 1);
-			}
-
 			$appointmentId = $this->request->get['appointment_id'];
 
+			// Sort
 			$url = '';
-
 			if(isset($this->request->get['sort'])){
 				$sort = $this->request->get['sort'];
 				$url .= '&sort='.$this->request->get['sort'];
@@ -238,31 +236,42 @@
 				$url .= '&order='.$this->request->get['order'];
 			} else {
 				$order = 'ASC';
-			}	
+			}
 
+			// View
 			$data['header'] 		= $this->load->controller('common/header');
 			$data['column_left'] 	= $this->load->controller('common/column_left');
 			$data['footer'] 		= $this->load->controller('common/footer');
 	 		$data['cancel']			= $this->url->link('service/services', 'user_token='.$this->session->data['user_token']. $url, true);
-
 			$data['breadcrumbs'] = array();
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('text_home'),
 				'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
 			);
-
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('text_appointment_request'),
 				'href' => $this->url->link('appointment/appointment_request', 'user_token=' . $this->session->data['user_token']. $url, true)
 			);
 
+			// Get appointment data
 			$this->load->model('appointment/appointment');
 			$appointmentResult = $this->model_appointment_appointment->getAppointmentById($appointmentId);
+
+			$this->load->model('service/service');
+			$serviceList = array();
+			$serviceResults = $this->model_service_service->getServices();
+			foreach($serviceResults as $serviceResult){
+				$serviceList[$serviceResult['service_id']] = array(
+					'service_price' => $serviceResult['service_price'],
+					'service_name'	=> $serviceResult['service_name']
+				);
+			}
+			$data['serviceList'] = json_encode($serviceList);
 
 			$current_service = array();
 			$serviceResults = $this->model_appointment_appointment->getServiceByAppointmentId($appointmentId);
 			foreach($serviceResults as $serviceResult){
-				$current_service[$serviceResult['service_id']] = $serviceResult['service_name'];
+				$current_service[$serviceResult['service_id']] = $serviceResult['qty'];
 			}
 			
 			$data['user_token']		= $this->session->data['user_token'];
@@ -275,7 +284,7 @@
 				'address'			=> $appointmentResult['appointment_address'],
 				'appointment_date' 	=> date('Y-m-d', strtotime($appointmentResult['appointment_date'])),
 				'appointment_time'	=> date('g:ia', strtotime($appointmentResult['appointment_date'])),
-				'services'			=> $current_service		
+				'services'			=> json_encode($current_service)
 			);
 
 			$data['action_save'] = $this->url->link('appointment/appointment_request/save', 'user_token='.$this->session->data['user_token'], true);
@@ -311,39 +320,88 @@
 			$date 					= $postData['date'];
 			$workerId				= $postData['worker_id'];
 			$appointment_id			= $postData['appointment_id'];
+			$services  				= $postData['services'];
 
 			$startTime 				= '';
 			$endTime 				= '';
 			$appointmentInterval 	= 0;
 			$travelDuration  	 	= 0;
+			$timetable 				= array();
 			
 			$this->load->model('user/user');
 			$this->load->model('appointment/appointment');
-			$this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration);
 			
 
 			$worker 		= array();
-			$appointments 	= $this->model_appointment_appointment->getAllAppointmentByDate($date);
-			$user 			= $this->model_user_user->getUser($workerId);
+			if($this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration))
+			{
+				$appointments 	= $this->model_appointment_appointment->getAllAppointmentByDate($date);
+				$user 			= $this->model_user_user->getUser($workerId);
 
-			// Init workers timetable to true 
-			$worker[$user['user_id']] = array();
-			for($time = $startTime; $time <= $endTime; $time+=($appointmentInterval * 60)){
-				$worker[$user['user_id']][date('g:ia', $time)] = true;
-			}
+				// Init workers timetable to false 
+				$worker[$user['user_id']] = array();
+				for($time = $startTime; $time <= $endTime; $time+=($appointmentInterval * 60)){
+					$timetable[date('g:ia', $time)] = true;
+				}
 
-			// Set workers unavailable slot to false
-			foreach ($appointments as $appointment) {
-				if($appointment['user_id'] != $user['user_id'] || $appointment['appointment_id'] == $appointment_id) continue;
-				$appointmentDate = strtotime($appointment['appointment_date']);
-				$totalDuration   = $appointment['total_duration'] * 60;
-				for($time = $appointmentDate - ($travelDuration - $appointmentInterval) * 60; $time < $appointmentDate + $totalDuration + $travelDuration * 60; $time +=($appointmentInterval * 60))
+				// Set workers unavailable slot to false
+				foreach ($appointments as $appointment) {
+					// If not that worker appointment, ignore
+					if($appointment['user_id'] != $user['user_id'] || $appointment['appointment_id'] == $appointment_id) continue;
+
+
+					// Remove date, need only time
+					$appointmentDate = strtotime(date('g:ia', strtotime($appointment['appointment_date'])));
+					$totalDuration   = $appointment['total_duration'] * 60;
+
+					for($time = $appointmentDate - ($travelDuration - $appointmentInterval) * 60; $time < $appointmentDate + $totalDuration + $travelDuration * 60; $time +=($appointmentInterval * 60))
+					{
+						if($time < $startTime || $time > $endTime){
+							continue;
+						}
+						$timetable[date('g:ia', $time)] = false;
+					}	
+				}
+
+				$serviceDurationMap = $this->getServiceDurationMap();
+				$durationForCurrentAppointment = 0;
+				foreach ($services as $serviceId => $qty) {
+					$durationForCurrentAppointment += $qty * $serviceDurationMap[$serviceId];
+				}
+
+				
+
+				// Match with current appointment
 				{
-					if($time < $startTime){
-						continue;
+					$counter 	= 0;
+					foreach($timetable as $time => $isAvailable){
+						if($isAvailable){
+							$counter+=$appointmentInterval;
+						}
+						else{
+							$counter = 0;
+						}
+
+						if($counter > $durationForCurrentAppointment){
+							$durationForCurrentAppointmentInSec = $durationForCurrentAppointment * 60;
+							$worker[$user['user_id']][strtotime($time) - $durationForCurrentAppointmentInSec] = true;
+						}
 					}
-					$worker[$appointment['user_id']][date('g:ia', $time)] = false;
-				}	
+
+					// Sort time by using second, then convert back to readable string format
+					ksort($worker[$user['user_id']]);
+					foreach ($worker[$user['user_id']] as $time => $value) {
+						$worker[$user['user_id']][date('g:ia', $time)] = $worker[$user['user_id']][$time];
+						unset($worker[$user['user_id']][$time]);
+					}
+				}
+			}
+			else
+			{
+				$worker[$user['user_id']] = array();
+				for($time = $startTime; $time <= $endTime; $time+=($appointmentInterval * 60)){
+					$worker[$user['user_id']][date('g:ia', $time)] = false;
+				}
 			}
 			$this->response->setOutput(json_encode($worker));
 		}

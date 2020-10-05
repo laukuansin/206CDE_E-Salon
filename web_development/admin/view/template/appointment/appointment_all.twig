@@ -3,14 +3,14 @@
 <div id='content'>
 	<div class="page-header">
 	    <div class="container-fluid">
-	      <div class="pull-right">
+{# 	      <div class="pull-right">
 	      	<button type="button" data-toggle="tooltip" title="{{ button_accept_all }}" class="btn btn-success" onclick="$('#form-user-group').attr('action','{{accept_all}}'); $('#form-user-group').submit();">
 	        	<i class="fa fa-check"></i>
 	        </button>
 	        <button type="button" data-toggle="tooltip" title="{{ button_reject_all }}" class="btn btn-danger" onclick="$('#form-user-group').attr('action','{{reject_all}}');$('#form-user-group').submit();">
 	        	<i class="fa fa-times"></i>
 	        </button>
-	      </div>
+	      </div> #}
 	      <h1>{{ heading_title }}</h1>
 	      <ul class="breadcrumb">
 	        {% for breadcrumb in breadcrumbs %}
