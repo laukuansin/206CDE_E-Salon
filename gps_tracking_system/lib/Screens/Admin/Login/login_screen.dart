@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart';
+import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:gps_tracking_system/Components/rounded_button.dart';
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,35 +16,32 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  FToast fToast;
+  static const String APP_TOKEN="app-token";
+  static const String USER_ID="user-id";
 
-  String _email;
+
+  String _username;
   String _password;
   bool _isPasswordVisible;
 
-  TextFormField _buildEmailTextFormField(){
+  TextFormField _buildUsernameTextFormField(){
     return TextFormField(
       decoration: InputDecoration(
-          labelText: "Email",
+          labelText: "Username",
           labelStyle: TextStyleFactory.p()
       ),
-      validator: (email){
-        return null;
-        if(email.isEmpty){
-          return "Email is required";
+      validator: (username){
+        if(username.isEmpty){
+          return "Username is required";
         }
 
-        if(email == "a") {
-          return null;
-        }
 
-        if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)){
-          return "Invalid email";
-        }
 
         return null;
       },
-      onSaved: (email){
-        _email = email;
+      onSaved: (username){
+        _username = username;
       },
     );
   }
@@ -59,7 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
           )
       ),
       validator: (password){
-        return null;
         if(password.isEmpty){
           return "Password is required";
         }
@@ -106,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              _buildEmailTextFormField(),
+                              _buildUsernameTextFormField(),
                               _buildPasswordTextFormField(),
                               SizedBox(height: size.height * 0.05,),
                               RoundedButton(
@@ -118,7 +121,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return;
                                   }
                                   _formKey.currentState.save();
-                                  Navigator.of(context).pushReplacementNamed("/appointmentList");
+                                  login(_username,_password);
+
                                 },
                               )
                             ],
@@ -132,9 +136,72 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void login(String username,String password)async
+  {
+    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
+
+    LoginResponse result    = await RestApi.admin.login(username, password);
+    progressDialog.hide();
+
+    showToastMessage(result.response.status, result.response.msj);
+    if(result.response.status == 1) {
+      User.createInstance(result.userToken, Role.OWNER);
+      Navigator.of(context).pushReplacementNamed("/appointmentList");
+    }
+  }
+
+  void showToastMessage(int status, String msg) {
+    Widget toast;
+    if(status == 1) {
+      toast = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.greenAccent
+          ),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, color: Colors.white),
+                SizedBox(width: 12.0),
+                Expanded(
+                    child: Text(msg,
+                    style: TextStyleFactory.p(color: Colors.white)))
+              ]
+          )
+      );
+    }
+    else {
+       toast = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0), color: Colors.red),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, color: Colors.white),
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: Text(
+                    msg,
+                    style: TextStyleFactory.p(color: Colors.white))),
+              ]
+          )
+       );
+    }
+
+    fToast.showToast(
+        child: toast,
+        toastDuration: Duration(seconds: 2),
+        gravity: ToastGravity.BOTTOM);
+  }
+
   @override
   void initState() {
     super.initState();
     _isPasswordVisible = false;
+    fToast = FToast();
+    fToast.init(context);
   }
 }

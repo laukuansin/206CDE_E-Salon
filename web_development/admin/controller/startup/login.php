@@ -6,13 +6,18 @@ class ControllerStartupLogin extends Controller {
 		$ignore = array(
 			'common/login',
 			'common/forgotten',
-			'common/reset'
+			'common/reset',
 		);
+
+		$api = array(
+			'api/login'
+		);
+
 
 		// User
 		$this->registry->set('user', new Cart\User($this->registry));
 
-		if (!$this->user->isLogged() && !in_array($route, $ignore)) {
+		if (!$this->user->isLogged() && !in_array($route, $ignore) && !in_array($route, $api)) {
 			return new Action('common/login');
 		}
 
@@ -23,10 +28,10 @@ class ControllerStartupLogin extends Controller {
 				'common/forgotten',
 				'common/reset',
 				'error/not_found',
-				'error/permission'
+				'error/permission',
 			);
 
-			if (!in_array($route, $ignore) && (!isset($this->request->get['user_token']) || !isset($this->session->data['user_token']) || ($this->request->get['user_token'] != $this->session->data['user_token']))) {
+			if (!in_array($route, $ignore) && !in_array($route, $api) && (!isset($this->request->get['user_token']) || !isset($this->session->data['user_token']) || ($this->request->get['user_token'] != $this->session->data['user_token']))) {
 				return new Action('common/login');
 			}
 		} else {
