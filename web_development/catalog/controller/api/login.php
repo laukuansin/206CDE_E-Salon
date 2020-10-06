@@ -49,4 +49,54 @@ class ControllerApiLogin extends Controller {
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}
+
+
+	public function customer_login(){
+		$email = (isset($this->request->post['email'])) ? $this->request->post['email'] : false;
+		$password = (isset($this->request->post['password'])) ? $this->request->post['password'] : false;
+
+		$this->load->model('api/login');
+		$this->load->library('obfuscate');
+		$this->encryptData = new Obfuscate();
+
+		if($email && $password){
+			$checkData = $this->model_api_login->validateCustomerAccount($email,$password);
+
+			if(!empty($checkData)){
+				$customerID = $checkData['customer_id'];
+				$authorization = array(
+					'customer_id'	=> $customerID,
+					'email' 		=> $email,
+					'password' 		=> $password
+				);
+
+				$response= [
+					'customer_id'=>$customerID,
+					'key'=>$this->encryptData->encrypt($authorization)
+				];
+				
+				$json['response'] = $response;
+				$json['error_code'] = [
+					'error' => 0,
+					'msj'   => 'Login success.'
+				];				
+			}
+			else{
+				$json['response'] = json_decode("{}");
+				$json['error_code'] = [
+					'error' => 1,
+					'msj'   => 'E-mail or Password is wrong.'
+				];
+			}
+		}
+		else{
+			$json['response'] = json_decode("{}");
+			$json['error_code'] = [
+                'error' => 1,
+                'msj'   => 'E-mail and Password cannot be empty.'
+            ];
+		}
+
+		$this->response->setOutput(json_encode($json));
+	}
 }
