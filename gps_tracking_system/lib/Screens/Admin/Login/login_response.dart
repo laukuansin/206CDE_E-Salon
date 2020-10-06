@@ -6,60 +6,40 @@ String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
 
 class LoginResponse {
   LoginResponse({
+    this.userToken,
     this.response,
-    this.errorCode,
   });
 
+  String userToken;
   Response response;
-  ErrorCode errorCode;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+    userToken: json["user_token"],
     response: Response.fromJson(json["response"]),
-    errorCode: ErrorCode.fromJson(json["error_code"]),
   );
 
   Map<String, dynamic> toJson() => {
+    "user_token": userToken,
     "response": response.toJson(),
-    "error_code": errorCode.toJson(),
-  };
-}
-
-class ErrorCode {
-  ErrorCode({
-    this.error,
-    this.msj,
-  });
-
-  int error;
-  String msj;
-
-  factory ErrorCode.fromJson(Map<String, dynamic> json) => ErrorCode(
-    error: json["error"],
-    msj: json["msj"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "error": error,
-    "msj": msj,
   };
 }
 
 class Response {
   Response({
-    this.userId,
-    this.key,
+    this.status,
+    this.msj,
   });
 
-  String userId;
-  String key;
+  int status;
+  String msj;
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
-    userId: json["user_id"],
-    key: json["key"],
+    status: json["status"],
+    msj: json["msj"],
   );
 
   Map<String, dynamic> toJson() => {
-    "user_id": userId,
-    "key": key,
+    "status": status,
+    "msj": msj,
   };
 }

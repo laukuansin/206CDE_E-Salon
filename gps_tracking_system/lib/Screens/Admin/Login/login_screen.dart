@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Response/LoginResponse.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'package:gps_tracking_system/Components/rounded_button.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -141,59 +141,62 @@ class _LoginScreenState extends State<LoginScreen> {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
 
-    LoginResponse result=await RestApi.login(username, password);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    LoginResponse result    = await RestApi.admin.login(username, password);
     progressDialog.hide();
-    if(result.errorCode.error==0)
-    {
-      successMessage(result.errorCode.msj);
+
+    showToastMessage(result.response.status, result.response.msj);
+    if(result.response.status == 1) {
+      User.createInstance(result.userToken, Role.OWNER);
       Navigator.of(context).pushReplacementNamed("/appointmentList");
-      await prefs.setString(APP_TOKEN, result.response.key);
-      await prefs.setString(USER_ID, result.response.userId);
-
     }
-    else{
-      errorMessage(result.errorCode.msj);
-    }
-
   }
-  void errorMessage(String errMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0), color: Colors.red),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.error_outline, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(errMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12))),
-        ]));
+
+  void showToastMessage(int status, String msg) {
+    Widget toast;
+    if(status == 1) {
+      toast = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Colors.greenAccent
+          ),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, color: Colors.white),
+                SizedBox(width: 12.0),
+                Expanded(
+                    child: Text(msg,
+                    style: TextStyleFactory.p(color: Colors.white)))
+              ]
+          )
+      );
+    }
+    else {
+       toast = Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0), color: Colors.red),
+          child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, color: Colors.white),
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: Text(
+                    msg,
+                    style: TextStyleFactory.p(color: Colors.white))),
+              ]
+          )
+       );
+    }
+
     fToast.showToast(
         child: toast,
         toastDuration: Duration(seconds: 2),
         gravity: ToastGravity.BOTTOM);
   }
 
-  void successMessage(String scsMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: Colors.greenAccent),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.check, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(scsMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12)))
-        ]));
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(seconds: 2),
-        gravity: ToastGravity.BOTTOM);
-  }
   @override
   void initState() {
     super.initState();

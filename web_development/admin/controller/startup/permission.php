@@ -43,7 +43,8 @@ class ControllerStartupPermission extends Controller {
 				'common/forgotten',
 				'common/reset',
 				'error/not_found',
-				'error/permission'
+				'error/permission',
+				'api/login'
 			);
 
 			if (!in_array($route, $ignore) && !$this->user->hasPermission('access', $route)) {
