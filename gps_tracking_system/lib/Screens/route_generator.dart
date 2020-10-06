@@ -9,11 +9,12 @@ import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart' as Use
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker.dart';
+import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
 
 class RouteGenerator{
 
   static const bool _DEBUG_MODE = false;
-  static const bool _ADMIN_MODE = true;
+  static const bool _ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget, {AppBar appbar})=> Scaffold(
       appBar: appbar,
@@ -57,6 +58,7 @@ class RouteGenerator{
           case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
           case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
           case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
+          case "/topUp"                           :return _buildRoute(TopUpScreen());
           case "/location_picker" :
             if(args is Location)
               return _buildRoute(LocationPickerScreen(args));
