@@ -7,18 +7,20 @@ class ControllerApiLogin extends Controller {
 		$json = array();
 		$this->language->load('common/login');
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-			$this->session->data['user_token'] = token(32);
-				
-			$json['user_token'] = $this->session->data['user_token'];
+			
+			$this->load->model('user/user');
+			$token  = $this->model_user_user->getUserTokenById($this->user->getId())['user_token'];
+
+			$json['user_token'] = $token;
 			$json['response']   = array(
 				'status' => 1,
-				'msj'	 => $this->language->get('text_login_success')
+				'msg'	 => $this->language->get('text_login_success')
 				);
 		}
 		else{
 			$json['response'] = array(
 				'status' => 0,
-				'msj'	 => $this->language->get('error_login')
+				'msg'	 => $this->language->get('error_login')
 			);
 		}
 		
@@ -26,8 +28,13 @@ class ControllerApiLogin extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+
 	protected function validate() {
-		if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->login($this->request->post['username'], html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8'))) {
+		if(isset($this->request->post['api_key'])){
+			if(!$this->user->loginByApiKey($this->request->post['api_key']))
+				$this->error['warning'] = $this->language->get('error_login');
+		}
+		else if (!isset($this->request->post['username']) || !isset($this->request->post['password']) || !$this->user->login($this->request->post['username'], html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8'))) {
 			$this->error['warning'] = $this->language->get('error_login');
 		}
 

@@ -1,17 +1,22 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
 import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
+import 'package:gps_tracking_system/Response/user_group.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
 
 
 class RestApi
 {
   RestApi._();
-  static _Admin admin = _Admin();
 
+  static _Admin admin = _Admin();
   static const String _DOMAIN_NAME ="http://192.168.68.107"; //android emulator 10.0.2.2
   static const String _GOOGLE_MAP_API_KEY = "AIzaSyBrNE3BrIA9VwrjmlsHo25fVdchca9H04g";
 
@@ -47,7 +52,6 @@ class RestApi
     var response = await http.get(url);
     return jsonDecode(response.body);
   }
-
 }
 
 class _Admin{
@@ -66,4 +70,46 @@ class _Admin{
     return loginResponseFromJson(response.body);
   }
 
+  Future<AddWorkerResponse> addUser(
+      String username,
+      String userGroup,
+      String firstName,
+      String lastName,
+      String email,
+      String imagePath,
+      String password,
+      String status,
+      String confirm
+    ) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/user/add&api_key=" + User.getToken();
+    log("Calling add user API : " + url);
+
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    //add text fields
+    request.fields["username"]      = username;
+    request.fields["user_group_id"] = userGroup;
+    request.fields["firstname"]     = firstName;
+    request.fields["lastname"]      = lastName;
+    request.fields["email"]         = email;
+    request.fields["password"]      = password;
+    request.fields["status"]        = status;
+    request.fields["confirm"]       = confirm;
+
+    //create multipart using filepath, string or bytes
+    if(imagePath.isNotEmpty)
+      request.files.add(await http.MultipartFile.fromPath("file", imagePath, contentType: MediaType("image", p.extension(imagePath).substring(1))));
+
+    var response        = await request.send();
+    var responseData    = await response.stream.toBytes();
+    log(String.fromCharCodes(responseData));
+    return addWorkerResponseFromJson(String.fromCharCodes(responseData));
+  }
+
+  Future<UserGroupResponse> getUserGroup() async{
+    String url = _DOMAIN_NAME + "index.php?route=api/user_group/getUserGroup&api_key=" + User.getToken();
+    log("Calling getUserGroup API : " + url);
+
+    var response = await http.post(url,body: {});
+    return userGroupResponseFromJson(response.body);
+  }
 }

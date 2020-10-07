@@ -36,6 +36,31 @@ class User {
 		}
 	}
 
+	public function loginByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$userInfo = $this->db->query("SELECT * FROM oc_user_api WHERE user_token = '$apiKey'");
+
+		if($userInfo->num_rows){
+			$user_query = $this->db->query("SELECT * FROM oc_user WHERE user_id=".$userInfo->row['user_id']);
+			if($user_query->num_rows){
+				$this->user_id = $user_query->row['user_id'];
+				$this->username = $user_query->row['username'];
+				$this->user_group_id = $user_query->row['user_group_id'];
+				$user_group_query = $this->db->query("SELECT permission FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
+
+				$permissions = json_decode($user_group_query->row['permission'], true);
+
+				if (is_array($permissions)) {
+					foreach ($permissions as $key => $value) {
+						$this->permission[$key] = $value;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function login($username, $password) {
 		$user_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
 
