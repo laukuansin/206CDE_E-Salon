@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Screens/User/Login/login_response.dart';
+import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:gps_tracking_system/Components/toast_widget';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,40 +16,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  FToast fToast;
   String _email;
   String _password;
   bool _isPasswordVisible;
 
   TextFormField _buildEmailTextFormField(){
     return TextFormField(
+      initialValue: "lengzai@gmail.com",
       decoration: InputDecoration(
           labelText: "Email",
           labelStyle: TextStyleFactory.p()
       ),
-      validator: (email){
-        return null;
-        if(email.isEmpty){
-          return "Email is required";
-        }
-
-        if(email == "a") {
-          return null;
-        }
-
-        if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email)){
-          return "Invalid email";
-        }
-
-        return null;
-      },
-      onSaved: (email){
-        _email = email;
-      },
+      validator: (email) => email.isEmpty ? "Email is required" : null,
+      onSaved: (email){_email = email;},
     );
   }
 
   TextFormField _buildPasswordTextFormField(){
     return TextFormField(
+      initialValue: "123456",
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
@@ -58,16 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           )
       ),
-      validator: (password){
-        return null;
-        if(password.isEmpty){
-          return "Password is required";
-        }
-        return null;
-      },
-      onSaved: (password){
-        _password = password;
-      },
+      validator: (password)=> password.isEmpty ? "Password is required" : null,
+      onSaved: (password){_password = password;},
     );
   }
 
@@ -114,11 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 verticalPadding: 10,
                                 horizontalPadding: 30,
                                 press: (){
-                                  if(!_formKey.currentState.validate()){
-                                    return;
-                                  }
+                                  if(!_formKey.currentState.validate())return;
                                   _formKey.currentState.save();
-                                  Navigator.of(context).pushReplacementNamed("/appointmentList");
+                                  _login();
                                 },
                               )
                             ],
@@ -132,9 +114,29 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  void _login() async{
+      final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+      await progressDialog.show();
+
+      LoginResponse result    = await RestApi.customer.login(_email, _password);
+      progressDialog.hide();
+
+      fToast.showToast(
+          child: ToastWidget(status: result.response.status, msg: result.response.msg),
+          toastDuration: Duration(seconds: 2),
+          gravity: ToastGravity.BOTTOM);
+
+      if(result.response.status == 1) {
+        User.createInstance(result.token, Role.CUSTOMER);
+        Navigator.of(context).pushReplacementNamed("/add_appointment");
+      }
+  }
+
   @override
   void initState() {
     super.initState();
     _isPasswordVisible = false;
+    fToast = FToast();
+    fToast.init(context);
   }
 }

@@ -28,15 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
           labelText: "Username",
           labelStyle: TextStyleFactory.p()
       ),
-      validator: (username){
-        if(username.isEmpty){
-          return "Username is required";
-        }
-        return null;
-      },
-      onSaved: (username){
-        _username = username;
-      },
+      validator: (username) => username.isEmpty ? "Username is required" : null,
+      onSaved: (username){_username = username;},
     );
   }
 
@@ -57,15 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
             },
           )
       ),
-      validator: (password){
-        if(password.isEmpty){
-          return "Password is required";
-        }
-        return null;
-      },
-      onSaved: (password){
-        _password = password;
-      },
+      validator: (password) => password.isEmpty ? "Password is required" : null,
+      onSaved: (password){_password = password;},
     );
   }
 
@@ -116,8 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return;
                                   }
                                   _formKey.currentState.save();
-                                  login(_username,_password);
-
+                                  _login();
                                 },
                               )
                             ],
@@ -131,12 +116,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void login(String username,String password)async
+  void _login()async
   {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
 
-    LoginResponse result    = await RestApi.admin.login(username, password);
+    LoginResponse result    = await RestApi.admin.login(_username, _password);
     progressDialog.hide();
 
     fToast.showToast(
@@ -149,7 +134,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.of(context).pushReplacementNamed("/add_worker");
     }
   }
-
 
   @override
   void initState() {

@@ -1,9 +1,9 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost:8080/');
+define('HTTP_SERVER', 'http://localhost/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost:8080/');
+define('HTTPS_SERVER', 'http://localhost/');
 
 // DIR
 

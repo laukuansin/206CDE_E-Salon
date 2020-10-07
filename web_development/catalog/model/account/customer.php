@@ -22,6 +22,11 @@ class ModelAccountCustomer extends Model {
 		return $customer_id;
 	}
 
+	public function getCustomerTokenById($customerId){
+		$customerId = $this->db->escape($customerId);
+		return $this->db->query("SELECT * FROM oc_customer_api WHERE customer_id=$customerId")->row;
+	}
+
 	public function editCustomer($customer_id, $data) {
 		$this->db->query("UPDATE " . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? json_encode($data['custom_field']['account']) : '') . "' WHERE customer_id = '" . (int)$customer_id . "'");
 	}
@@ -118,6 +123,25 @@ class ModelAccountCustomer extends Model {
 
 	public function getLoginAttempts($email) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_login` WHERE email = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+
+		return $query->row;
+	}
+
+	public function getLoginAttemptsByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$query = $this->db->query("SELECT * FROM oc_customer_login WHERE email=(
+		SELECT email FROM oc_customer WHERE customer_id = 
+		(SELECT customer_id FROM oc_customer_api WHERE oc_customer_api.customer_token = '$apiKey'))
+		");
+
+		return $query->row;
+	}
+
+	public function getCustomerByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$query = $this->db->query("SELECT * FROM oc_customer WHERE customer_id = 
+		(SELECT customer_id FROM oc_customer_api WHERE oc_customer_api.customer_token = '$apiKey')
+		");
 
 		return $query->row;
 	}

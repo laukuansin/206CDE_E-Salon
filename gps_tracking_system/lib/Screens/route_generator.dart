@@ -13,7 +13,7 @@ import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker.dart';
 class RouteGenerator{
 
   static const bool _DEBUG_MODE = false;
-  static const bool _ADMIN_MODE = true;
+  static const bool _ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget, {AppBar appbar})=> Scaffold(
       appBar: appbar,
