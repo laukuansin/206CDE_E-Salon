@@ -3,6 +3,10 @@
 	class ControllerAppointmentAppointment extends Controller{
 
 		public function index(){
+			if (!$this->customer->isLogged()) {
+				$this->response->redirect($this->url->link('account/login', '', true));
+			}
+
 			$this->load->language('appointment/appointment');
 			$this->load->model('service/service');
 			$results = $this->model_service_service->getServices();
@@ -21,6 +25,10 @@
 		}
 
 		public function makeAppointment(){
+			if (!$this->customer->isLogged()) {
+				$this->response->redirect($this->url->link('account/login', '', true));
+			}
+			
 			if($this->request->server['REQUEST_METHOD'] != 'POST')
 				return;
 

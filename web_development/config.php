@@ -6,6 +6,7 @@ define('HTTP_SERVER', 'http://localhost/');
 define('HTTPS_SERVER', 'http://localhost/');
 
 // DIR
+
 define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/');
 define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
 define('DIR_IMAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/image/');
