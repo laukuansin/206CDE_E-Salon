@@ -12,7 +12,7 @@ define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldPr
 define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
 define('DIR_IMAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/image/');
 define('DIR_STORAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/');
-define('DIR_CATALOG', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/');
+define('DIR_CATALOG', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
