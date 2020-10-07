@@ -5,6 +5,7 @@ class ControllerUserUser extends Controller {
 	public function index() {
 		$this->load->language('user/user');
 
+			
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('user/user');
@@ -20,6 +21,19 @@ class ControllerUserUser extends Controller {
 		$this->load->model('user/user');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+			$userTokenList = $this->model_user_user->getUserToken();
+
+			$isValid;
+			do
+			{
+				$isValid = true;
+				$token = token(32);
+				foreach ($userTokenList as $userToken) {
+					$isValid &= ($token != $userToken['user_token']);
+				}
+			}while(!$isValid);
+
+			$this->request->post['user_token'] = $token;
 			$this->model_user_user->addUser($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');

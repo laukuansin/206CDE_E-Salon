@@ -27,19 +27,19 @@ class LoginResponse {
 class Response {
   Response({
     this.status,
-    this.msj,
+    this.msg,
   });
 
   int status;
-  String msj;
+  String msg;
 
   factory Response.fromJson(Map<String, dynamic> json) => Response(
     status: json["status"],
-    msj: json["msj"],
+    msg: json["msg"],
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
-    "msj": msj,
+    "msg": msg,
   };
 }

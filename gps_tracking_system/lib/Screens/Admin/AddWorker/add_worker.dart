@@ -1,28 +1,29 @@
-import 'dart:io';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gps_tracking_system/Components/dropdown.dart';
+import 'package:gps_tracking_system/Components/image_picker.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Response/AddStaffResponse.dart';
+import 'package:gps_tracking_system/Response/user_group.dart';
+import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
-class AddWorker extends StatefulWidget {
-  AddWorkerState createState() => AddWorkerState();
-}
+import 'package:gps_tracking_system/Components/toast_widget';
 
 class AddWorkerState extends State<AddWorker> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  File fileImg;
-  List<String> _listGroup, _listStatus;
-  String errorMsgOfEmail, errorMsgPassword, errorMsgConfirmPassword;
-  String username, firstName, lastName, userGroup, email, password, confirmPassword, status;
+  List<String> _listStatus;
+  List<UserGroup> _userGroupList;
+  List<UserStatus> _userStatusList;
+
+  String _username = "", _firstName = "", _lastName = "", _userGroup = "", _email ="", _password="", _confirm="", _status="", _imgPath = "";
+  String _errUsername, _errFirstname, _errLastname, _errEmail, _errPassword, _errConfirm;
   bool _hiddenPassword, _hiddenConfirmPassword;
-  FToast fToast;
+  FToast _fToast;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +35,15 @@ class AddWorkerState extends State<AddWorker> {
           style: TextStyleFactory.p(color:primaryTextColor),),
           actions: <Widget>[
             Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: addWorker,
-                  child: Icon(
-                    Icons.check,
-                    color: primaryColor,
-                  ),
-                ))
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: addUser,
+                child: Icon(
+                  Icons.check,
+                  color: primaryColor,
+                ),
+              )
+            )
           ],
         ),
         body: SingleChildScrollView(
@@ -55,7 +57,7 @@ class AddWorkerState extends State<AddWorker> {
                         _buildInputRow(_buildFirstName()),
                         _buildInputRow(_buildLastName()),
                         _buildInputRow(_buildEmail()),
-                        _buildInputRow(_buildImagePicker()),
+                        _buildInputRow(_buildImageFiled()),
                         _buildInputRow(_buildPassword()),
                         _buildInputRow(_buildConfirmPassword()),
                         _buildInputRow(_buildStatus(), isLast: true)
@@ -89,228 +91,83 @@ class AddWorkerState extends State<AddWorker> {
     );
   }
 
-  Container _buildImagePicker(){
-    return Container(
-        child:ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading:Icon(
-              Icons.image,
-              color: primaryColor
-          ),
-          title:Align(
-            child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:<Widget>[
-                Text(
-                  "Image",
-                  style: TextStyleFactory.p(),
-                ),
-                SizedBox(height: 5,),
-                imagePick(),
-                SizedBox(height: 5,),
-                RaisedButton(
-                  onPressed: pickImage,
-                  child: Text(
-                      "Upload",
-                      style: TextStyleFactory.p(color:primaryLightColor)),
-                  color: primaryColor,
-                )
-              ]
-            ),
-            alignment: Alignment(-1.2,0),
-          ),
-          trailing: SizedBox(),
-        )
-    );
+  ImagePicker _buildImageFiled(){
+    return ImagePicker(callback: (path){
+      setState(() {_imgPath = path;});
+    },);
   }
 
-  Future<String> _showDropDown(String title, List<String>listData) async{
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Container(
-            height: 100.0,
-            width: 100.0,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: listData.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(listData[index]),
-                  onTap: () {
-                    setState(() {
-                      Navigator.pop(context, listData[index]);
-                    });
-                  });
-                },
-            ),
-          )
-        );
-      }
-    );
-  }
+  InputDecoration standardInputDecoration(String label, IconData iconData) => InputDecoration(
+      icon: Icon(iconData, color: primaryColor,),
+      labelText: label,
+      labelStyle: TextStyleFactory.p()
+  );
 
   TextFormField _buildUserName() {
     return TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Username cannot be empty";
-          }
-          return null;
-        },
-        onSaved: (value) {
-          username = value;
-        },
-        decoration: new InputDecoration(
-            icon: Icon(
-              Icons.person,
-              color: primaryColor,
-            ),
-            labelText: "Username",
-            labelStyle: TextStyleFactory.p()
-        )
+        initialValue: "ah huat",
+        validator: (_) => (_errUsername.isEmpty) ? null : _errUsername,
+        onSaved: (value) {_username = value;},
+        decoration: standardInputDecoration("Username", Icons.people),
     );
   }
 
   TextFormField _buildFirstName() {
     return TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return "First name cannot be empty";
-          }
-          return null;
-        },
-        decoration: new InputDecoration(
-          icon: Icon(
-            Icons.font_download,
-            color: primaryColor,
-          ),
-          labelText: "First Name",
-          labelStyle: TextStyleFactory.p(),
-        ),
-        onSaved: (value) {
-          firstName = value;
-        },
+      initialValue: "Ah",
+        validator: (_) => _errFirstname.isEmpty ? null : _errFirstname,
+        decoration: standardInputDecoration("First Name", Icons.font_download),
+        onSaved: (value) {_firstName = value;},
     );
   }
 
   TextFormField _buildLastName() {
     return TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Last Name cannot be empty";
-          }
-          return null;
-        },
-        decoration: new InputDecoration(
-            icon: Icon(
-              Icons.font_download,
-              color: primaryColor,
-            ),
-            labelText: "Last Name",
-            labelStyle: TextStyleFactory.p()
-        ),
-        onSaved: (value) {
-          lastName = value;
-        },
+      initialValue: "Huat",
+        validator: (_) => _errLastname.isEmpty ? null : _errLastname,
+        decoration: standardInputDecoration("Last Name", Icons.font_download),
+        onSaved: (value) {_lastName = value;},
     );
   }
 
   TextFormField _buildEmail() {
     return TextFormField(
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Email cannot be empty";
-        } else {
-          if (!RegExp(
-              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-              .hasMatch(email)) {
-            return "Please enter correct format of email";
-          }
-        }
-        return null;
-      },
-      decoration: new InputDecoration(
-        icon: Icon(
-          Icons.email,
-          color: primaryColor,
-        ),
-        labelText: "Email",
-        labelStyle: TextStyleFactory.p(),
-      ),
-      onSaved: (value) {
-        email = value;
-      },
+      initialValue: "ahhuat@gmail.com",
+      validator: (_) => _errEmail.isEmpty ? null : _errEmail,
+      decoration: standardInputDecoration("Email", Icons.email),
+      onSaved: (value) {_email = value;},
     );
   }
 
   TextFormField _buildPassword() {
     return TextFormField(
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Password cannot be empty";
-        } else {
-          if (value.length < 8) {
-            return "Use 8 characters or more for your password";
-          }
-        }
-        return null;
-      },
+      initialValue: "123456",
+      validator: (_) => _errPassword.isEmpty ? null : _errPassword,
       obscureText: _hiddenPassword,
       decoration: new InputDecoration(
-        icon: Icon(
-          Icons.lock,
-          color: primaryColor,
-        ),
+        icon: Icon(Icons.lock, color: primaryColor,),
         labelText: "Password",
         suffixIcon: IconButton(
-          onPressed: (){setState(() {
-            _hiddenPassword = !_hiddenPassword;
-          });},
-          icon: _hiddenPassword
-              ? Icon(Icons.visibility_off)
-              : Icon(Icons.visibility),
+          onPressed: (){setState(() {_hiddenPassword = !_hiddenPassword;});},
+          icon: _hiddenPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
         ),
         labelStyle: TextStyleFactory.p(),
       ),
-      onSaved: (value) {
-        password = value;
-      },
+      onSaved: (value) {_password = value;},
     );
   }
 
   TextFormField _buildConfirmPassword() {
     return TextFormField(
-      onSaved: (value) {
-        confirmPassword = value;
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Confirm Password cannot be empty";
-        } else {
-          if (password != value) {
-            return "Those passwords did not match. Try agin";
-          }
-        }
-        return null;
-      },
+      onSaved: (value) {_confirm = value;},
+      initialValue: "123456",
+      validator: (_) => _errConfirm.isEmpty? null : _errConfirm,
       obscureText: _hiddenConfirmPassword,
       decoration: new InputDecoration(
-          icon: Icon(
-            Icons.lock,
-            color: primaryColor,
-          ),
+          icon: Icon(Icons.lock, color: primaryColor,),
           suffixIcon: IconButton(
-            onPressed: (){
-              setState(() {
-                _hiddenConfirmPassword = !_hiddenConfirmPassword;
-              });
-            },
-            icon: _hiddenConfirmPassword
-                ? Icon(Icons.visibility_off)
-                : Icon(Icons.visibility),
+            onPressed: (){setState(() {_hiddenConfirmPassword = !_hiddenConfirmPassword;});},
+            icon: _hiddenConfirmPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
           ),
           labelText: "Confirm Password",
           labelStyle: TextStyleFactory.p()
@@ -318,188 +175,138 @@ class AddWorkerState extends State<AddWorker> {
     );
   }
 
-  GestureDetector _buildUserGroup(){
-    return GestureDetector(
-        child: Container(
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(
-                  Icons.people,
-                  color: primaryColor
-              ),
-              title: Align(
-                child:Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children:<Widget>[
-                    Text("User Group", style: TextStyleFactory.p()),
-                    Text(userGroup, style: TextStyleFactory.p(color: primaryTextColor),)
-                  ]
-                ),
-                alignment: Alignment(-1.2, 0),
-              ),
-              trailing: Icon(Icons.chevron_right),
-            )
-        ),
-        onTap: () async{
-          String result = await _showDropDown("Select User Group", _listGroup);
-          if(result == null) result = userGroup;
-          setState(() {
-            userGroup = result;
-          });
-        }
+
+  Widget _buildUserGroup(){
+    return Dropdown(
+      title: "User Group",
+      data: _userGroup == null? "": _userGroup,
+      dropdownTitle: "Select User Group",
+      dropdownSelection: getUserGroupNameList(),
+      leadingIconData: Icons.people,
+      trailingIconData: Icons.chevron_right,
+      context: context,
+      callback: (value){setState(() {
+        _userGroup = value == null || value.isEmpty ? _userGroup : value;
+      });},
     );
   }
 
-  GestureDetector _buildStatus(){
-    return GestureDetector(
-      child: Container(
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                children: [
-                  Icon(
-                      Icons.offline_pin,
-                      size: 24, color: primaryColor
-                  ),
-                  Padding(
-                    child: Wrap(
-                        direction: Axis.vertical,
-                        children: <Widget>[
-                          Text(
-                            "Status",
-                            style: TextStyleFactory.p(),
-                          ),
-                          Text(
-                              status,
-                              style: TextStyleFactory.p(color:primaryTextColor))
-                        ]
-                    ),
-                    padding: EdgeInsets.only(left: 15),
-                  )
-                ]
-              )
-            ),
-            Icon(Icons.chevron_right)
-          ]
-        )
-      ),
-      onTap: ()async{
-        String result = await _showDropDown("Select status", _listStatus);
-        if(result == null) result = status;
-        setState(() {
-          status = result;
-        });
-      }
+  Widget _buildStatus(){
+    return Dropdown(
+      title: "Status",
+      data: _status == null? "": _status,
+      dropdownTitle: "Select status",
+      dropdownSelection: _listStatus,
+      leadingIconData: Icons.offline_pin,
+      trailingIconData: Icons.chevron_right,
+      context: context,
+      callback: (value){setState(() {
+        _status = value == null || value.isEmpty ? _status : value;
+      });},
     );
   }
 
-  Widget imagePick() => (fileImg == null)? Text("No Image Selected", style: TextStyleFactory.p()):Image.file(fileImg, width: 150, height: 150);
-  Future pickImage() async {
-    PickedFile pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
-    setState(() {
-      fileImg = File(pickedImage.path);
-    });
-  }
+  void clearErrorMessage(){_errFirstname = _errLastname = _errUsername = _errEmail = _errPassword = _errConfirm = ""; _hiddenPassword = _hiddenConfirmPassword = true;}
 
   @override
   void initState() {
     super.initState();
-    fToast = FToast();
-    fToast.init(context);
 
-    _listGroup = List();
-    _listGroup.add("Owner");
-    _listGroup.add("Worker");
+    initDropdownList();
+    _fToast = FToast();
+    _fToast.init(context);
 
     _listStatus = List();
     _listStatus.add("Enabled");
     _listStatus.add("Disabled");
 
-    username        = "";
-    firstName       = "";
-    lastName        = "";
-    email           = "";
-    password        = "";
-    confirmPassword = "";
-    fileImg         = null;
-    status    = _listStatus[0] != null ? _listStatus[0] : "";
-    userGroup = _listGroup[0]  != null ?  _listGroup[0] : "";
-
-    _hiddenConfirmPassword = true;
-    _hiddenPassword = true;
+    _status    = _listStatus[0] != null ? _listStatus[0] : "";
+    clearErrorMessage();
   }
 
-  void addWorker() {
+  void initDropdownList()async{
+    final UserGroupResponse userGroupResponse = await RestApi.admin.getUserGroup();
+    setState(() {
+      _userStatusList = [UserStatus(statusId: 1, name:"Enabled"), UserStatus(statusId: 0, name:"Disabled")];
+      _status = _userStatusList[0].name;
+      _userGroupList = userGroupResponse.userGroup;
+      _userGroup = _userGroupList[0].name;
+    });
+  }
 
-    FocusScope.of(context).unfocus();
+  void addUser()async{
+    //final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+  //  await progressDialog.show();
+
     _formKey.currentState.save();
+    AddWorkerResponse result = await RestApi.admin.addUser(_username, getIdFromGroupName(_userGroup), _firstName, _lastName, _email, _imgPath , _password, getIdFromStatusName(_status), _confirm);
+   // progressDialog.hide();
+    clearErrorMessage();
 
-    if (_formKey.currentState.validate()) {
-      String imagePath;
-      if(fileImg==null)
-      {
-        imagePath="";
-      }
-      else{
-        imagePath=fileImg.path;
-
-      }
-      addStaff(username,firstName,lastName,email,password,imagePath,status,userGroup);
-    return;
-    }
-
-  }
-
-  void addStaff(String username,String firstname,String lastname,String email,String password,String imagePath,String status,String userGroup)async{
-    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
-    await progressDialog.show();
-    AddStaffResponse result =await RestApi.addStaff(username, userGroup, firstName, lastName, email, imagePath, password, status);
-    progressDialog.hide();
-
-    if(result.errorCode.error==0)
+    if(result.response.status ==1)
     {
-      successMessage(result.errorCode.msj);
-
+      _fToast.showToast(
+          child: ToastWidget(status: result.response.status, msg: result.response.msg),
+          toastDuration: Duration(seconds: 2),
+          gravity: ToastGravity.BOTTOM);
     }
     else{
-      errorMessage(result.errorCode.msj);
+      _errEmail     = result.error.email;
+      _errFirstname = result.error.firstname;
+      _errLastname  = result.error.lastname;
+      _errConfirm   = result.error.confirm;
+      _errPassword  = result.error.password;
+      _errUsername  = result.error.username;
+      _formKey.currentState.validate();
     }
   }
-  void errorMessage(String errMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0), color: Colors.red),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.error_outline, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(errMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12))),
-        ]));
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(seconds: 2),
-        gravity: ToastGravity.BOTTOM);
+
+  List<String> getUserGroupNameList(){
+    if(_userGroupList == null) return [];
+
+    List<String> userGroupNameList = [];
+    for(UserGroup userGroup in  _userGroupList)
+      userGroupNameList.add(userGroup.name);
+
+    return userGroupNameList;
   }
 
-  void successMessage(String scsMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: Colors.greenAccent),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.check, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(scsMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12)))
-        ]));
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(seconds: 2),
-        gravity: ToastGravity.BOTTOM);
+  List<String> getStatusNameList(){
+    if(_userStatusList == null) return [];
+
+    List<String> userStatusList = [];
+    for(UserStatus userStatus in  _userStatusList)
+      userStatusList.add(userStatus.name);
+    return userStatusList;
   }
+
+  String getIdFromGroupName(String name){
+    for(UserGroup userGroup in  _userGroupList){
+      if(userGroup.name == name)
+        return userGroup.userGroupId;
+    }
+    return '-1';
+  }
+
+  String getIdFromStatusName(String name){
+    for(UserStatus userStatus in _userStatusList){
+      if(userStatus.name == name)
+        return userStatus.statusId.toString();
+    }
+    return '-1';
+  }
+}
+
+class UserStatus {
+  UserStatus({
+    this.statusId,
+    this.name,
+  });
+
+  int statusId;
+  String name;
+}
+
+class AddWorker extends StatefulWidget {
+  AddWorkerState createState() => AddWorkerState();
 }

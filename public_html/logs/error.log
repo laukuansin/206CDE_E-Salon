@@ -104,3 +104,173 @@
 2020-09-30 12:27:33 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
 2020-09-30 12:32:17 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
 2020-09-30 12:32:22 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 25
+2020-10-06 13:37:12 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 5
+2020-10-06 13:37:12 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 5
+2020-10-06 13:37:12 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 126
+2020-10-06 13:37:57 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 5
+2020-10-06 13:37:57 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 5
+2020-10-06 13:37:57 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 126
+2020-10-06 13:38:19 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:38:19 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:38:19 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 127
+2020-10-06 13:38:24 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:38:24 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:38:24 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 127
+2020-10-06 13:39:03 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:39:03 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 6
+2020-10-06 13:39:03 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 127
+2020-10-06 13:39:24 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 7
+2020-10-06 13:39:24 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 7
+2020-10-06 13:39:24 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 128
+2020-10-06 13:39:33 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 128
+2020-10-06 13:39:51 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 127
+2020-10-06 13:42:47 - PHP Notice:  Undefined variable: json in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 127
+2020-10-06 13:54:54 - PHP Warning:  array_keys() expects parameter 1 to be array, string given in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 158
+2020-10-06 13:54:54 - PHP Warning:  Invalid argument supplied for foreach() in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 158
+2020-10-06 13:54:54 - PHP Notice:  Undefined index: tmp_name in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 171
+2020-10-06 13:55:13 - PHP Notice:  Undefined variable: key in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 160
+2020-10-06 13:55:13 - PHP Notice:  String offset cast occurred in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 160
+2020-10-06 13:55:13 - PHP Notice:  Undefined variable: key in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 13:55:13 - PHP Notice:  String offset cast occurred in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 13:55:13 - PHP Notice:  Undefined variable: key in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 13:55:13 - PHP Notice:  String offset cast occurred in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 13:55:13 - PHP Notice:  Undefined variable: key in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 163
+2020-10-06 13:55:13 - PHP Notice:  String offset cast occurred in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 163
+2020-10-06 13:55:13 - PHP Notice:  Undefined variable: key in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 164
+2020-10-06 13:55:13 - PHP Notice:  String offset cast occurred in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 164
+2020-10-06 14:17:09 - PHP Notice:  Undefined index: username in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 119
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: firstname in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 137
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: lastname in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 141
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 149
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:19:36 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 149
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:13 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:26 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 14:20:26 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 14:20:26 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:26 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:32 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 14:20:50 - PHP Notice:  Undefined index: error_image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 50
+2020-10-06 14:20:50 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 107
+2020-10-06 14:20:50 - PHP Notice:  Undefined variable: Array in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 107
+2020-10-06 14:20:50 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 107
+2020-10-06 14:20:50 - PHP Notice:  Undefined index: error_image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 113
+2020-10-06 14:22:46 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 50
+2020-10-06 14:22:46 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 107
+2020-10-06 14:22:46 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 113
+2020-10-06 14:23:30 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 107
+2020-10-06 14:23:30 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 113
+2020-10-06 14:23:43 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 113
+2020-10-06 14:24:04 - PHP Notice:  Undefined index: user_group_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-06 14:24:04 - PHP Notice:  Undefined index: status in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-06 14:25:51 - PHP Notice:  Undefined index: status in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: username in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 121
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: username in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 125
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: firstname in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 137
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: lastname in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 141
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 145
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 149
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 161
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 15:15:30 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 166
+2020-10-06 17:18:51 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 7
+2020-10-06 17:56:06 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 17:56:06 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 17:56:41 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 17:56:41 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 17:57:17 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 17:57:17 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:17:11 - PHP Notice:  Undefined index: username in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/login.php on line 11
+2020-10-06 18:17:11 - PHP Notice:  Undefined index: user_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/login.php on line 11
+2020-10-06 18:19:45 - PHP Notice:  Undefined variable: user_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 17
+2020-10-06 18:22:23 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:22:23 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:24:24 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:24:24 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:24:36 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:24:36 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:25:50 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:25:50 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:26:30 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:26:30 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:27:47 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:27:47 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:29:08 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:29:08 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:29:32 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:29:32 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:29:41 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:29:41 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:31:40 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:31:40 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 164
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 169
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 172
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 173
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 230
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 231
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 232
+2020-10-06 18:38:13 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 248
+2020-10-06 18:39:40 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-06 18:39:40 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 164
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 169
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 172
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 173
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 194
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 230
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 231
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 232
+2020-10-06 18:39:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/user/user.php on line 248
+2020-10-07 5:20:27 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-07 5:20:27 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-07 5:20:35 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 12
+2020-10-07 5:20:35 - PHP Notice:  Trying to access array offset on value of type bool in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/permission.php on line 17
+2020-10-07 6:27:41 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 162
+2020-10-07 6:27:41 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 163
+2020-10-07 6:27:41 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 167
+2020-10-07 6:27:41 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 167
+2020-10-07 6:27:54 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 167
+2020-10-07 6:28:10 - PHP Notice:  Undefined index: confirm in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 167
+2020-10-07 6:29:05 - PHP Notice:  Undefined index: tmp_name in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 66
+2020-10-07 6:30:29 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 6:30:29 - PHP Notice:  Undefined index: status in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 6:30:29 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 7
+2020-10-07 6:33:13 - PHP Notice:  Undefined index: file in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 11
+2020-10-07 6:33:13 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 11
+2020-10-07 7:13:27 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 25
+2020-10-07 7:14:26 - PHP Notice:  Undefined index: error_image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 25
+2020-10-07 7:16:57 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 7
+2020-10-07 8:19:23 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:19:47 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:21:18 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:22:37 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:24:40 - PHP Notice:  Undefined index: tmp_name in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 79
+2020-10-07 8:24:47 - PHP Notice:  Undefined index: image in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:24:47 - PHP Notice:  Undefined index: status in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4
+2020-10-07 8:27:14 - PHP Notice:  Undefined index: status in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/model/user/user.php on line 4

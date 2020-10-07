@@ -23,6 +23,7 @@ class User{
   }
 
   static bool isAuthenticated() => _user != null;
+  static String getToken() => _user.token;
   static Role getRole()=> _user.role;
   static EndUser getEndUserProfile()=>_user.endUserProfile;
 }
