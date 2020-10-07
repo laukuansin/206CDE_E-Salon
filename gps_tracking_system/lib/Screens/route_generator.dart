@@ -9,6 +9,9 @@ import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart' as Use
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker.dart';
+import 'package:gps_tracking_system/Screens/Admin/Setting/settings.dart';
+import 'package:gps_tracking_system/Screens/Admin/Calendar/calendar.dart';
+import 'package:gps_tracking_system/Screens/User/signUp/signUp.dart';
 
 class RouteGenerator{
 
@@ -46,7 +49,8 @@ class RouteGenerator{
           case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
           case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
           case "/today_appointment"               :return _buildRoute(TodayAppointmentScreen());
-          case "/add_worker"       				        :return _buildRoute(AddWorker());
+          case "/add_worker"       				        :return _buildRoute(SignUpPage());     // Original - AddWorker()  // SettingPage()
+          case "/calendar"       				          :return _buildRoute(CalendarPage());
         }
       }
       else{

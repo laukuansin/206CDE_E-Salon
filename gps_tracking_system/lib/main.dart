@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: primaryLightColor,
+        primaryColor: primaryColor,  // change back to primaryLightColor
       ),
       initialRoute: "/",
       onGenerateRoute: RouteGenerator.generateRoute,
