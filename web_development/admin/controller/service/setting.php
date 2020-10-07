@@ -18,7 +18,9 @@ class ControllerServiceSetting extends Controller{
 			$this->load->model('service/setting');
 
 			$data = array('cancellation_time' => $this->request->post['cancellation_time']
-				, 'business_hour' => $this->request->post['business_hour']);
+				, 'business_hour' => $this->request->post['business_hour']
+				, 'travel_time' => $this->request->post['travel_time']
+				, 'appointment_interval' => $this->request->post['appointment_interval']);
 
 			
 			$this->model_service_setting->updateSetting(json_encode($data));
@@ -39,10 +41,20 @@ class ControllerServiceSetting extends Controller{
 
 		if(isset($this->error['cancellation_time'])){
 			$data['error_cancellation_time'] = $this->error['cancellation_time'];
-
-			
 		} else {
 			$data['error_cancellation_time'] = '';
+		}
+
+		if(isset($this->error['travel_time'])){
+			$data['error_travel_time'] = $this->error['travel_time'];	
+		} else {
+			$data['error_travel_time'] = '';
+		}
+
+		if(isset($this->error['appointment_interval'])){
+			$data['error_appointment_interval'] = $this->error['appointment_interval'];	
+		} else {
+			$data['error_appointment_interval'] = '';
 		}
 
 		$data['breadcrumbs'] = array();
@@ -80,6 +92,18 @@ class ControllerServiceSetting extends Controller{
 			$data['cancellation_time'] = $result['cancellation_time'];
 		}
 
+		if(isset($this->request->post['travel_time'])){
+			$data['travel_time'] = $this->request->post['travel_time'];
+		} else if(!empty($result)){
+			$data['travel_time'] = $result['travel_time'];
+		}
+
+		if(isset($this->request->post['appointment_interval'])){
+			$data['appointment_interval'] = $this->request->post['appointment_interval'];
+		} else if(!empty($result)){
+			$data['appointment_interval'] = $result['appointment_interval'];
+		}
+
 
 		$this->response->setOutput($this->load->view('service/setting', $data));
 	}
@@ -94,6 +118,19 @@ class ControllerServiceSetting extends Controller{
 		} else if(!is_numeric($this->request->post['cancellation_time'])){
 			$this->error['cancellation_time'] = $this->language->get('error_cancellation_time');
 		}
+
+		if(empty($this->request->post['travel_time'])){
+			$this->error['travel_time'] = $this->language->get('error_empty_travel_time');
+		} else if(!is_numeric($this->request->post['travel_time'])){
+			$this->error['travel_time'] = $this->language->get('error_travel_time');
+		}
+
+		if(empty($this->request->post['appointment_interval'])){
+			$this->error['appointment_interval'] = $this->language->get('error_empty_appointment_interval');
+		} else if(!is_numeric($this->request->post['appointment_interval'])){
+			$this->error['appointment_interval'] = $this->language->get('error_appointment_interval');
+		}
+
 
 		return !$this->error;
 	}

@@ -95,3 +95,4 @@
 2020-10-02 10:34:44 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Users\User\AndroidStudioProjects\RealWorldProject\web_development\system\library\mail\mail.php on line 77
 2020-10-02 10:36:36 - PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Users\User\AndroidStudioProjects\RealWorldProject\web_development\system\library\mail\mail.php on line 77
 2020-10-06 5:20:06 - PHP Notice:  Trying to get property 'row' of non-object in C:\Users\User\AndroidStudioProjects\RealWorldProject\web_development\catalog\model\api\login.php on line 9
+

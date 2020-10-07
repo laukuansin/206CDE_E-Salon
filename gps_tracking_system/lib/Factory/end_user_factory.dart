@@ -1,4 +1,4 @@
-import 'package:gps_tracking_system/Model/Worker.dart';
+import 'package:gps_tracking_system/Model/worker.dart';
 import 'package:gps_tracking_system/Model/customer.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 

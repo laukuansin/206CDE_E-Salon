@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/components/rounded_button.dart';
+import 'package:gps_tracking_system/Components/rounded_button.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

@@ -1,6 +1,7 @@
 <?php
 // Text
 $_['text_api']                  = 'API';
+$_['text_appointment']			= 'Appointment';
 $_['text_attribute']            = 'Attributes';
 $_['text_attribute_group']      = 'Attribute Groups';
 $_['text_backup']               = 'Backup / Restore';
@@ -76,3 +77,5 @@ $_['text_processing_status']    = 'Orders Processing';
 $_['text_other_status']         = 'Other Statuses';
 $_['text_on_site_service']		= 'On Site Service';
 $_['text_services']				= 'Services';
+$_['text_appointment_request']  = 'Requests';
+$_['text_appointment_all']  	= 'All Appointments';

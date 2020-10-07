@@ -14,21 +14,16 @@ class User{
   EndUser endUserProfile;
   Role role;
 
-  User._(final Role role): role = role;
+  User._(final String token, final Role role):token = token, role = role;
 
-  static bool isAuthenticated(){
-    return _user != null;
+
+  static void createInstance(String token, Role role){
+    if(_user == null)
+      _user = User._(token, role);
   }
 
-  static bool authenticate(String email, String password){
-    if(_user == null) {
-      String id = "P18010220";
-      _user = User._(Role.CUSTOMER);
-      _user.endUserProfile = EndUserFactory.createInstance(EndUserType.CUSTOMER, id);
-    }
-    return true;
-  }
-
+  static bool isAuthenticated() => _user != null;
+  static String getToken() => _user.token;
   static Role getRole()=> _user.role;
   static EndUser getEndUserProfile()=>_user.endUserProfile;
 }

@@ -6,10 +6,11 @@ define('HTTP_SERVER', 'http://localhost:8080/');
 define('HTTPS_SERVER', 'http://localhost:8080/');
 
 // DIR
-define('DIR_APPLICATION', 'C:/Users/User/AndroidStudioProjects/RealWorldProject/web_development/catalog/');
-define('DIR_SYSTEM', 'C:/Users/User/AndroidStudioProjects/RealWorldProject/web_development/system/');
-define('DIR_IMAGE', 'C:/Users/User/AndroidStudioProjects/RealWorldProject/web_development/image/');
-define('DIR_STORAGE', 'C:/Users/User/AndroidStudioProjects/RealWorldProject/public_html/');
+
+define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/');
+define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
+define('DIR_IMAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/image/');
+define('DIR_STORAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
