@@ -1,0 +1,164 @@
+{{ header }}
+{{ column_left }}
+<div id='content'>
+	<div class="page-header">
+	    <div class="container-fluid">
+{# 	      <div class="pull-right">
+	      	<button type="button" data-toggle="tooltip" title="{{ button_accept_all }}" class="btn btn-success" onclick="$('#form-user-group').attr('action','{{accept_all}}'); $('#form-user-group').submit();">
+	        	<i class="fa fa-check"></i>
+	        </button>
+	        <button type="button" data-toggle="tooltip" title="{{ button_reject_all }}" class="btn btn-danger" onclick="$('#form-user-group').attr('action','{{reject_all}}');$('#form-user-group').submit();">
+	        	<i class="fa fa-times"></i>
+	        </button>
+	      </div> #}
+	      <h1>{{ heading_title }}</h1>
+	      <ul class="breadcrumb">
+	        {% for breadcrumb in breadcrumbs %}
+	        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+	        {% endfor %}
+	      </ul>
+	    </div>
+  	</div>
+
+  	<div class="container-fluid">
+		<div class = "panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class='col-md-3'>
+						<h3 class='panel-title'>
+							<i class="fa fa-list"></i>
+							{{text_appointment_all}}
+						</h3>
+					</div>
+					<div class="col-md-9">
+						<form action='{{filter}}' method='get' id='form-filter' class='pull-right form-inline'>
+							<label style='margin-left:15px'>Status: </label>
+							<select id='input-filter-status' class='d-inline' name='status'>
+								{% for sts in status %}
+									{% if selectedStatus and selectedStatus == sts.status_id %}
+										<option value='{{sts.status_id}}' selected>{{sts.status}}</option>
+									{% else %}
+										<option value='{{sts.status_id}}' >{{sts.status}}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							<label style='margin-left:15px'>Customer: </label>
+							<select id='input-filter-customer' class='d-inline' name='customer'>
+								{% for customer in customers %}
+									{% if selectedCustomer and selectedCustomer == customer.customer_id %}
+										<option value='{{customer.customer_id}}' selected>{{customer.customer_name}}</option>
+									{% else %}
+										<option value='{{customer.customer_id}}' >{{customer.customer_name}}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							<label style='margin-left:15px'>Worker: </label>
+							<select id='input-filter-worker' class='d-inline' name='worker'>
+								{% for worker in workers %}
+									{% if selectedWorker and selectedWorker == worker.user_id %}
+										<option value='{{worker.user_id}}' selected>{{worker.user_name}}</option>
+									{% else %}
+										<option value='{{worker.user_id}}'>{{worker.user_name}}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							<button type='button' onclick="window.location.href = $('#form-filter').attr('action') + '&worker=' + $('#input-filter-worker option:selected').val()+'&customer='+$('#input-filter-customer option:selected').val()+'&status='+$('#input-filter-status option:selected').val();" class='' style='margin-left:15px;'>Filter</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<form action="{{reject_all}}" method="post" enctype="multipart/form-data" id="form-user-group">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<td style="width: 1px;" class="text-center">
+										<input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" />
+									</td>
+									<td class="text-left" width="10%">
+										{% if sort == 'appointment_date' %}
+											 <a href='{{sort_date}}' class="{{order|lower}}">{{column_date}}</a>
+										{% else %}
+											 <a href='{{sort_date}}'>{{column_date}}</a>
+										{% endif %}
+									</td>
+
+									<td class="text-left">
+										{% if sort == 'customer_name'%}
+											<a href="{{sort_cust_name}}" class="{{ order|lower}}">
+												{{column_cust_name}}
+											</a>
+										{% else %}
+											<a href="{{sort_cust_name}}">{{column_cust_name}}</a>
+										{% endif %}
+									</td>
+									<td class="text-left">
+										{{column_telephone}}
+									</td>
+									<td class="text-left">
+										{{column_address}}
+									</td>
+									<td class="text-left">
+										{{column_services}}
+									</td>
+									<td class="text-left">
+										{{column_worker_name}}
+									</td>
+									<td class="text-left">
+										{{column_status}}
+									</td>
+									<td class="text-right">
+										{{column_action}}
+									</td>
+								</tr>
+							</thead>
+							<tbody>
+								{% if appointments %}
+								{% for appointment in appointments %}
+								<tr>
+									<td>
+										{% if appointment.appointment_id in selected %}
+											<input type="checkbox" name="selected[]" value="{{ appointment.appointment_id }}" checked="checked" />
+										{% else %}
+											<input type="checkbox" name="selected[]" value="{{ appointment.appointment_id }}"/>
+										{% endif %}
+									</td>
+									<td class='text-left' width="10%">
+										{{appointment.appointment_date}}
+									</td>
+									<td class='text_name'>
+										{{appointment.customer_name}}
+									</td>
+									<td class='text_name'>
+										{{appointment.telephone}}
+									</td>
+									<td class='text_name'>
+										{{appointment.address}}
+									</td>
+									<td class='text-left'>
+										{{appointment.services}}
+									</td>
+									<td class='text-left'>
+										{{appointment.worker_name}}
+									</td>
+									<td class='text-left'>
+										{{appointment.status}}
+									</td>
+									<td class='text-right'>
+										<a href="{{ appointment.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+									</td>
+								</tr>
+								{% endfor %}
+								{% else %}
+
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</form> 
+			</div>
+		</div>
+	</div>
+
+</div>
