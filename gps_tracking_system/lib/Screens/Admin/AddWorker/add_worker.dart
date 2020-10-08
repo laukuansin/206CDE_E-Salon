@@ -235,12 +235,12 @@ class AddWorkerState extends State<AddWorker> {
   }
 
   void addUser()async{
-    //final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
-  //  await progressDialog.show();
+    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
 
     _formKey.currentState.save();
     AddWorkerResponse result = await RestApi.admin.addUser(_username, getIdFromGroupName(_userGroup), _firstName, _lastName, _email, _imgPath , _password, getIdFromStatusName(_status), _confirm);
-   // progressDialog.hide();
+    progressDialog.hide();
     clearErrorMessage();
 
     if(result.response.status ==1)

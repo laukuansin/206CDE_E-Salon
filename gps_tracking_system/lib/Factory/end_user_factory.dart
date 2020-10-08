@@ -11,12 +11,12 @@ enum EndUserType{
 class EndUserFactory{
   EndUserFactory._();
 
-  static EndUser createInstance(EndUserType type, String id){
+  static EndUser createInstance(EndUserType type){
     switch(type){
       case EndUserType.CUSTOMER:
-        return Customer(id);
+        return Customer();
       case EndUserType.WORKER:
-        return Worker(id);
+        return Worker();
       case EndUserType.OWNER:
         return null;
     }
