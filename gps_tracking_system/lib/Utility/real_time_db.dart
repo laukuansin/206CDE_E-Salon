@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:gps_tracking_system/Model/location.dart';
+import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Model/worker.dart' as MyWorker;
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 
@@ -39,9 +39,9 @@ class RealTimeDb{
   static Map<String,List<double>> _localCache = {}; // Cache data to reduce number of calling firebase
   RealTimeDb._();
 
-  static void saveWorkerChanges(Location workerLocation)
+  static void saveWorkerChanges(WorkerLocation workerLocation)
   {
-    _db.child(GROUP_WORKER).child(workerLocation.userId).set({
+    _db.child(GROUP_WORKER).child(workerLocation.workerId).set({
       KEY_LATITUDE: workerLocation.latitude,
       KEY_LONGITUDE: workerLocation.longitude,
     });

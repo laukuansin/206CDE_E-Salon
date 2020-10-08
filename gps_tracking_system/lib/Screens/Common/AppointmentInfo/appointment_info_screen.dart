@@ -1,36 +1,49 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/worker.dart';
+import 'package:gps_tracking_system/Model/worker_location.dart';
+import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppointmentInfo extends StatefulWidget{
+
+  final Appointment appointment;
+  AppointmentInfo(this.appointment);
+
   @override
-  State<StatefulWidget> createState() =>_AppointmentInfoState(Worker(workerId: "P18010220"));
+  State<StatefulWidget> createState() =>_AppointmentInfoState(appointment, Worker(workerId: "P18010220"));
 }
 
 class _AppointmentInfoState extends State<AppointmentInfo>{
 
-  final String customerAddress = "Sunshine Farlim";
+  final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
+  final DateFormat dayFormatter  = DateFormat("E");
+  final DateFormat dateFormatter  = DateFormat("dd");
+  final DateFormat timeFormatter  = DateFormat().add_jm();
+  final Appointment appointment;
   final GlobalKey _keySlidingUpPanel = GlobalKey();
   double _minHeightOfSlidingUpPanel;
   bool _isWorkerReady;
-  Location _workerLocation;
+  WorkerLocation _workerLocation;
   GoogleMapListener _googleMapController;
-  GlobalKey<GoogleMapScreenState> _key;
-  _AppointmentInfoState(Worker worker)
+  GlobalKey<GoogleMapScreenState> _key = GlobalKey();
+
+  _AppointmentInfoState(this.appointment, Worker worker)
   {
     _isWorkerReady = false;
-    _workerLocation = Location(userId: worker.id,);
+    _workerLocation = WorkerLocation(workerId: worker.id,);
     _googleMapController = GoogleMapListener(worker: worker, workerLocationUpdated: onLocationReceived);
-    _key = GlobalKey();
   }
 
 
@@ -73,11 +86,11 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "31",
+            dateFormatter.format(dateParser.parse(appointment.appointmentDate.toUpperCase())),
             style: TextStyleFactory.heading1(color:dateColor)
           ),
           Text(
-            "THU",
+            dayFormatter.format(dateParser.parse(appointment.appointmentDate.toUpperCase())),
             style: TextStyleFactory.p()
           )
         ],
@@ -96,7 +109,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
           ListTile(
             contentPadding: EdgeInsets.only(bottom: 16.0, left: 16.0, right:16.0),
             leading: buildDateDay(screenSize),
-            title: Text("Emilie Khor"),
+            title: Text(appointment.customerName),
             trailing: RoundedButton(
               icon: Icons.navigation,
               horizontalPadding: 10,
@@ -106,7 +119,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
                   try {
                     AppLauncher.openMap(
                         srcLatLng: [_workerLocation.latitude, _workerLocation.longitude],
-                        destAddress: customerAddress
+                        destAddress: appointment.address
                     );
                   }
                   catch(e){
@@ -153,10 +166,10 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
       child:Column(
         children:<Widget>[
           buildPanelInfoHeader(screenSize, "Basic Information"),
-          buildPanelInfo(screenSize, Icons.access_time, "9am to 10am"),
-          buildPanelInfo(screenSize, Icons.location_on, "38, Lorong 7/ SS9, Bandar Tasek Mutiara, 14120, Simpang Ampat"),
-          buildPanelInfo(screenSize, Icons.contacts, "012-4727438"),
-          buildPanelInfo(screenSize, Icons.note_add, "Server down. Please solve it as fast as possible. Thank You very much. >3"),
+          buildPanelInfo(screenSize, Icons.access_time, timeFormatter.format(dateParser.parse(appointment.appointmentDate.toUpperCase()))),
+          buildPanelInfo(screenSize, Icons.location_on, appointment.address),
+          buildPanelInfo(screenSize, Icons.contacts, appointment.telephone),
+          // buildPanelInfo(screenSize, Icons.note_add, "Server down. Please solve it as fast as possible. Thank You very much. >3"),
           SizedBox(height: screenSize.height * 0.015,)
         ]
       )
@@ -192,7 +205,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
               child:GoogleMapScreen(
                 key: _key,
                 workerLatLng: LatLng(_workerLocation.latitude, _workerLocation.longitude),
-                customerAddress: customerAddress,
+                customerAddress: appointment.address,
               ),
             ),
 
@@ -219,9 +232,16 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
       );
   }
 
+
+  @override
+  void dispose() {
+
+  }
+
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude){
+    log(_key.toString());
     _key.currentState.updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
     _isWorkerReady = true;
   }

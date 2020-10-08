@@ -154,26 +154,11 @@ class ViewModel
     |   }                          |
     +------------------------------+
     */
-    Map<String, dynamic> jsonTimeTakenAndDistance = await RestApi
+    Map<String, int> timeDistance = await MapHelper
         .getRouteTimeDistance([workerLatLng, _customerLatLng]);
+    _totalDurationInSeconds = timeDistance['duration'];
+    _totalDistanceInMeter   = timeDistance['distance'];
 
-    try {
-      List<dynamic> timeTaken = jsonTimeTakenAndDistance["durations"];
-      List<dynamic> distance = jsonTimeTakenAndDistance["distances"];
-
-      int row = timeTaken.length;
-      _totalDurationInSeconds = 0;
-      _totalDistanceInMeter = 0;
-      for (int i = 0; i < row - 1; i++) {
-        double second = timeTaken[i][i + 1];
-        double d = distance[i][i + 1];
-        _totalDurationInSeconds += second.toInt();
-        _totalDistanceInMeter += d.toInt();
-      }
-    }
-    catch (error) {
-      debug.log(error.toString());
-    }
   }
 
   void animateCameraToRouteBound() async

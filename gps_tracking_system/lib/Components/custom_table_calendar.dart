@@ -42,7 +42,6 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     calendarController = CalendarController();
   }
@@ -55,29 +54,32 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
 
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
-      calendarController: calendarController,
-      events: event,
-      holidays: holiday,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      availableCalendarFormats:{CalendarFormat.week: "Week",CalendarFormat.month: "Month", },
-      calendarStyle: CalendarStyle(
-        selectedColor: primaryColor,
-        todayColor: Colors.orange,
-        markersColor: Colors.brown[700],
-        outsideDaysVisible: false,
+    return GestureDetector(
+        child:TableCalendar(
+          initialCalendarFormat: CalendarFormat.week,
+          calendarController: calendarController,
+          events: event,
+          holidays: holiday,
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          availableCalendarFormats:{CalendarFormat.week: "Week",CalendarFormat.month: "Month", },
+          calendarStyle: CalendarStyle(
+          selectedColor: primaryColor,
+          todayColor: Colors.greenAccent,
+          markersColor: Colors.brown[700],
+          outsideDaysVisible: false,
 
-      ),
-      headerStyle: HeaderStyle(
-        formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-        formatButtonDecoration: BoxDecoration(
-          color: primaryColor,
-          borderRadius: BorderRadius.circular(16.0),
         ),
-      ),
-      onDaySelected: onDaySelected,
-      onVisibleDaysChanged: onVisibleDayChanged,
-      onCalendarCreated: onCalendarCreated,
+        headerStyle: HeaderStyle(
+          formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+          formatButtonDecoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+        onDaySelected: onDaySelected,
+        onVisibleDaysChanged: onVisibleDayChanged,
+        onCalendarCreated: onCalendarCreated,
+      )
     );
   }
 
@@ -95,7 +97,6 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
     if(onCalendarCreatedCallBack == null) return;
     onCalendarCreatedCallBack(first, last, format);
   }
-
 
   CustomTableCalendarState({
     this.onDaySelectedCallBack,

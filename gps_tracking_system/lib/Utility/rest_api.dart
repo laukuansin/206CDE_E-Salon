@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
 import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
+import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Screens/User/Login/login_response.dart' as CustomerLogin;
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_response.dart';
@@ -118,6 +119,16 @@ class _Admin {
 
     var response = await http.post(url, body: {});
     return userGroupResponseFromJson(response.body);
+  }
+
+  Future<AppointmentListResponse> getAppointmentList() async{
+    String url = _DOMAIN_NAME +
+        "index.php?route=api/appointment/getAppointments&api_key=" +
+        User.getToken();
+    log("Calling get appointment list  API : " + url);
+
+    var response = await http.post(url, body: {});
+    return appointmentListResponseFromJson(response.body);
   }
 }
 

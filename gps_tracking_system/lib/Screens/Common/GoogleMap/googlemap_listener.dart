@@ -4,10 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/user.dart';
 import 'package:gps_tracking_system/Model/worker.dart';
+import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 
 class GoogleMapListener{
-  final Location _workerLocation;
+  final WorkerLocation _workerLocation;
   final Function(double, double) _workerLocationUpdated;
   Timer _timer;
 
@@ -16,7 +17,7 @@ class GoogleMapListener{
     @required Function(double, double)workerLocationUpdated,
     Duration refreshRate = const Duration(seconds: 5)
   })
-      :_workerLocation = Location(userId: worker.id),
+      :_workerLocation = WorkerLocation(workerId: worker.id),
         _workerLocationUpdated = workerLocationUpdated
   {
     if(User.isAuthenticated()) {
