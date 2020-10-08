@@ -19,6 +19,19 @@ class ControllerAccountRegister extends Controller {
 		$this->load->model('account/customer');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		  	$customerTokenList  = $this->model_account_customer->getCustomerTokens();
+
+            $isValid;
+            do
+            {
+                $isValid = true;
+                $token = token(32);
+                foreach ($customerTokenList as $customerToken) {
+                    $isValid &= ($token != $customerToken['customer_token']);
+                }
+            }while(!$isValid);
+
+            $this->request->post['customer_token'] = $token;
 			$customer_id = $this->model_account_customer->addCustomer($this->request->post);
 
 			// Clear any previous login attempts for unregistered accounts.

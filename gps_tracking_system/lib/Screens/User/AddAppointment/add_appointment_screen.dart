@@ -307,7 +307,7 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
     fToast = FToast();
     fToast.init(context);
     note = "";
-    location = new Location("", 0, 0);
+    location = new Location(latitude: 0, longitude: 0);
     dateTime = null;
     dateTimeStr = "";
     adult = 0;

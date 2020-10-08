@@ -9,13 +9,15 @@ import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart' as Use
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker.dart';
+import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 
 class RouteGenerator{
 
   static const bool _DEBUG_MODE = false;
   static const bool _ADMIN_MODE = false;
 
-  static Scaffold buildScaffold(Widget widget, {AppBar appbar})=> Scaffold(
+  static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar})=> Scaffold(
+      key: key,
       appBar: appbar,
       body: Material(
         child:SafeArea(
@@ -31,36 +33,30 @@ class RouteGenerator{
   static Route<dynamic> generateRoute(RouteSettings settings)
   {
     final args = settings.arguments;
-    if(_DEBUG_MODE){
-      switch(settings.name) {
 
+    if(_ADMIN_MODE){
+      switch(settings.name)
+      {
+        case"/"                                 :return _buildRoute(SplashScreen());
+        case "/login"                           :return _buildRoute(AdminLogin.LoginScreen());
+        case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
+        case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
+        case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
+        case "/today_appointment"               :return _buildRoute(TodayAppointmentScreen());
+        case "/add_worker"       				        :return _buildRoute(AddWorker());
       }
     }
-    else{
-      if(_ADMIN_MODE){
-        switch(settings.name)
-        {
-          case"/"                                 :return _buildRoute(SplashScreen());
-          case "/login"                           :return _buildRoute(AdminLogin.LoginScreen());
-          case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
-          case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
-          case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
-          case "/today_appointment"               :return _buildRoute(TodayAppointmentScreen());
-          case "/add_worker"       				        :return _buildRoute(AddWorker());
-        }
-      }
-      else{
-        switch(settings.name)
-        {
-          case"/"                                 :return _buildRoute(SplashScreen());
-          case "/login"                           :return _buildRoute(UserLogin.LoginScreen());
-          case "/appointmentInfo"                 :return _buildRoute(AppointmentInfo());
-          case "/appointmentList"                 :return _buildRoute(AppointmentListScreen());
-          case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
-          case "/location_picker" :
-            if(args is Location)
-              return _buildRoute(LocationPickerScreen(args));
-        }
+    else {
+      switch (settings.name) {
+        case "/"                :return _buildRoute(SplashScreen());
+        case "/sign_up"         :return _buildRoute(SignUpScreen());
+        case "/login"           :return _buildRoute(UserLogin.LoginScreen());
+        case "/appointmentInfo" :return _buildRoute(AppointmentInfo());
+        case "/appointmentList" :return _buildRoute(AppointmentListScreen());
+        case "/add_appointment" :return _buildRoute(AddAppointmentScreen());
+        case "/location_picker" :
+          if (args is Location)
+            return _buildRoute(LocationPickerScreen(args));
       }
     }
   }

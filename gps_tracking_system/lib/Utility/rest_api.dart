@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
 import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
 import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Screens/User/Login/login_response.dart' as CustomerLogin;
+import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_response.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
 import 'package:http/http.dart' as http;
@@ -130,8 +132,24 @@ class _Customer{
       "email": email,
       "password": password
     });
-
     return CustomerLogin.loginResponseFromJson(response.body);
+  }
+
+  Future<SignUpResponse>signUp(EndUser endUser) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/register";
+    log("Calling sign up API : " + url);
+
+    var response = await http.post(url, body: {
+      "email": endUser.email,
+      "firstname": endUser.firstName,
+      "lastname": endUser.lastName,
+      "password": endUser.password,
+      "telephone": endUser.contactNo,
+      "confirm":endUser.confirm
+    });
+
+    log(response.body);
+    return signUpResponseFromJson(response.body);
   }
 }
 
