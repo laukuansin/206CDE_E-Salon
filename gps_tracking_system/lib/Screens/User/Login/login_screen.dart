@@ -1,17 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/user.dart';
-import 'package:gps_tracking_system/Screens/User/Login/login_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -162,9 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (result.response.status == 1) {
       User.createInstance(result.token, Role.CUSTOMER);
-      Navigator.of(context).pushReplacementNamed("/add_appointment");
+      Navigator.of(context).pushReplacementNamed("/home_page");
     }
-
   }
 
   @override

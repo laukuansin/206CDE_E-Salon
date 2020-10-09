@@ -10,4 +10,5 @@ const primaryTextColor = Colors.black;
 const secondaryTextColor = Color(0xFF75777a);
 
 const dateColor = Colors.orange;
+const monthColor = Colors.greenAccent;
 const dayColor = Colors.blueGrey;

@@ -1,6 +1,7 @@
 <?php
 class ControllerStartupStartup extends Controller {
 	public function index() {
+
 		// Store
 		if ($this->request->server['HTTPS']) {
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "store WHERE REPLACE(`ssl`, 'www.', '') = '" . $this->db->escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']), '/.\\') . '/') . "'");
@@ -111,6 +112,11 @@ class ControllerStartupStartup extends Controller {
 		// Customer
 		$customer = new Cart\Customer($this->registry);
 		$this->registry->set('customer', $customer);
+
+		if(isset($this->request->get['api_key'])){
+			$this->customer->loginByApiKey($this->request->get['api_key']);
+		}
+
 		
 		// Customer Group
 		if (isset($this->session->data['customer']) && isset($this->session->data['customer']['customer_group_id'])) {
