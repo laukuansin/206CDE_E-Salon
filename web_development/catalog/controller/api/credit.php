@@ -47,6 +47,44 @@ class ControllerApiCredit extends Controller {
 
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getCreditByCustomer()
+    {
+        $customer_id = $this->request->get['customer_id'];
+        $this->load->model('api/credit');
+        if(empty($customer_id))
+        {
+            $json['credit']=0;
+            $json['error_code'] = [
+                'error' => 1,
+                'msj'   => 'Missing Parameter.'
+                ];
+        }
+        else{
+            $credit=$this->model_api_credit->getCreditById($customer_id);
+            if(empty($credit))
+            {
+                $json['credit']=0;
+                $json['error_code'] = [
+                    'error' => 1,
+                    'msj'   => 'Customer cannot find.'
+                    ];
+            }
+            else{
+                $json['credit']=$credit["total"];
+                $json['error_code'] = [
+                    'error' => 0,
+                    'msj'   => 'Get Credit success.'
+                    ];
+            }
+           
+        }
+
+        
+
+        $this->response->setOutput(json_encode($json));
+
+    }
     public function getReference(){
         mt_srand((double)microtime()*10000);
         $charid = md5(uniqid(rand(), true));

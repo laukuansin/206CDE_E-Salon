@@ -21,5 +21,15 @@ class ModelApiCredit extends Model{
 	
 		return $this->db->getLastId();
     }
+
+    public function getCreditById($customerID)
+    {
+        $sql = "SELECT SUM(credit)AS total
+        FROM oc_customer_credit
+        WHERE customer_id='" . (int) $customerID . "' 
+        ";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
 }
 ?>
