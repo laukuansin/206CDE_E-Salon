@@ -42,7 +42,37 @@ class Customer {
 		}
 	}
 
-  public function login($email, $password, $override = false) {
+	public function loginByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$customer_info= $this->db->query("SELECT * FROM oc_customer_api WHERE customer_token = '$apiKey'");
+
+		if($customer_info->num_rows){
+			$customer_info = $customer_info->row;
+			$customer_query = $this->db->query("SELECT * FROM oc_customer WHERE customer_id = ". $customer_info['customer_id']. " AND status = '1'");
+
+			if($customer_query->num_rows){
+				$this->session->data['customer_id'] = $customer_query->row['customer_id'];
+
+				$this->customer_id = $customer_query->row['customer_id'];
+				$this->firstname = $customer_query->row['firstname'];
+				$this->lastname = $customer_query->row['lastname'];
+				$this->customer_group_id = $customer_query->row['customer_group_id'];
+				$this->email = $customer_query->row['email'];
+				$this->telephone = $customer_query->row['telephone'];
+				$this->newsletter = $customer_query->row['newsletter'];
+				$this->address_id = $customer_query->row['address_id'];
+			
+				$this->db->query("UPDATE " . DB_PREFIX . "customer SET language_id = '" . (int)$this->config->get('config_language_id') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+
+
+				return true;
+			}
+
+		} 
+		return false;
+	}
+
+  	public function login($email, $password, $override = false) {
 		if ($override) {
 			$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND status = '1'");
 		} else {

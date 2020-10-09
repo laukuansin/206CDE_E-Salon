@@ -2,8 +2,29 @@
 class ModelUserUser extends Model {
 	public function addUser($data) {
 		$this->db->query("INSERT INTO `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', image = '" . $this->db->escape($data['image']) . "', status = '" . (int)$data['status'] . "', date_added = NOW()");
-	
-		return $this->db->getLastId();
+		
+		$userId = $this->db->getLastId();
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_api` SET user_id = '". $userId. "', user_token = '".$data['user_token']."'");
+		return $userId;
+	}
+
+	public function getUserToken(){
+		return $this->db->query("SELECT * FROM oc_user_api")->rows;
+	}
+
+	public function getUserTokenById($userId){
+		$userId = $this->db->escape($userId);
+		return $this->db->query("SELECT * FROM oc_user_api WHERE user_id=$userId")->row;
+	}
+
+	public function getUserTokenByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		return $this->db->query("SELECT * FROM oc_user_api WHERE user_token='$apiKey'")->row;
+	}
+
+	public function getEnableUsersByGroupId($user_group_id) {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE status=1 AND user_group_id = '" . (int)$user_group_id . "'");
+		return $query->rows;
 	}
 
 	public function editUser($user_id, $data) {

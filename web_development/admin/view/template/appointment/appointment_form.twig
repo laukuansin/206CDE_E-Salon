@@ -1,0 +1,252 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{{ header }}
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+{{ column_left }}
+
+<div id="content" ng-app='appointmentApp' ng-controller='appointmentCtrl'>
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" id="button-save" form="form-setting" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>  
+      </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+  	<div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit_appointment }}</h3>
+      </div>
+      <div class="panel-body">
+	    <form action="{{ action_save }}" method="post" enctype="multipart/form-data" id="form-setting" class="form-horizontal">
+        <input hidden name='appointment_id' value='{{appointment.appointment_id}}'/>
+        <div class='form-group'>
+          <label class='control-label col-sm-2'>{{entry_customer}}</label>
+            <div class='col-sm-10'>
+              <label class='control-label'>{[{appointment.customerName}]}</label>
+            </div>
+        </div>
+        <div class='form-group'>
+          <label class='control-label col-sm-2'>{{entry_telephone}}</label>
+            <div class='col-sm-10'>
+              <label class='control-label'>{[{appointment.telephone}]}</label>
+            </div>
+        </div>
+        <div class='form-group required'>
+          <label class='control-label col-sm-2'>{{entry_address}}</label>
+            <div class='col-sm-10'>
+              <input type='text' id="input-address" name='appointment_address' placeholder="{{entry_address}}" class="form-control" ng-model='appointment.address'>
+              {% if error_address %}
+                <div class="text-danger">{{ error_address}}</div>
+              {% endif %}
+            </div>
+        </div>
+	    	<div class='form-group required'>
+	    		<label class="control-label col-sm-2" for="input-worker">{{entry_worker}}</label>
+	    		<div class='col-sm-10'>
+	    			  <select ng-model='model.selectedWorker' class="form-control" id="worker" name='worker' ng-change='requestWorkerTimeSlot()'>
+                <option ng-repeat='(workerId, workerName) in workerList' value='{[{workerId}]}' >{[{workerName}]}</option>
+              </select>
+	    		</div>
+	    	</div>
+        <div class='form-group'>
+          <label class="control-label col-sm-2" for="input-worker">{{entry_services}}</label>
+          <div class='col-sm-10'>
+            <div class='well well-sm' id='container-form' style='overflow:auto'>
+              <div class='col-sm-6'>
+                <table class='table mb-0 pb-0' id="table-service">
+                  <thead>
+                      <tr>
+                          <th style="width:50%">Service name</th>
+                          <th class='text-right' style="width:10%">Pax</th>
+                          <th class='text-right' style="width:30%">Service price</th>
+                          <th class='text-center' style="width:10%">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody id='table-service-content'>
+                      <tr ng-repeat='(serviceId, serviceQty) in model.selectedServiceList'>
+                          <td style="width:50%">{[{serviceList[serviceId]['service_name']}]}</td>
+                          <td class='text-right' style='width:10%'>
+                            <input type='text' class='form-control text-right'name="service[{[{serviceId}]}]" ng-model='model.selectedServiceList[serviceId]' ng-change='requestAvailableTimeSlot()'/>
+                          </td>
+                          <td class='text-right' style='width:30%'>{[{serviceList[serviceId]['service_price']}]}</td>
+                          <td style="width:10%" class='text-center'>
+                              <i class="fa fa-trash text-danger btn" ng-click="removeService(serviceId)"></i>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td style="width:50%">
+                            <select class="form-control" id="service" name='service' ng-model='selected_service_text' ng-options="serviceId as serviceInfo['service_name']  for (serviceId, serviceInfo) in getSelectableServiceList()" >
+                              <option value="" selected disabled>Select service</option>
+                            </select>
+                          </td>
+                          <td style="width:50%" colspan="4" class='text-right'>
+                              <button type='button' ng-click="addService()" class='btn btn-primary' id='btn-add-service'><i class="fa fa-plus"></i>  Add service</button>
+                          </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+             </div>
+          </div>
+        </div>
+        <div class='form-group required'>
+          <label class='control-label col-sm-2'>{{entry_date}}</label>
+            <div class='col-sm-2'>
+            <input id="datepicker" ng-model='model.selectedDate' name='appointment_date' ng-change='requestWorkerTimeSlot()' />
+            <script>
+                $('#datepicker').datepicker({
+                    uiLibrary: 'bootstrap3',
+                    format:'yyyy-mm-dd'
+                });
+                $('#datepicker').change(function(){
+                    angular.element(document.getElementById('datepicker')).triggerHandler('change');
+                });
+            </script>
+              {% if error_date %}
+                <div class="text-danger">{{ error_date }}</div>
+              {% endif %}
+            </div>
+        </div>
+
+
+        <div class='form-group required'>
+          <label class="col-sm-2 control-label">{{entry_time}}</label>
+          <div class='col-sm-10'>
+            <div class='well well-sm' id='container-form' style='overflow:auto; height:200px; min-height:200px'>
+              <div class="form-check" ng-repeat='time in worker.populateData()'>
+                <input class="form-check-input" type="radio" name="appointment_time" value='{[{time}]}' id="radio-{[{time}]}" ng-model="model.selectedTime">
+                <label class="form-check-label" for="radio-{[{time}]}">
+                  {[{time}]}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+	    </form>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  var app = angular.module("appointmentApp", []);
+  app.config(function($interpolateProvider){
+    $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+  });
+
+  function Appointment(customerName, telephone, date, time, address, workerId, workerName, appointmentId, services){
+      this.customerName   = customerName;
+      this.telephone      = telephone;
+      this.date           = date;
+      this.time           = time;
+      this.address        = address;
+      this.workerName     = workerName;
+      this.appointmentId  = appointmentId;
+      this.workerId       = workerId;
+      this.services       = services;
+  }
+
+  function Worker(workerId, workerTimetable){
+    this.workerId = workerId;
+    this.workerTimetable = workerTimetable;
+  }
+
+
+  Worker.prototype.populateData = function(){
+    var data = [];
+
+    for (const [key, value] of Object.entries(this.workerTimetable)) {
+      if(value === true)
+        data.push(key);
+    }
+    return data;
+  }
+
+
+  app.controller('appointmentCtrl', function($scope, $http){
+    $scope.appointment = new Appointment(
+      '{{appointment.customer_name}}'
+      ,'{{appointment.telephone}}'
+      ,'{{appointment.appointment_date}}'
+      ,'{{appointment.appointment_time}}'
+      ,'{{appointment.address}}'
+      ,'{{appointment.worker_id}}'
+      ,'{{appointment.worker_name}}'
+      ,'{{appointment.appointment_id}}'
+      , {{appointment.services}});
+
+
+    $scope.serviceList  = {{serviceList}};
+    $scope.workerList   = {{worker}};
+
+    $scope.worker = null;
+    $scope.model  = {};
+    $scope.model.selectedServiceList  = {{appointment.services}};
+    $scope.model.selectedDate         = '{{appointment.appointment_date}}';
+    $scope.model.selectedWorker       = '{{appointment.worker_id}}';
+    $scope.model.selectedTime         = '{{appointment.appointment_time}}';
+
+    $scope.getSelectableServiceList = function(){
+
+      return Object.keys($scope.serviceList)
+      .filter((serviceId) => {return (!(serviceId in $scope.model.selectedServiceList));})
+      .reduce((obj, key)  =>{obj[key] = $scope.serviceList[key]; return obj;},{});
+    }
+
+    $scope.requestWorkerTimeSlot = function(){
+      if($scope.appointment.date != $scope.model.selectedDate)
+        $scope.model.selectedTime = '';
+      else
+        $scope.model.selectedTime = $scope.appointment.time;
+      var data = {
+        worker_id     : $scope.model.selectedWorker,
+        date          : $scope.model.selectedDate,
+        appointment_id: $scope.appointment.appointmentId,
+        services      : $scope.model.selectedServiceList
+      }
+
+      var url = '/admin/index.php?route=appointment/appointment_request/getWorkerTimetable&user_token={{user_token}}';
+      $http.post(url, data).then(
+        function(response){
+          console.log(response.data);
+           $scope.worker = new Worker(Object.keys(response.data)[0], Object.values(response.data)[0]);
+           $scope.worker.populateData();
+        }, function(response){
+          alert("Unknown error occur! " + response.data);
+        }
+      );
+    }
+
+
+    $scope.addService = function(){
+      if($scope.selected_service_text in $scope.serviceList && !($scope.selected_service_text in $scope.model.selectedServiceList)){
+        $scope.model.selectedServiceList[$scope.selected_service_text] = 1;
+      }
+    }
+
+    $scope.removeService = function(serviceId){
+      delete $scope.model.selectedServiceList[serviceId];
+    }
+
+    $scope.$watch('model.selectedServiceList', function(){
+      $scope.requestWorkerTimeSlot();
+    }, true);
+
+    
+    
+
+  });
+
+</script>
+
+{{ footer }}

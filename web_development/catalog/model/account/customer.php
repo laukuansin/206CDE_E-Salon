@@ -14,12 +14,24 @@ class ModelAccountCustomer extends Model {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int)$customer_group_id . "', store_id = '" . (int)$this->config->get('config_store_id') . "', language_id = '" . (int)$this->config->get('config_language_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? json_encode($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '" . (int)!$customer_group_info['approval'] . "', date_added = NOW()");
 
 		$customer_id = $this->db->getLastId();
+		$customer_token = $data['customer_token'];
+
+		$this->db->query("INSERT INTO oc_customer_api VALUES($customer_id, '$customer_token')");
 
 		if ($customer_group_info['approval']) {
 			$this->db->query("INSERT INTO `" . DB_PREFIX . "customer_approval` SET customer_id = '" . (int)$customer_id . "', type = 'customer', date_added = NOW()");
 		}
 		
 		return $customer_id;
+	}
+
+	public function getCustomerTokens(){
+		return $this->db->query("SELECT * FROM oc_customer_api")->rows;
+	}
+
+	public function getCustomerTokenById($customerId){
+		$customerId = $this->db->escape($customerId);
+		return $this->db->query("SELECT * FROM oc_customer_api WHERE customer_id=$customerId")->row;
 	}
 
 	public function editCustomer($customer_id, $data) {
@@ -118,6 +130,25 @@ class ModelAccountCustomer extends Model {
 
 	public function getLoginAttempts($email) {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_login` WHERE email = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+
+		return $query->row;
+	}
+
+	public function getLoginAttemptsByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$query = $this->db->query("SELECT * FROM oc_customer_login WHERE email=(
+		SELECT email FROM oc_customer WHERE customer_id = 
+		(SELECT customer_id FROM oc_customer_api WHERE oc_customer_api.customer_token = '$apiKey'))
+		");
+
+		return $query->row;
+	}
+
+	public function getCustomerByApiKey($apiKey){
+		$apiKey = $this->db->escape($apiKey);
+		$query = $this->db->query("SELECT * FROM oc_customer WHERE customer_id = 
+		(SELECT customer_id FROM oc_customer_api WHERE oc_customer_api.customer_token = '$apiKey')
+		");
 
 		return $query->row;
 	}

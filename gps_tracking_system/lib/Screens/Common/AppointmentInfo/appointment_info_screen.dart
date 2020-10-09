@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/worker.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
@@ -12,7 +13,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppointmentInfo extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() =>_AppointmentInfoState(Worker("P18010220"));
+  State<StatefulWidget> createState() =>_AppointmentInfoState(Worker(workerId: "P18010220"));
 }
 
 class _AppointmentInfoState extends State<AppointmentInfo>{
@@ -21,14 +22,13 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
   final GlobalKey _keySlidingUpPanel = GlobalKey();
   double _minHeightOfSlidingUpPanel;
   bool _isWorkerReady;
-  Worker _worker;
+  Location _workerLocation;
   GoogleMapListener _googleMapController;
   GlobalKey<GoogleMapScreenState> _key;
-
   _AppointmentInfoState(Worker worker)
   {
     _isWorkerReady = false;
-    _worker = worker;
+    _workerLocation = Location(userId: worker.id,);
     _googleMapController = GoogleMapListener(worker: worker, workerLocationUpdated: onLocationReceived);
     _key = GlobalKey();
   }
@@ -105,7 +105,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
                 press: (){
                   try {
                     AppLauncher.openMap(
-                        srcLatLng: [_worker.latitude, _worker.longitude],
+                        srcLatLng: [_workerLocation.latitude, _workerLocation.longitude],
                         destAddress: customerAddress
                     );
                   }
@@ -191,7 +191,7 @@ class _AppointmentInfoState extends State<AppointmentInfo>{
               width: screenSize.width,
               child:GoogleMapScreen(
                 key: _key,
-                workerLatLng: LatLng(_worker.latitude, _worker.longitude),
+                workerLatLng: LatLng(_workerLocation.latitude, _workerLocation.longitude),
                 customerAddress: customerAddress,
               ),
             ),

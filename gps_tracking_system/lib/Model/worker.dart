@@ -3,18 +3,21 @@ import 'package:gps_tracking_system/Model/end_user.dart';
 
 class Worker extends EndUser{
 
-  double latitude;
-  double longitude;
 
-  Worker(String workerId,
-      {
-        this.latitude = 4.2105,
-        this.longitude = 101.9758,
-        String contactNo,
-        String name,
-      }):
-    super(workerId,
-          firstName: name,
-      contactNo: contactNo);
+
+  Worker({
+    String workerId  = "",
+    String contactNo = "",
+    String firstname = "",
+    String lastname  = "",
+    String email     = "",
+  }):
+    super(
+      id: workerId,
+      firstName: firstname,
+      lastName: lastname,
+      contactNo: contactNo,
+      email:email,
+    );
 
 }

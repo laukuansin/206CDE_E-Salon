@@ -4,6 +4,7 @@ class ControllerStartupPermission extends Controller {
 		if (isset($this->request->get['route'])) {
 			$route = '';
 
+			
 			$part = explode('/', $this->request->get['route']);
 
 			if (isset($part[0])) {
@@ -43,9 +44,11 @@ class ControllerStartupPermission extends Controller {
 				'common/forgotten',
 				'common/reset',
 				'error/not_found',
-				'error/permission'
+				'error/permission',
+				'api/login'
 			);
 
+			
 			if (!in_array($route, $ignore) && !$this->user->hasPermission('access', $route)) {
 				return new Action('error/permission');
 			}
