@@ -14,7 +14,7 @@ class CustomerCreditResponse {
   Response response;
 
   factory CustomerCreditResponse.fromJson(Map<String, dynamic> json) => CustomerCreditResponse(
-    credit: json["credit"] == null? 0.0 : double.parse(json["credit"]),
+    credit: json["credit"] == null? 0.0 : json["credit"].toDouble(),
     response: Response.fromJson(json["response"]),
   );
 

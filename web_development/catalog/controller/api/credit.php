@@ -51,10 +51,10 @@ class ControllerApiCredit extends Controller {
 
         $this->load->model('account/customer');
         $creditResult = $this->model_account_customer->getCustomerCredit($this->customer->getId());
-        $json['credit'] = is_null($creditResult["total_credit"])? 0 : $creditResult["total_credit"];
+        $json['credit'] = is_null($creditResult["total_credit"])? 0.0 : (double)$creditResult["total_credit"];
         $json['response'] = array(
             'status' => 1,
-            'msj'   => 'Get Credit successfully'
+            'msg'   => 'Get Credit successfully'
         );
 
         $this->response->setOutput(json_encode($json));
