@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_tracking_system/Response/CreditResponse.dart';
-import 'package:gps_tracking_system/Response/TopUpResponse.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
-import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
-import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart' as AdminLogin;
-import 'package:gps_tracking_system/Screens/User/Login/login_response.dart' as CustomerLogin;
-import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response';
+import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart' as AdminLogin;
+import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as CustomerLogin;
+import 'package:gps_tracking_system/Utility/RestApi/user_sign_up_response.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
 import 'package:http/http.dart' as http;
@@ -76,7 +75,7 @@ class _Admin {
     return AdminLogin.loginResponseFromJson(response.body);
   }
 
-  Future<AddWorkerResponse> addUser(String username,
+  Future<AddWorkerResponse> addWorker(String username,
       String userGroup,
       String firstName,
       String lastName,
@@ -154,26 +153,23 @@ class _Customer{
     return signUpResponseFromJson(response.body);
   }
   
-   Future<TopUpResponse> topUp(int customerID,double amount) async{
-    String url=DOMAIN_NAME+"/index.php?route=api/credit/top_up";
-    log("Calling login API : " + url);
+   Future<TopUpResponse> topUpCustomerCredit(double credit) async{
+    String url= _DOMAIN_NAME + "index.php?route=api/credit/topUpCustomerCredit&api_key="+User.getToken();
+    log("Calling top up customer credit API : " + url);
+
     var response = await http.post(url,body: {
-      "customer_id":customerID.toString(),
-      "credit":amount.toString(),
+      "credit":credit.toString(),
+      "description": "Top up credit"
     });
-
-    final String responseString =response.body;
-    return topUpResponseFromJson(responseString);
-
+    log(response.body);
+    return topUpResponseFromJson(response.body);
   }
-  Future<CreditResponse> getCredit(int customerID) async{
-    String url=DOMAIN_NAME+"/index.php?route=api/credit/getCreditByCustomer&customer_id="+customerID.toString();
-    log("Calling login API : " + url);
+
+  Future<CustomerCreditResponse> getCustomerCredit() async{
+    String url= _DOMAIN_NAME + "index.php?route=api/credit/getCustomerCredit&api_key="+User.getToken();
+    log("Calling get customer credit API : " + url);
     var response = await http.get(url);
-
-    final String responseString =response.body;
-    return creditResponseFromJson(responseString);
-
+    return customerCreditResponseFromJson(response.body);
   }
 }
 

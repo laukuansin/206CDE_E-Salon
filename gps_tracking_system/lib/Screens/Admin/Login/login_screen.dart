@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/user.dart';
-import 'package:gps_tracking_system/Screens/Admin/Login/login_response.dart';
-import 'package:gps_tracking_system/Utility/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';

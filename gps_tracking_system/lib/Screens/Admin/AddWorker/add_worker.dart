@@ -7,8 +7,8 @@ import 'package:gps_tracking_system/Components/dropdown.dart';
 import 'package:gps_tracking_system/Components/image_picker.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
-import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker_response';
-import 'package:gps_tracking_system/Utility/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response';
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
@@ -239,7 +239,7 @@ class AddWorkerState extends State<AddWorker> {
     await progressDialog.show();
 
     _formKey.currentState.save();
-    AddWorkerResponse result = await RestApi.admin.addUser(_username, getIdFromGroupName(_userGroup), _firstName, _lastName, _email, _imgPath , _password, getIdFromStatusName(_status), _confirm);
+    AddWorkerResponse result = await RestApi.admin.addWorker(_username, getIdFromGroupName(_userGroup), _firstName, _lastName, _email, _imgPath , _password, getIdFromStatusName(_status), _confirm);
     progressDialog.hide();
     clearErrorMessage();
 

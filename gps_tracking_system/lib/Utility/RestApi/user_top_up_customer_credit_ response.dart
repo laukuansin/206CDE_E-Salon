@@ -6,36 +6,36 @@ String topUpResponseToJson(TopUpResponse data) => json.encode(data.toJson());
 
 class TopUpResponse {
   TopUpResponse({
-    this.errorCode,
+    this.response,
   });
 
-  ErrorCode errorCode;
+  Response response;
 
   factory TopUpResponse.fromJson(Map<String, dynamic> json) => TopUpResponse(
-    errorCode: ErrorCode.fromJson(json["error_code"]),
+    response: Response.fromJson(json["response"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "error_code": errorCode.toJson(),
+    "response": response.toJson(),
   };
 }
 
-class ErrorCode {
-  ErrorCode({
-    this.error,
-    this.msj,
+class Response {
+  Response({
+    this.status,
+    this.msg,
   });
 
-  int error;
-  String msj;
+  int status;
+  String msg;
 
-  factory ErrorCode.fromJson(Map<String, dynamic> json) => ErrorCode(
-    error: json["error"],
-    msj: json["msj"],
+  factory Response.fromJson(Map<String, dynamic> json) => Response(
+    status: json["status"],
+    msg: json["msg"],
   );
 
   Map<String, dynamic> toJson() => {
-    "error": error,
-    "msj": msj,
+    "status": status,
+    "msg": msg,
   };
 }
