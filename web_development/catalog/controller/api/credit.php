@@ -1,97 +1,72 @@
 <?php
 class ControllerApiCredit extends Controller {
-    public function top_up()
+    public function topUpCustomerCredit()
     {
-        $customer_id = (isset($this->request->post['customer_id'])) ? $this->request->post['customer_id'] : false;
-        $credit = (isset($this->request->post['credit'])) ? $this->request->post['credit'] : false;
-        $this->load->model('api/credit');
-        if($customer_id&&$credit)
-        {
-           $checkCustomer=$this->model_api_credit->checkCustomer($customer_id);
+        //Must have function
+        // !!!!!!!!!!!!!!!!!!!
+        $json = array();
+        if(!$this->customer->isLogged()) {
+            $json['response'] = array(
+                'status' => -1,
+                'msg' => 'Invalid token'
+            );
+            $this->response->setOutput(json_encode($json));
+            return;
+        }  
 
-           if($checkCustomer)
-           {
-                $description="Top up RM".$credit;
-                $reference=$this->getReference();
-                $topUp=$this->model_api_credit->topUp($customer_id,$credit,$description,$reference);
+        $this->load->model('account/customer');
 
-                if(empty($topUp))
-                {
-                    $json['error_code'] = [
-                        'error' => 3,
-                        'msj'   => 'Top Up Failure.'
-                        ];
-                }
-                else{
-                    $json['error_code'] = [
-                        'error' => 0,
-                        'msj'   => 'Top Up success.'
-                        ];
-                }
-           }
-           else{
-            $json['error_code'] = [
-                'error' => 2,
-                'msj'   => 'Customer ID is not exist.'
-                ];
-           }
-        }
-        else{
-            $json['error_code'] = [
-            'error' => 1,
-            'msj'   => 'Missing Parameter.'
+        if(isset($this->request->post['credit']) && isset($this->request->post['description'])){
+            $this->request->post['customer_id'] = $this->customer->getId();
+            $this->request->post['reference']   = $this->getReference();
+            $this->model_account_customer->topUpCustomerCredit($this->request->post);
+
+            $json['response'] = [
+                'status' => 1,
+                'msg'   => 'Top Up successfully.'
+            ];
+        } else {
+            $json['response'] = [
+                'status' => 0,
+                'msg'   => 'Paramter missing.'
             ];
         }
-
-        
-
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCreditByCustomer()
+    public function getCustomerCredit()
     {
-        $customer_id = $this->request->get['customer_id'];
-        $this->load->model('api/credit');
-        if(empty($customer_id))
-        {
-            $json['credit']=0;
-            $json['error_code'] = [
-                'error' => 1,
-                'msj'   => 'Missing Parameter.'
-                ];
-        }
-        else{
-            $credit=$this->model_api_credit->getCreditById($customer_id);
-            if(empty($credit))
-            {
-                $json['credit']=0;
-                $json['error_code'] = [
-                    'error' => 1,
-                    'msj'   => 'Customer cannot find.'
-                    ];
-            }
-            else{
-                $json['credit']=$credit["total"];
-                $json['error_code'] = [
-                    'error' => 0,
-                    'msj'   => 'Get Credit success.'
-                    ];
-            }
-           
-        }
+        //Must have function
+        // !!!!!!!!!!!!!!!!!!!
+        $json = array();
+        if(!$this->customer->isLogged()) {
+            $json['response'] = array(
+                'status' => -1,
+                'msg' => 'Invalid token'
+            );
+            $this->response->setOutput(json_encode($json));
+            return;
+        }  
+            
 
-        
+        $this->load->model('account/customer');
+        $creditResult = $this->model_account_customer->getCustomerCredit($this->customer->getId());
+        $json['credit'] = is_null($creditResult["total_credit"])? 0 : $creditResult["total_credit"];
+        $json['response'] = array(
+            'status' => 1,
+            'msj'   => 'Get Credit successfully'
+        );
 
         $this->response->setOutput(json_encode($json));
-
     }
-    public function getReference(){
+
+    private function getReference(){
         mt_srand((double)microtime()*10000);
         $charid = md5(uniqid(rand(), true));
         $c = unpack("C*",$charid);
         $c = implode("",$c);
-
         return substr($c,0,20);
     }
+
 }
 ?>
