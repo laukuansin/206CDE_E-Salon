@@ -106,30 +106,6 @@ class ViewModel
     );
   }
 
-  String getTotalDistance()
-  {
-    int totalDistance = _totalDistanceInMeter;
-    int kiloMeter = totalDistance ~/ 1000;
-    totalDistance %= 1000;
-    int meter = totalDistance;
-
-    if(kiloMeter > 0)
-      return kiloMeter.toString() + " km";
-    else
-      return meter.toString() + " m";
-  }
-
-  String getTotalDurations()
-  {
-    int minute = _totalDurationInSeconds ~/ 60;
-    int hour = minute ~/ 60;
-    minute %= 60;
-
-    if(hour > 0)
-      return hour.toString() +  " h " + minute.toString() + " min";
-    else
-      return minute.toString() + " min";
-  }
 
   void setGoogleMapController(GoogleMapController controller)
   {

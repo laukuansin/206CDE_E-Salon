@@ -27,6 +27,12 @@ class AppointmentListResponse {
 }
 
 class Appointment {
+  static final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
+  static final DateFormat dayDateMonthFormatter  = DateFormat("E MMM dd");
+  static final DateFormat dayFormatter  = DateFormat("E");
+  static final DateFormat dateFormatter  = DateFormat("dd");
+  static final DateFormat timeFormatter  = DateFormat().add_jm();
+
   Appointment({
     this.appointmentId,
     this.customerName,
@@ -45,7 +51,7 @@ class Appointment {
   String telephone;
   String address;
   String status;
-  String appointmentDate;
+  DateTime appointmentDate;
   String appointmentTime;
   String services;
 
@@ -56,7 +62,7 @@ class Appointment {
     telephone: json["telephone"],
     address: json["address"],
     status: json["status"],
-    appointmentDate: json["appointment_date"],
+    appointmentDate: dateParser.parse(json["appointment_date"].toString().toUpperCase()),
     services: json["services"],
   );
 
@@ -70,6 +76,11 @@ class Appointment {
     "appointment_date": appointmentDate,
     "services": services,
   };
+
+  String getAppointmentDateStringEMMMDD() => dayDateMonthFormatter.format(appointmentDate);
+  String getAppointmentDateStringJM() => timeFormatter.format(appointmentDate);
+  String getAppointmentDateStringDay() => dayFormatter.format(appointmentDate);
+  String getAppointmentDateStringDate() => dateFormatter.format(appointmentDate);
 }
 
 class Response {

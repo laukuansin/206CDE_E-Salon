@@ -20,7 +20,7 @@ class GoogleMapListener{
       :_workerLocation = WorkerLocation(workerId: worker.id),
         _workerLocationUpdated = workerLocationUpdated
   {
-    if(User.isAuthenticated()) {
+    if(User.isAuthenticated() && false) {
       switch(User.getRole()){
         case Role.CUSTOMER:
           RealTimeDb.onWorkerLocationChanges(worker.id, _locationReceived);

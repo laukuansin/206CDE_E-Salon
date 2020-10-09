@@ -4,7 +4,6 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 import 'package:gps_tracking_system/Utility/rest_api.dart';
 
@@ -65,4 +64,33 @@ class MapHelper{
     return { "duration" : totalDurationInSeconds, "distance":totalDistanceInMeter};
   }
 
+
+  static String getTotalDistanceString(int totalDistanceInMeter)
+  {
+    int totalDistance = totalDistanceInMeter;
+    int kiloMeter = totalDistance ~/ 1000;
+    totalDistance %= 1000;
+    int meter = totalDistance;
+
+    if(kiloMeter > 0)
+      return kiloMeter.toString() + " km";
+    else
+      return meter.toString() + " m";
+  }
+
+  static String getTotalDurationString(int totalDurationInSeconds)
+  {
+    int minute = totalDurationInSeconds ~/ 60;
+    int hour = minute ~/ 60;
+    minute %= 60;
+
+    if(hour > 0)
+      return hour.toString() +  " h " + minute.toString() + " min";
+    else
+      return minute.toString() + " min";
+  }
+
+  static String getTotalDistanceDurationString(int totalDurationInSeconds, int totalDistanceInMeter){
+    return getTotalDurationString(totalDurationInSeconds) + "(" + getTotalDistanceString(totalDistanceInMeter) + ")";
+  }
 }

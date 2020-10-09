@@ -62,7 +62,7 @@ class RouteGenerator{
             return _buildRoute(LocationPickerScreen(args));
           break;
         case "/appointmentInfo" :
-          if(args is Appointment)
+          if(args is Map<String, dynamic>)
             return _buildRoute(AppointmentInfo(args));
           break;
       }

@@ -170,3 +170,4 @@
 2020-10-08 10:06:12 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 44
 2020-10-08 10:06:12 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 45
 2020-10-08 10:06:12 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 46
+2020-10-09 12:33:11 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 27

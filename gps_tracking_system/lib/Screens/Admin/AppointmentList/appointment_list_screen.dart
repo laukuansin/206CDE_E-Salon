@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +9,6 @@ import 'package:gps_tracking_system/Utility/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 
@@ -25,9 +22,6 @@ class _AppointmentListState extends State<AppointmentListScreen>{
 
   final Map<String, List<Appointment>> appointmentList = {};
   final Map<String, Map<String, int>> appointmentRouteTimeDistance = {};
-  final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
-  final DateFormat dateFormatter  = DateFormat("E MMM dd");
-  final DateFormat timeFormatter  = DateFormat().add_jm();
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +55,8 @@ class _AppointmentListState extends State<AppointmentListScreen>{
     if(result.response.status == 1) {
       for(Appointment appointment in result.appointments){
         if(!appointmentList.containsKey(appointment.appointmentDate))
-          appointmentList[appointment.appointmentDate] = [];
-        appointmentList[appointment.appointmentDate].add(appointment);
+          appointmentList[appointment.appointmentDate.toString()] = [];
+        appointmentList[appointment.appointmentDate.toString()].add(appointment);
       }
 
       setState(() {});
@@ -89,8 +83,7 @@ class _AppointmentListState extends State<AppointmentListScreen>{
   Card _buildAppointmentCard(Appointment appointment){
 
     String timeTaken = appointmentRouteTimeDistance.containsKey(appointment.appointmentId)
-        ? getTotalDurationString(appointmentRouteTimeDistance[appointment.appointmentId]['duration']) + "(" + getTotalDistanceString(appointmentRouteTimeDistance[appointment.appointmentId]['distance']) + ")"
-        :"";
+        ? MapHelper.getTotalDistanceDurationString(appointmentRouteTimeDistance[appointment.appointmentId]['duration'], appointmentRouteTimeDistance[appointment.appointmentId]['distance']):"";
 
     return Card(
       elevation: 0,
@@ -102,7 +95,7 @@ class _AppointmentListState extends State<AppointmentListScreen>{
           ListTile(
             leading:Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:<Widget>[Text(timeFormatter.format(dateParser.parse(appointment.appointmentDate.toUpperCase())))]
+              children:<Widget>[Text(appointment.getAppointmentDateStringJM())]
             ),
             title: Text(appointment.customerName, ),
             subtitle: Column(
@@ -163,7 +156,7 @@ class _AppointmentListState extends State<AppointmentListScreen>{
           itemCount: appointmentList.length,
           itemBuilder: (BuildContext context, int index){
             String key = appointmentList.keys.elementAt(index);
-            return _buildAppointmentListByDate(dateFormatter.format(dateParser.parse(key.toUpperCase())), appointmentList[key]);
+            return _buildAppointmentListByDate(appointmentList[key][0].getAppointmentDateStringEMMMDD(), appointmentList[key]);
           }
       )
     );
@@ -214,29 +207,6 @@ class _AppointmentListState extends State<AppointmentListScreen>{
     );
   }
 
-  String getTotalDistanceString(int totalDistanceInMeter)
-  {
-    int totalDistance = totalDistanceInMeter;
-    int kiloMeter = totalDistance ~/ 1000;
-    totalDistance %= 1000;
-    int meter = totalDistance;
 
-    if(kiloMeter > 0)
-      return kiloMeter.toString() + " km";
-    else
-      return meter.toString() + " m";
-  }
-
-  String getTotalDurationString(totalDurationInSeconds)
-  {
-    int minute = totalDurationInSeconds ~/ 60;
-    int hour = minute ~/ 60;
-    minute %= 60;
-
-    if(hour > 0)
-      return hour.toString() +  " h " + minute.toString() + " min";
-    else
-      return minute.toString() + " min";
-  }
 
 }
