@@ -2,12 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/worker.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
-import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
@@ -30,31 +30,40 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   final Appointment appointment;
   final GlobalKey _keySlidingUpPanel = GlobalKey();
   final GlobalKey<GoogleMapScreenState> _key = GlobalKey();
-
   double _minHeightOfSlidingUpPanel;
+
   bool  _isWorkerReady;
   WorkerLocation _workerLocation;
+  String _distanceDurationToDest;
   GoogleMapListener _googleMapController;
 
   _AppointmentInfoState(this.appointment) {
     _isWorkerReady = false;
-    _workerLocation = WorkerLocation(
-      workerId: "P18010220",
-    );
-    _googleMapController = GoogleMapListener(
-        worker: Worker(workerId:"P18010220"), workerLocationUpdated: onLocationReceived);
+    _workerLocation = WorkerLocation(workerId: appointment.workerId);
+    _googleMapController = GoogleMapListener(workerId: appointment.workerId, workerLocationUpdated: onLocationReceived);
   }
 
   @override
   void initState() {
     super.initState();
     _minHeightOfSlidingUpPanel = -1;
+    _distanceDurationToDest    = "";
+
+    requestAppointmentTimeDistance();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _minHeightOfSlidingUpPanel = _keySlidingUpPanel.currentContext.size.height;
       setState(() {});
     });
   }
 
+  void requestAppointmentTimeDistance() async {
+    LatLng origin = MapHelper.positionToLatLng(await getCurrentPosition());
+    LatLng destination = await MapHelper.addressToLatLng(appointment.address);
+    Map<String, int> timeDestinationMap = await MapHelper.getRouteTimeDistance([origin, destination]);
+    setState(() {
+      _distanceDurationToDest = MapHelper.getTotalDistanceDurationString(timeDestinationMap["duration"], timeDestinationMap["distance"]);
+    });
+  }
 
   Container _buildSlidingUpPanelIndicator() {
     Size screenSize = MediaQuery.of(context).size;
@@ -170,7 +179,6 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
               appointment.getAppointmentDateStringJM()),
           buildPanelInfo(screenSize, Icons.location_on, appointment.address),
           buildPanelInfo(screenSize, Icons.contacts, appointment.telephone),
-          // buildPanelInfo(screenSize, Icons.note_add, "Server down. Please solve it as fast as possible. Thank You very much. >3"),
           SizedBox(
             height: screenSize.height * 0.015,
           )
@@ -182,7 +190,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         color: primaryLightColor,
         child: Column(children: <Widget>[
           buildPanelInfoHeader(screenSize, "Travel information"),
-          buildPanelInfo(screenSize, Icons.time_to_leave, distanceDuration),
+          buildPanelInfo(screenSize, Icons.time_to_leave, _distanceDurationToDest),
           SizedBox(
             height: screenSize.height * 0.015,
           )
@@ -196,50 +204,49 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
 
     return Scaffold(
         body: SlidingUpPanel(
-      backdropEnabled: true,
-      backdropTapClosesPanel: true,
-      margin: EdgeInsets.only(top: statusBarHeight),
-      body: SizedBox(
-        height: screenSize.height,
-        width: screenSize.width,
-        child: GoogleMapScreen(
-          key: _key,
-          workerLatLng:
-              LatLng(_workerLocation.latitude, _workerLocation.longitude),
-          customerAddress: appointment.address,
-        ),
-      ),
-      panel: Container(
-        color: primaryBgColor,
-        child: Column(
-          children: [
-            _buildTopPanel(screenSize),
-            SizedBox(
-              height: screenSize.height * 0.01,
+          backdropEnabled: true,
+          backdropTapClosesPanel: true,
+          margin: EdgeInsets.only(top: statusBarHeight),
+          body: SizedBox(
+            height: screenSize.height,
+            width: screenSize.width,
+            child: GoogleMapScreen(
+              key: _key,
+              workerLatLng:
+                  LatLng(_workerLocation.latitude, _workerLocation.longitude),
+              customerAddress: appointment.address,
             ),
-            _buildPanelBasicInformation(screenSize),
-            SizedBox(
-              height: screenSize.height * 0.01,
+          ),
+          panel: Container(
+            color: primaryBgColor,
+            child: Column(
+              children: [
+                _buildTopPanel(screenSize),
+                SizedBox(
+                  height: screenSize.height * 0.01,
+                ),
+                _buildPanelBasicInformation(screenSize),
+                SizedBox(
+                  height: screenSize.height * 0.01,
+                ),
+                _buildPanelTravelInformation(screenSize),
+              ],
             ),
-            _buildPanelTravelInformation(screenSize),
-          ],
-        ),
-      ),
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(24.0),
-        topRight: Radius.circular(24.0),
-      ),
-      maxHeight: screenSize.height,
-      minHeight: _minHeightOfSlidingUpPanel,
-      defaultPanelState: PanelState.CLOSED,
+          ),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.0),
+            topRight: Radius.circular(24.0),
+          ),
+          maxHeight: screenSize.height,
+          minHeight: _minHeightOfSlidingUpPanel,
+          defaultPanelState: PanelState.CLOSED,
     ));
   }
 
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude) {
-    _key.currentState
-        .updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
+    _key.currentState.updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
     _isWorkerReady = true;
   }
 }

@@ -7,7 +7,7 @@ class CustomTableCalendar extends StatefulWidget{
 
   final Function(DateTime, List) onDaySelectedCallBack;
   final Function(DateTime, DateTime, CalendarFormat) onVisibleDayChangedCallBack;
-  final Function(DateTime, DateTime, CalendarFormat) onCalendarCreatedCallBack;
+  final Function(DateTime, DateTime, CalendarController) onCalendarCreatedCallBack;
   final Map<DateTime, List> event;
   final Map<DateTime, List> holiday;
 
@@ -35,7 +35,7 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
 
   final Function(DateTime, List) onDaySelectedCallBack;
   final Function(DateTime, DateTime, CalendarFormat) onVisibleDayChangedCallBack;
-  final Function(DateTime, DateTime, CalendarFormat) onCalendarCreatedCallBack;
+  final Function(DateTime, DateTime, CalendarController) onCalendarCreatedCallBack;
   final Map<DateTime, List> event;
   final Map<DateTime, List> holiday;
   CalendarController calendarController;
@@ -64,18 +64,15 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
           availableCalendarFormats:{CalendarFormat.week: "Week",CalendarFormat.month: "Month", },
           calendarStyle: CalendarStyle(
           selectedColor: primaryColor,
-          todayColor: Colors.greenAccent,
-          markersColor: Colors.brown[700],
+          todayColor: Colors.blue,
+          markersColor: Colors.amber,
+          markersMaxAmount: 1,
+          markersPositionBottom: 7,
+          weekendStyle: TextStyle(color: secondaryTextColor),
+          outsideWeekendStyle: TextStyle(color:secondaryTextColor),
           outsideDaysVisible: false,
-
         ),
-        headerStyle: HeaderStyle(
-          formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-          formatButtonDecoration: BoxDecoration(
-            color: primaryColor,
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-        ),
+        headerVisible: false,
         onDaySelected: onDaySelected,
         onVisibleDaysChanged: onVisibleDayChanged,
         onCalendarCreated: onCalendarCreated,
@@ -95,8 +92,9 @@ class CustomTableCalendarState extends State<CustomTableCalendar>{
 
   void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format){
     if(onCalendarCreatedCallBack == null) return;
-    onCalendarCreatedCallBack(first, last, format);
+    onCalendarCreatedCallBack(first, last, calendarController);
   }
+
 
   CustomTableCalendarState({
     this.onDaySelectedCallBack,
