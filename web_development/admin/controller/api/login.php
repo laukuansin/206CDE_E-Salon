@@ -12,9 +12,10 @@ class ControllerApiLogin extends Controller {
 			$token  = $this->model_user_user->getUserTokenById($this->user->getId())['user_token'];
 
 			$json['user_token'] = $token;
+			$json['user_group_id'] = (int)$this->user->getGroupId();
 			$json['response']   = array(
 				'status' => 1,
-				'msg'	 => $this->language->get('text_login_success')
+				'msg'	 => $this->language->get('text_login_success'),
 				);
 		}
 		else{
