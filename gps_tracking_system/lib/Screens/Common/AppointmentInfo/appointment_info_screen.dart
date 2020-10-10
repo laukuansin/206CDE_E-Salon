@@ -29,18 +29,18 @@ class AppointmentInfo extends StatefulWidget {
 class _AppointmentInfoState extends State<AppointmentInfo> {
   final Appointment appointment;
   final GlobalKey _keySlidingUpPanel = GlobalKey();
-  final GlobalKey<GoogleMapScreenState> _key = GlobalKey();
+  final GlobalKey<GoogleMapScreenState> _googleMapKey = GlobalKey();
   double _minHeightOfSlidingUpPanel;
 
   bool  _isWorkerReady;
   WorkerLocation _workerLocation;
   String _distanceDurationToDest;
-  GoogleMapListener _googleMapController;
+  GoogleMapListener _googleMapListener;
 
   _AppointmentInfoState(this.appointment) {
-    _isWorkerReady = false;
-    _workerLocation = WorkerLocation(workerId: appointment.workerId);
-    _googleMapController = GoogleMapListener(workerId: appointment.workerId, workerLocationUpdated: onLocationReceived);
+    _isWorkerReady      = false;
+    _workerLocation     = WorkerLocation(workerId: appointment.workerId);
+    _googleMapListener  = GoogleMapListener(workerId: appointment.workerId, workerLocationUpdated: onLocationReceived);
   }
 
   @override
@@ -51,8 +51,9 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
 
     requestAppointmentTimeDistance();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _minHeightOfSlidingUpPanel = _keySlidingUpPanel.currentContext.size.height;
-      setState(() {});
+      setState(() {
+        _minHeightOfSlidingUpPanel = _keySlidingUpPanel.currentContext.size.height;
+      });
     });
   }
 
@@ -211,7 +212,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             height: screenSize.height,
             width: screenSize.width,
             child: GoogleMapScreen(
-              key: _key,
+              key: _googleMapKey,
               workerLatLng:
                   LatLng(_workerLocation.latitude, _workerLocation.longitude),
               customerAddress: appointment.address,
@@ -246,7 +247,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude) {
-    _key.currentState.updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
+    _googleMapKey.currentState.updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
     _isWorkerReady = true;
   }
 }
