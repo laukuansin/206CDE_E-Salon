@@ -25,6 +25,23 @@ class ModelAccountCustomer extends Model {
 		return $customer_id;
 	}
 
+
+    public function topUpCustomerCredit($data)
+    {
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "customer_credit` SET customer_id = '" . (int)$data['customer_id'] . "', credit = '" . (float)$data['credit'] . "', date_added = NOW(),reference='".(int)$data['reference']."',description='".$this->db->escape($data['description'])."'");
+	
+		return $this->db->getLastId();
+    }
+
+
+    public function getCustomerCredit($customerID)
+    {
+        $sql = "SELECT SUM(credit)AS total_credit 
+    			FROM oc_customer_credit 
+    			WHERE customer_id='" . $customerID . "' ";
+        return $this->db->query($sql)->row;
+    }
+
 	public function getCustomerTokens(){
 		return $this->db->query("SELECT * FROM oc_customer_api")->rows;
 	}

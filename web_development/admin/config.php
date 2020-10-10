@@ -8,7 +8,6 @@ define('HTTPS_SERVER', 'http://localhost/admin/');
 define('HTTPS_CATALOG', 'http://localhost/');
 
 // DIR
-
 define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/');
 define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
 define('DIR_IMAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/image/');
