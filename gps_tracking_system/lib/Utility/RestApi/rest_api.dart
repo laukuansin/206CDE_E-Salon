@@ -5,6 +5,7 @@ import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_res
 import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response';
 import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as CustomerLogin;
@@ -15,7 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://192.168.68.107/"; //android emulator 10.0.2.2
+const tempDomainName = "http://175.138.37.52/";//"http://10.0.2.2/";
 
 class RestApi
 {
@@ -120,6 +121,24 @@ class _Admin {
     var response = await http.post(url, body: {});
     return userGroupResponseFromJson(response.body);
   }
+
+  Future<AppointmentListResponse> getAppointmentList() async{
+    String url = _DOMAIN_NAME;
+    if(User.getRole() == Role.OWNER) {
+      url += "index.php?route=api/appointment/getAllAppointments&api_key=" +
+          User.getToken();
+      log("Calling get appointment list (Owner)  API : " + url);
+    } else {
+      url += "index.php?route=api/appointment/getWorkerAppointments&api_key=" +
+          User.getToken();
+      log("Calling get appointment list (Worker)  API : " + url);
+    }
+
+    var response = await http.post(url, body: {});
+    return appointmentListResponseFromJson(response.body);
+  }
+
+
 }
 
 class _Customer{

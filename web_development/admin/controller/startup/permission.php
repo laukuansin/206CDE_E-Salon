@@ -45,7 +45,10 @@ class ControllerStartupPermission extends Controller {
 				'common/reset',
 				'error/not_found',
 				'error/permission',
-				'api/login'
+				'api/login',
+				'api/appointment',
+				'api/user',
+				'api/user_group'
 			);
 
 			

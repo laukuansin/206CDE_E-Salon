@@ -1,8 +1,9 @@
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:gps_tracking_system/Model/location.dart';
+import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Model/worker.dart' as MyWorker;
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 
@@ -37,22 +38,23 @@ class RealTimeDb{
   static const String GROUP_ADDRESS     = "Address";
   static DatabaseReference _db          = FirebaseDatabase.instance.reference();
   static Map<String,List<double>> _localCache = {}; // Cache data to reduce number of calling firebase
+  static StreamSubscription<Event> _streamSubscription;
   RealTimeDb._();
 
-  static void saveWorkerChanges(Location workerLocation)
+  static void saveWorkerChanges(WorkerLocation workerLocation)
   {
-    _db.child(GROUP_WORKER).child(workerLocation.userId).set({
+    _db.child(GROUP_WORKER).child(workerLocation.workerId).set({
       KEY_LATITUDE: workerLocation.latitude,
       KEY_LONGITUDE: workerLocation.longitude,
     });
   }
 
-  static void onWorkerLocationChanges(String workerId, Function(double,double) callBack)
+  static void startListenWorkerLocationChanges(String workerId, Function(double,double) callBack)
   {
     if(callBack == null) return;
 
     // Firebase will automatically call this at first time even without changing value
-    _db .child(GROUP_WORKER)
+    _streamSubscription = _db .child(GROUP_WORKER)
         .child(workerId)
         .onValue
         .listen((event) {
@@ -65,6 +67,10 @@ class RealTimeDb{
           longitude is double? longitude: 0.0
       );
     });
+  }
+
+  static void stopListenWorkerLocationChanges() {
+    _streamSubscription.cancel();
   }
 
   static void removeWorker(String workerId){

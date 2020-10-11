@@ -65,22 +65,17 @@ class LocationPickerScreenState
   Future<void> _updateLocation(Position position)async {
     _location.latitude  = position.latitude;
     _location.longitude = position.longitude;
-    _location.address   = await latLngToAddress(position);
+    _location.address   = await MapHelper.positionToAddress(position);
     _searchBarController.text = _location.address;
   }
 
   void searchLocation(String location)async
   {
-    Coordinates coordinates= (await Geocoder.local.findAddressesFromQuery(location)).first.coordinates;
+    LatLng latLng = await MapHelper.addressToLatLng(location);
     _location.address = location;
-    _location.latitude = coordinates.latitude;
-    _location.longitude = coordinates.longitude;
+    _location.latitude = latLng.latitude;
+    _location.longitude = latLng.longitude;
     _updateMarker();
-  }
-
-  Future<String> latLngToAddress(Position position) async{
-    List<Address> addresses=await Geocoder.local.findAddressesFromCoordinates(MapHelper.positionToCoordinates(position));
-    return addresses.first.addressLine;
   }
 
   void _updateMarker() async{
@@ -170,9 +165,7 @@ class LocationPickerScreenState
       ),
       style: const TextStyle(color: Colors.white, fontSize: 16.0),
       // onChanged: updateSearchQuery,
-      onSubmitted: (text){
-        searchLocation(text);
-      },
+      onSubmitted: searchLocation
     );
   }
 

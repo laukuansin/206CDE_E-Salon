@@ -101,7 +101,7 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
                   Icon(Icons.chevron_right)
                 ])),
             onTap: () {
-              Navigator.of(context).pushNamed('/add_appointment', arguments: this.location).
+              Navigator.of(context).pushNamed('/location_picker', arguments: this.location).
               then((value){
                 setState(() {});
               });
