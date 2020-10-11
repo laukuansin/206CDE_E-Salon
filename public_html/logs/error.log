@@ -171,3 +171,16 @@
 2020-10-08 10:06:12 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 45
 2020-10-08 10:06:12 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 46
 2020-10-09 12:33:11 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/service/setting.php on line 27
+2020-10-10 9:51:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 12
+2020-10-10 9:51:47 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 17
+2020-10-10 9:52:10 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 12
+2020-10-10 9:52:10 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 17
+2020-10-10 9:52:59 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 12
+2020-10-10 9:52:59 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 17
+2020-10-10 9:53:39 - PHP Notice:  Undefined variable: data in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 101
+2020-10-10 9:53:39 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/appointment.php on line 101
+2020-10-10 9:59:16 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 12
+2020-10-10 9:59:16 - PHP Notice:  Undefined index: user_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/error/not_found.php on line 17
+2020-10-10 10:20:56 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
+2020-10-10 10:24:39 - PHP Notice:  Undefined index: appointment_time in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 202
+2020-10-10 10:24:39 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209

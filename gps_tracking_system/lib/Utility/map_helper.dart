@@ -5,7 +5,7 @@ import 'package:geocoder/model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
-import 'package:gps_tracking_system/Utility/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 
 /// This class is a helper call for coordinate conversion
 class MapHelper{

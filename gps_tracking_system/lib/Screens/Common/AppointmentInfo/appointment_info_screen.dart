@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
@@ -37,17 +39,20 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   String _distanceDurationToDest;
   GoogleMapListener _googleMapListener;
 
-  _AppointmentInfoState(this.appointment) {
-    _isWorkerReady      = false;
-    _workerLocation     = WorkerLocation(workerId: appointment.workerId);
-    _googleMapListener  = GoogleMapListener(workerId: appointment.workerId, workerLocationUpdated: onLocationReceived);
-  }
+  _AppointmentInfoState(this.appointment);
 
   @override
   void initState() {
     super.initState();
     _minHeightOfSlidingUpPanel = -1;
     _distanceDurationToDest    = "";
+    _isWorkerReady             = false;
+    _workerLocation            = WorkerLocation(workerId: appointment.workerId);
+    _googleMapListener         = GoogleMapListener(workerId: appointment.workerId, workerLocationUpdated: onLocationReceived);
+
+    if(appointment.status == Status.PENDING){
+      _googleMapListener.startServices();
+    }
 
     requestAppointmentTimeDistance();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,6 +109,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     );
   }
 
+
+
   Widget _buildTopPanel(Size screenSize) {
     return Container(
         key: _keySlidingUpPanel,
@@ -121,7 +128,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                 horizontalPadding: 10,
                 text: "Navigate",
                 fontSize: 14,
-                press: () {
+                press: () async{
                   try {
                     AppLauncher.openMap(srcLatLng: [
                       _workerLocation.latitude,
@@ -203,8 +210,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     Size screenSize = MediaQuery.of(context).size;
     double statusBarHeight = MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-        body: SlidingUpPanel(
+    return RouteGenerator.buildScaffold(
+        SlidingUpPanel(
           backdropEnabled: true,
           backdropTapClosesPanel: true,
           margin: EdgeInsets.only(top: statusBarHeight),
