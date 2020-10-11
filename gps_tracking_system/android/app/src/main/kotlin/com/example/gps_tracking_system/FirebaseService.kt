@@ -1,17 +1,26 @@
 package com.example.gps_tracking_system
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
+import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class FirebaseService: Service() {
@@ -21,6 +30,37 @@ class FirebaseService: Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var workerId: String
 
+
+    override fun onCreate() {
+        super.onCreate()
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            startForeground(1, Notification())
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startMyOwnForeground() {
+        val NOTIFICATION_CHANNEL_ID = "example.permanence"
+        val channelName = "Background Service"
+        val chan = NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE)
+        chan.setLightColor(Color.BLUE)
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE)
+        val manager: NotificationManager = (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+        manager.createNotificationChannel(chan)
+        val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notification: Notification = notificationBuilder.setOngoing(true)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build()
+        startForeground(2, notification)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+        return START_STICKY;
+    }
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -58,5 +98,33 @@ class FirebaseService: Service() {
         data["Lng"] = location.longitude
         Log.d("FirebaseService", "Updating location ${location.latitude}, ${location.longitude}")
         database.child("Worker").child(workerId).setValue(data)
+    }
+
+    override fun onDestroy() {
+        Log.d("FirebaseService", "destory: ")
+        val bundle = Bundle()
+        bundle.putString("worker_id", workerId)
+
+        var rootIntent = Intent()
+        rootIntent.action = "restartservice";
+        rootIntent.setClass(this, FirebaseReceiver::class.java)
+        rootIntent.putExtra("firebaseWorkerId", bundle)
+        sendBroadcast(rootIntent)
+        super.onDestroy()
+    }
+
+
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        Log.d("FirebaseService", "onTaskRemoved: ")
+        val bundle = Bundle()
+        bundle.putString("worker_id", workerId)
+
+        var rootIntent = Intent()
+        rootIntent.action = "restartservice";
+        rootIntent.setClass(this, FirebaseReceiver::class.java)
+        rootIntent.putExtra("firebaseWorkerId", bundle)
+        sendBroadcast(rootIntent)
+        super.onTaskRemoved(rootIntent)
     }
 }
