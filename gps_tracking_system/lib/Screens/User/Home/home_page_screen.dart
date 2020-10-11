@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -20,13 +21,14 @@ class HomePageScreen extends StatefulWidget {
 class HomePageScreenState extends State<HomePageScreen> {
   double creditAmount;
   FToast fToast;
-
+  List<Appointment> _appointmentList;
   @override
   void initState() {
     super.initState();
     fToast = FToast();
     fToast.init(context);
     creditAmount = 0.0;
+    requestAppointmentList();
     requestCurrentCustomerCredit();
   }
 
@@ -128,7 +130,25 @@ class HomePageScreenState extends State<HomePageScreen> {
                         ),
                         padding: EdgeInsets.only(top: 20)),
                     Padding(
-                      child: Text("Appointment", style: TextStyleFactory.heading3(fontWeight: FontWeight.normal)),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text("Appointment", style: TextStyleFactory.heading3(fontWeight: FontWeight.normal)),
+                          ),
+
+                          RaisedButton(
+                            elevation: 0,
+                            color: primaryLightColor,
+                            child:
+                                Icon(Icons.notifications, color: primaryColor, size: 20,),
+
+                            onPressed: (){Navigator.of(context).pushNamed("/my_appointments");},
+                          )
+
+
+                        ],
+                      )
+                      ,
                       padding: EdgeInsets.only(top: 20),
                     ),
                     Padding(
@@ -136,7 +156,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                       child: ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: 5,
+                          itemCount: isShowAppointmentList()?_appointmentList.length:0,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -145,24 +165,19 @@ class HomePageScreenState extends State<HomePageScreen> {
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(10.0)),
                               child: Padding(
-                                child: ListTile(
+                                child:
+                                ListTile(
                                   leading: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Text("31",
+                                          Text(_appointmentList[index].day,
                                               style: TextStyleFactory.heading1(
                                                   color: dateColor)),
-                                          Text("MAR", style: TextStyleFactory.p())
+                                          Text(_appointmentList[index].month, style: TextStyleFactory.p())
                                         ],
                                     ),
-                                    title: Text("Tan Hoe Theng"),
-                                    trailing: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.done, color: Colors.greenAccent,),
-                                        Text("Accepted",style: TextStyleFactory.p(color: Colors.greenAccent),)
-                                      ],
-                                    ),
+                                    title: Text(_appointmentList[index].workerName),
+                                    trailing: statusWidget(_appointmentList[index].status),
                                 ),
                                 padding: EdgeInsets.all(10),
                               ),
@@ -171,6 +186,47 @@ class HomePageScreenState extends State<HomePageScreen> {
                     )
               ],
             )))));
+  }
+
+  bool isShowAppointmentList()
+  {
+    if(_appointmentList==null)
+        return false;
+    else
+      return true;
+  }
+  Widget statusWidget(String status)
+  {
+    Color color;
+    IconData icon;
+    if(status=="Accepted")
+    {
+      color=Colors.greenAccent;
+      icon=Icons.done;
+    }
+    else if(status=="Rejected"){
+      color=Colors.red;
+      icon=Icons.close;
+    }
+    else if(status=="Pending"){
+      color=Colors.yellowAccent[700];
+      icon=MdiIcons.loading;
+    }
+    else if(status=="Completed"){
+      color=Colors.green;
+      icon=Icons.done;
+    }
+    else if(status=="Cancelled"){
+      color=Colors.red;
+      icon=Icons.close;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, color: color,),
+        Text(status,style: TextStyleFactory.p(color: color))
+      ],
+    );
   }
 
   void requestCurrentCustomerCredit()async
@@ -188,6 +244,27 @@ class HomePageScreenState extends State<HomePageScreen> {
     }
     else{
       creditAmount = 0.0;
+      fToast.showToast(child: ToastWidget(
+        status: result.response.status,
+        msg: result.response.msg,
+      ));
+    }
+  }
+  void requestAppointmentList()async
+  {
+    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
+    AppointmentListResponse result=await RestApi.customer.getAppointmentListAccepted();
+    progressDialog.hide();
+
+    if(result.response.status == 1)
+    {
+      setState(() {
+        _appointmentList=result.list;
+      });
+    }
+    else{
+      _appointmentList=null;
       fToast.showToast(child: ToastWidget(
         status: result.response.status,
         msg: result.response.msg,

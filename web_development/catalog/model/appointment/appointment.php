@@ -62,6 +62,50 @@ class ModelAppointmentAppointment extends Model{
 		$sql = rtrim($sql, ',');		
 		$this->db->query($sql);
 	}
+
+	public function getAppointmentListAcceptedByCustomerID($customerId)
+	{
+		$sql ="
+			SELECT 
+				oc_a.appointment_id,oc_a.appointment_date,oc_a_s.status,oc_u.username
+			FROM 
+				oc_appointment oc_a
+			LEFT JOIN oc_user oc_u
+			ON	(oc_a.user_id=oc_u.user_id)
+			LEFT JOIN oc_appointment_status oc_a_s
+			ON (oc_a_s.status_id=oc_a.status_id)
+			WHERE 
+				oc_a.customer_id = '".(int)$customerId."' AND oc_a.status_id=1
+			ORDER BY
+				oc_a.appointment_date DESC
+			
+		"
+		;
+		return $this->db->query($sql)->rows;
+	}
+	public function getAppointmentListByCustomerID($customerId)
+	{
+		$sql ="
+			SELECT 
+				oc_a.appointment_id,oc_a.appointment_date,oc_a_s.status,oc_s.service_name
+			FROM 
+				oc_appointment oc_a
+			LEFT JOIN oc_appointment_service oc_a_ser
+			ON (oc_a.appointment_id=oc_a_ser.appointment_id)
+			LEFT JOIN oc_service oc_s
+			ON (oc_s.service_id=oc_a_ser.service_id)
+
+			LEFT JOIN oc_appointment_status oc_a_s
+			ON (oc_a_s.status_id=oc_a.status_id)
+			WHERE 
+				oc_a.customer_id = '".(int)$customerId."'
+			ORDER BY
+				oc_a.appointment_date DESC
+			
+		"
+		;
+		return $this->db->query($sql)->rows;
+	}
 }
 
 ?>

@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if(result.response.status == 1) {
       User.createInstance(result.userToken, Role.OWNER);
-      Navigator.of(context).pushReplacementNamed("/add_worker");
+      Navigator.of(context).pushReplacementNamed("/manage_appointment");
     }
   }
 

@@ -54,7 +54,7 @@ class ControllerApiCredit extends Controller {
         $json['credit'] = is_null($creditResult["total_credit"])? 0 : $creditResult["total_credit"];
         $json['response'] = array(
             'status' => 1,
-            'msj'   => 'Get Credit successfully'
+            'msg'   => 'Get Credit successfully'
         );
 
         $this->response->setOutput(json_encode($json));
