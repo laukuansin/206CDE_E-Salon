@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
@@ -16,7 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://175.138.37.52/";//"http://10.0.2.2/";
+const tempDomainName = "http://192.168.68.107/";//"http://10.0.2.2/";
 
 class RestApi
 {
@@ -189,6 +190,13 @@ class _Customer{
     log("Calling get customer credit API : " + url);
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);
+  }
+
+  Future<GetServicesResponse> getAllServices() async{
+    String url = _DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + User.getToken();
+    log("Calling get services API : " + url);
+    var response = await http.get(url);
+    return getServicesResponseFromJson(response.body);
   }
 }
 

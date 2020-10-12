@@ -184,3 +184,10 @@
 2020-10-10 10:20:56 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
 2020-10-10 10:24:39 - PHP Notice:  Undefined index: appointment_time in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 202
 2020-10-10 10:24:39 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
+2020-10-11 18:37:08 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
+2020-10-11 18:49:00 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 142
+2020-10-11 18:49:00 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 149
+2020-10-11 18:49:00 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 156
+2020-10-11 18:49:00 - PHP Notice:  Undefined index: password in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 156
+2020-10-11 18:49:00 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 159
+2020-10-11 18:49:19 - PHP Notice:  Undefined index: customer_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 87
