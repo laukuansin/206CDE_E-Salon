@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 AppointmentListResponse appointmentListResponseFromJson(String str) => AppointmentListResponse.fromJson(json.decode(str));
 
@@ -6,62 +7,128 @@ String appointmentListResponseToJson(AppointmentListResponse data) => json.encod
 
 class AppointmentListResponse {
   AppointmentListResponse({
-    this.list,
     this.response,
+    this.appointments,
   });
 
-  List<Appointment> list;
   Response response;
+  List<Appointment> appointments;
 
   factory AppointmentListResponse.fromJson(Map<String, dynamic> json) => AppointmentListResponse(
-    list: List<Appointment>.from(json["list"].map((x) => Appointment.fromJson(x))),
     response: Response.fromJson(json["response"]),
+    appointments:json['appointments'] == null? null:  List<Appointment>.from(json["appointments"].map((x) => Appointment.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "list": List<dynamic>.from(list.map((x) => x.toJson())),
     "response": response.toJson(),
+    "appointments": List<dynamic>.from(appointments.map((x) => x.toJson())),
   };
 }
 
+enum Status{
+  OFFSET,
+  ACCEPTED,
+  REJECTED,
+  PENDING,
+  CANCELLED,
+  CLOSE
+}
+
+enum ServiceAttr{
+  PRICE,
+  QTY,
+}
+
 class Appointment {
+  static final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
+  static final DateFormat dayDateMonthFormatter  = DateFormat("E MMM dd");
+  static final DateFormat monthYearFormatter = DateFormat("MMMM yyyy");
+  static final DateFormat dayFormatter  = DateFormat("E");
+  static final DateFormat dateFormatter  = DateFormat("dd");
+  static final DateFormat dateMonthYearFormatter = DateFormat("yyyy-MM-dd");
+  static final DateFormat timeFormatter  = DateFormat().add_jm();
+
   Appointment({
     this.appointmentId,
-    this.date,
-    this.year,
-    this.month,
-    this.day,
-    this.status,
+    this.customerId,
+    this.customerName,
+    this.workerId,
     this.workerName,
+    this.telephone,
+    this.address,
+    this.status,
+    this.appointmentDate,
+    this.appointmentTime,
+    this.services,
+    this.servicesId,
   });
 
-  int appointmentId;
-  DateTime date;
-  String year;
-  String month;
-  String day;
-  String status;
+
+  String appointmentId;
+  String customerId;
+  String customerName;
+  String workerId;
   String workerName;
+  String telephone;
+  String address;
+  Status status;
+  DateTime appointmentDate;
+  String appointmentTime;
+  String services;
+  List<int> servicesId;
 
-  factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
-    appointmentId: json["appointment_id"],
-    date: DateTime.parse(json["date"]),
-    year: json["year"],
-    month: json["month"],
-    day: json["day"],
-    status: json["status"],
-    workerName: json["worker_name"],
-  );
+  factory Appointment.fromJson(Map<String, dynamic> json){
+    List<int> servicesId = [];
+    
+    if(json['services_id'] != null) {
+      String servicesIdString = json['services_id'];
+      List<String>serviceIdList = servicesIdString.split(',');
+      for(String serviceId in serviceIdList) {
+        servicesId.add(int.parse(serviceId));
+      }
+    }
 
-  Map<String, dynamic> toJson() => {
-    "appointment_id": appointmentId,
-    "date": date.toIso8601String(),
-    "year": year,
-    "month": month,
-    "day": day,
-    "status": status,
-    "worker_name": workerName,
-  };
+    return Appointment(
+      appointmentId: json["appointment_id"],
+      customerId: json['customer_id'],
+      customerName: json["customer_name"],
+      workerId: json['worker_id'],
+      workerName: json["worker_name"],
+      telephone: json["telephone"],
+      address: json["address"],
+      status: Status.values[json["status_id"].toInt()],
+      appointmentDate: dateParser.parse(
+          json["appointment_date"].toString().toUpperCase()),
+      services: json["services"],
+      servicesId: servicesId,
+    );
+  }
+
+    Map<String, dynamic> toJson() => {
+      "appointment_id": appointmentId,
+      "customer_id" : customerId,
+      "customer_name": customerName,
+      "worker_id":workerId,
+      "worker_name": workerName,
+      "telephone": telephone,
+      "address": address,
+      "status_id": status,
+      "appointment_date": appointmentDate,
+      "services": services,
+    };
+
+    String getAppointmentDateStringEMMMDD() => dayDateMonthFormatter.format(appointmentDate);
+    String getAppointmentDateStringJM() => timeFormatter.format(appointmentDate);
+    String getAppointmentDateStringDay() => dayFormatter.format(appointmentDate);
+    String getAppointmentDateStringDate() => dateFormatter.format(appointmentDate);
+    String getAppointmentDateStringDateMonthYear() => dateMonthYearFormatter.format(appointmentDate);
+    String getAppointmentDateStringMonthYear() => monthYearFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringEMMMDD(DateTime appointmentDate) => dayDateMonthFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringJM(DateTime appointmentDate) => timeFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringDay(DateTime appointmentDate) => dayFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringDate(DateTime appointmentDate) => dateFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringDateMonthYear(DateTime appointmentDate) => dateMonthYearFormatter.format(appointmentDate);
+    static String convertAppointmentDateStringMonthYear(DateTime appointmentDate) => monthYearFormatter.format(appointmentDate);
 }
 
 class Response {

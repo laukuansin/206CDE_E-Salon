@@ -120,7 +120,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                                         Text("Appointment", style: TextStyleFactory.p(),)
                                       ],
                                     ),
-                                    onPressed: (){Navigator.of(context).pushNamed("/add_appointment");},
+                                    onPressed: (){Navigator.of(context).pushNamed("/choose_service");},
                                   ),
                                 )
                               ],

@@ -8,19 +8,23 @@ class LoginResponse {
   LoginResponse({
     this.userToken,
     this.response,
+    this.userGroupId
   });
 
   String userToken;
+  int userGroupId;
   Response response;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
     userToken: json["user_token"],
     response: Response.fromJson(json["response"]),
+    userGroupId: json['user_group_id'] == null? -1 :json['user_group_id']
   );
 
   Map<String, dynamic> toJson() => {
     "user_token": userToken,
     "response": response.toJson(),
+    "user_group_id": userGroupId
   };
 }
 

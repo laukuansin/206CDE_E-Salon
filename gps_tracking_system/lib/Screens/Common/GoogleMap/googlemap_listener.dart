@@ -1,39 +1,49 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:gps_tracking_system/Model/location.dart';
+import 'package:flutter/services.dart';
 import 'package:gps_tracking_system/Model/user.dart';
-import 'package:gps_tracking_system/Model/worker.dart';
+import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 
 class GoogleMapListener{
-  final Location _workerLocation;
+  static const platForm = const MethodChannel('gps_tracking_system/firebase');
+  final WorkerLocation _workerLocation;
   final Function(double, double) _workerLocationUpdated;
-  Timer _timer;
 
   GoogleMapListener({
-    @required Worker worker,
+    @required String workerId,
     @required Function(double, double)workerLocationUpdated,
-    Duration refreshRate = const Duration(seconds: 5)
   })
-      :_workerLocation = Location(userId: worker.id),
-        _workerLocationUpdated = workerLocationUpdated
-  {
-    if(User.isAuthenticated()) {
-      switch(User.getRole()){
-        case Role.CUSTOMER:
-          RealTimeDb.onWorkerLocationChanges(worker.id, _locationReceived);
-          break;
+      :_workerLocation = WorkerLocation(workerId: workerId),
+       _workerLocationUpdated = workerLocationUpdated;
 
-        case Role.WORKER:
-          _timer = Timer.periodic(refreshRate, (timer) {
-            _sendRealtimeLocation();
-          });
-          break;
+  void startServices(){
+    switch(User.getRole()){
+      case Role.CUSTOMER:
+        RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
+        break;
 
-        case Role.OWNER:
-          break;
-      }
+      case Role.WORKER:
+        platForm.invokeMethod('firebaseAutoLocationUpdateService',{"worker_id": _workerLocation.workerId});
+        RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
+        break;
+
+      case Role.OWNER:
+        break;
+    }
+  }
+
+  void stopServices(){
+    switch(User.getRole()){
+      case Role.CUSTOMER:
+        RealTimeDb.stopListenWorkerLocationChanges();
+        break;
+
+      case Role.WORKER:
+        RealTimeDb.stopListenWorkerLocationChanges();
+        break;
+
+      case Role.OWNER:
+        break;
     }
   }
 
@@ -43,11 +53,4 @@ class GoogleMapListener{
     _workerLocationUpdated(latitude, longitude);
   }
 
-  void _sendRealtimeLocation() async{
-    Position position = await getCurrentPosition();
-    _workerLocation.latitude = position.latitude;
-    _workerLocation.longitude = position.longitude;
-    _workerLocationUpdated(position.latitude, position.longitude);
-    RealTimeDb.saveWorkerChanges(_workerLocation);
-  }
 }

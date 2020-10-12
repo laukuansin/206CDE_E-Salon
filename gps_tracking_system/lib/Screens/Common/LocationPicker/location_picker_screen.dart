@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/location.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:geocoder/geocoder.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   final Location location;
@@ -35,14 +36,14 @@ class LocationPickerScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
+    return RouteGenerator.buildScaffold(
+        _buildMap(context),
+        appbar: AppBar(
           key: scaffoldKey,
           leading: _isSearching ? const BackButton() : null,
           title: _isSearching ? _buildSearchField() : _buildTitle(context),
           actions: _buildActions(),
-        ),
-        body: _buildMap(context));
+        ),);
   }
 
   @override
@@ -65,22 +66,17 @@ class LocationPickerScreenState
   Future<void> _updateLocation(Position position)async {
     _location.latitude  = position.latitude;
     _location.longitude = position.longitude;
-    _location.address   = await latLngToAddress(position);
+    _location.address   = await MapHelper.positionToAddress(position);
     _searchBarController.text = _location.address;
   }
 
   void searchLocation(String location)async
   {
-    Coordinates coordinates= (await Geocoder.local.findAddressesFromQuery(location)).first.coordinates;
+    LatLng latLng = await MapHelper.addressToLatLng(location);
     _location.address = location;
-    _location.latitude = coordinates.latitude;
-    _location.longitude = coordinates.longitude;
+    _location.latitude = latLng.latitude;
+    _location.longitude = latLng.longitude;
     _updateMarker();
-  }
-
-  Future<String> latLngToAddress(Position position) async{
-    List<Address> addresses=await Geocoder.local.findAddressesFromCoordinates(MapHelper.positionToCoordinates(position));
-    return addresses.first.addressLine;
   }
 
   void _updateMarker() async{
@@ -151,7 +147,7 @@ class LocationPickerScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
-            Text(_location.address.isEmpty? _MARKER_TITLE: _location.address),
+            Text(_location.address.isEmpty? _MARKER_TITLE: _location.address, style: TextStyleFactory.p(),),
           ],
         ),
       ),
@@ -168,11 +164,9 @@ class LocationPickerScreenState
         border: InputBorder.none,
         hintStyle: const TextStyle(color: Colors.white30),
       ),
-      style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      style: TextStyleFactory.p(),
       // onChanged: updateSearchQuery,
-      onSubmitted: (text){
-        searchLocation(text);
-      },
+      onSubmitted: searchLocation
     );
   }
 

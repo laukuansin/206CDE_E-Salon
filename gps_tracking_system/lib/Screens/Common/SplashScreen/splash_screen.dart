@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -44,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: primaryColor,
                 fontSize: 30
               ),
-            )
+            ),
           ]
         ),
       )

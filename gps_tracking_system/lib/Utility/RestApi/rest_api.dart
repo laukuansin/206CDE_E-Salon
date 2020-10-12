@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/manage_appointment_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/my_appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/update_appointment_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_make_appointment_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response';
 import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as CustomerLogin;
@@ -19,7 +24,9 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://192.168.68.107/"; //android emulator 10.0.2.2  192.168.68.107  192.168.8.103
+
+const tempDomainName = "http://192.168.68.107/";//"http://10.0.2.2/";
+
 
 class RestApi
 {
@@ -125,15 +132,7 @@ class _Admin {
     return userGroupResponseFromJson(response.body);
   }
 
-  Future<ManageAppointmentResponse> getAppointmentList() async {
-    String url = _DOMAIN_NAME +
-        "index.php?route=api/appointment/getAppointmentList&api_key=" +
-        User.getToken();
-    log("Calling getAppoinntmentList API : " + url);
 
-    var response = await http.post(url, body: {});
-    return manageAppointmentResponseFromJson(response.body);
-  }
   Future<UpdateAppointmentResponse> updateAppointment(int appointmentID,int statusID) async {
     String url = _DOMAIN_NAME +
         "index.php?route=api/appointment/updateAppointmentStatus&api_key=" +
@@ -147,6 +146,21 @@ class _Admin {
     return updateAppointmentResponseFromJson(response.body);
   }
 
+  Future<AppointmentListResponse> getAppointmentList() async{
+    String url = _DOMAIN_NAME;
+    if(User.getRole() == Role.OWNER) {
+      url += "index.php?route=api/appointment/getAllAppointments&api_key=" +
+          User.getToken();
+      log("Calling get appointment list (Owner)  API : " + url);
+    } else {
+      url += "index.php?route=api/appointment/getWorkerAppointments&api_key=" +
+          User.getToken();
+      log("Calling get appointment list (Worker)  API : " + url);
+    }
+
+    var response = await http.post(url, body: {});
+    return appointmentListResponseFromJson(response.body);
+  }
 }
 
 class _Customer{
@@ -176,7 +190,6 @@ class _Customer{
       "confirm":endUser.confirm
     });
 
-    log(response.body);
     return signUpResponseFromJson(response.body);
   }
   
@@ -188,7 +201,7 @@ class _Customer{
       "credit":credit.toString(),
       "description": "Top up credit"
     });
-    log(response.body);
+
     return topUpResponseFromJson(response.body);
   }
 
@@ -198,6 +211,7 @@ class _Customer{
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);
   }
+
   Future<AppointmentListResponse> getAppointmentListAccepted() async{
     String url= _DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentListAccepted&api_key="+User.getToken();
     log("Calling get appointment list API : " + url);
@@ -210,5 +224,33 @@ class _Customer{
     var response = await http.get(url);
     return myAppointmentListResponseFromJson(response.body);
   }
+
+
+  Future<GetServicesResponse> getAllServices() async{
+    String url = _DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + User.getToken();
+    log("Calling get services API : " + url);
+    var response = await http.get(url);
+    return getServicesResponseFromJson(response.body);
+  }
+
+  Future<GetAppointmentAvailableTimeslotResponse> getAppointmentAvailableTimeSlot(String appointmentDate,  List<Service> services) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/appointment/getAvailableTimeSlot&api_key=" + User.getToken();
+    log("Calling get appointment available time slot API : " + url);
+
+    var body = json.encode({"services": services, "appointment_date": appointmentDate});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    return getAppointmentAvailableTimeslotResponseFromJson(response.body);
+  }
+
+  Future<MakeAppointmentResponse> makeAppointment(Appointment appointment, List<Service>services, String appointmentTime) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/appointment/makeAppointment&api_key=" + User.getToken();
+    log("Calling make appointment API : " + url);
+
+    var body = json.encode({"services": services, "appointment_date": appointment.getAppointmentDateStringDateMonthYear(), "appointment_time":appointmentTime, "address": appointment.address,});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    log(response.body);
+    return makeAppointmentResponseFromJson(response.body);
+  }
+
 }
 
