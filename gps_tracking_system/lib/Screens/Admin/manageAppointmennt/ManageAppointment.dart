@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/manage_appointment_response.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/update_appointment_response.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:gps_tracking_system/Components/toast_widget';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:multi_select_item/multi_select_item.dart';
 
 class ManageAppointmentScreen extends StatefulWidget {
@@ -16,114 +15,120 @@ class ManageAppointmentScreen extends StatefulWidget {
 }
 
 class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
-  List<Appointment> _appointmentList;
+  List<Appointment> _appointmentList = [];
   FToast fToast;
   MultiSelectController controller = new MultiSelectController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fToast = FToast();
     fToast.init(context);
     requestGetAppointments();
-
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return RouteGenerator.buildScaffold(
         Container(
-            color: Colors.white,
+            height: size.height,
+            width: size.width,
+            color: primaryBgColor,
             child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:
-                    isShowAppointmentList() ? _appointmentList.length : 0,
+                itemCount: _appointmentList.length,
                 itemBuilder: (context, index) {
                   Appointment appointment = _appointmentList[index];
-                  return Dismissible(
-                    key: Key(appointment.appointmentId.toString()),
-                    onDismissed: (DismissDirection dir) {
-                      setState(() {
-                        if (dir == DismissDirection.startToEnd)
-                          updateAppointmentStatus(appointment.appointmentId, 2);
-                        else
-                          updateAppointmentStatus(appointment.appointmentId, 1);
+                  return Container(
+                      margin: EdgeInsets.only(top: 1),
+                      color: primaryLightColor,
+                      child: Dismissible(
+                        key: Key(appointment.appointmentId.toString()),
+                        onDismissed: (DismissDirection dir) {
+                          setState(() {
+                            if (dir == DismissDirection.startToEnd)
+                              updateAppointmentStatus(
+                                  appointment.appointmentId, 2);
+                            else
+                              updateAppointmentStatus(
+                                  appointment.appointmentId, 1);
 
-                        _appointmentList.removeAt(index);
-                        controller.set(_appointmentList.length);
-                      });
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(dir == DismissDirection.startToEnd
-                            ? "Reject Appointment"
-                            : "Accept Apoointment"),
-                      ));
-                    },
-                    background: Container(
-                      child: Padding(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.close, color: Colors.white),
-                            Text("Reject",
-                                style: TextStyleFactory.p(color: Colors.white))
-                          ],
-                        ),
-                        padding: EdgeInsets.only(left: 30),
-                      ),
-                      color: Colors.red,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    secondaryBackground: Container(
-                      child: Padding(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.done, color: Colors.white),
-                            Text("Accept",
-                                style: TextStyleFactory.p(color: Colors.white))
-                          ],
-                        ),
-                        padding: EdgeInsets.only(right: 30),
-                      ),
-                      color: Colors.green,
-                      alignment: Alignment.centerRight,
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.only(top: 5),
-                      child: Column(children: <Widget>[
-                        Padding(
-                            child: MultiSelectItem(
-                              isSelecting: controller.isSelecting,
-                              onSelected: () {
-                                setState(() {
-                                  _appointmentList[index].selected=true;
-                                  controller.toggle(index);
-                                });
-                              },
-                              child: ListTile(
-                                leading: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(appointment.day,
-                                        style: TextStyleFactory.heading1(
-                                            color: dateColor)),
-                                    Text(appointment.month,
-                                        style: TextStyleFactory.p())
-                                  ],
-                                ),
-                                title: itemBody(appointment),
-                                trailing: controller.isSelected(index)?
-                                    Icon(Icons.check_circle,color: Colors.green)
-                               :null
-                              ),
+                            _appointmentList.removeAt(index);
+                            controller.set(_appointmentList.length);
+                          });
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(dir == DismissDirection.startToEnd
+                                ? "Reject Appointment"
+                                : "Accept Appointment"),
+                          ));
+                        },
+                        background: Container(
+                          child: Padding(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.close, color: primaryLightColor),
+                                Text("Reject",
+                                    style: TextStyleFactory.p(
+                                        color: primaryLightColor))
+                              ],
                             ),
-                            padding: EdgeInsets.all(10)),
-                        Divider(color: primaryDeepLightColor, thickness: 0.5)
-                      ]),
-                    ),
-                  );
+                            padding: EdgeInsets.only(left: 30),
+                          ),
+                          color: Colors.red,
+                          alignment: Alignment.centerLeft,
+                        ),
+                        secondaryBackground: Container(
+                          child: Padding(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.done, color: primaryLightColor),
+                                Text("Accept",
+                                    style: TextStyleFactory.p(
+                                        color: primaryLightColor))
+                              ],
+                            ),
+                            padding: EdgeInsets.only(right: 30),
+                          ),
+                          color: Colors.green,
+                          alignment: Alignment.centerRight,
+                        ),
+                        child: Container(
+                          color: primaryLightColor,
+                          child: Column(children: <Widget>[
+                            Padding(
+                                child: MultiSelectItem(
+                                  isSelecting: controller.isSelecting,
+                                  onSelected: () {
+                                    setState(() {
+                                      _appointmentList[index].selected = true;
+                                      controller.toggle(index);
+                                    });
+                                  },
+                                  child: ListTile(
+                                      leading: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(appointment.day,
+                                              style: TextStyleFactory.heading1(
+                                                  color: dateColor)),
+                                          Text(appointment.month,
+                                              style: TextStyleFactory.p())
+                                        ],
+                                      ),
+                                      title: itemBody(appointment),
+                                      trailing: controller.isSelected(index)
+                                          ? Icon(Icons.check_circle,
+                                              color: Colors.green)
+                                          : null),
+                                ),
+                                padding: EdgeInsets.all(10)),
+                          ]),
+                        ),
+                      ));
                 })),
         appbar: AppBar(
             title: Text("Manage Appointment",
@@ -141,44 +146,38 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
                 : null,
             actions: controller.isSelecting
                 ? [
-                    IconButton(icon: Icon(Icons.delete), onPressed: () {
-
-                      for(Appointment appointment in _appointmentList)
-                        {
-                          if(appointment.selected)
-                          {
-                            updateAppointmentStatus(appointment.appointmentId, 2);
+                    IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          for (Appointment appointment in _appointmentList) {
+                            if (appointment.selected) {
+                              updateAppointmentStatus(
+                                  appointment.appointmentId, 2);
+                            }
                           }
-                        }
-                        setState(() {
-                          _appointmentList.clear();
-                          requestGetAppointments();
-                          controller.deselectAll();
-                        });
-                    }),
-                    IconButton(icon: Icon(Icons.done), onPressed: () {
-                      for(Appointment appointment in _appointmentList)
-                      {
-                        if(appointment.selected)
-                        {
-                          updateAppointmentStatus(appointment.appointmentId, 1);
-                        }
-                      }
-                      setState(() {
-                        _appointmentList.clear();
-                        requestGetAppointments();
-                        controller.deselectAll();
-                      });
-                    })
+                          setState(() {
+                            _appointmentList.clear();
+                            requestGetAppointments();
+                            controller.deselectAll();
+                          });
+                        }),
+                    IconButton(
+                        icon: Icon(Icons.done),
+                        onPressed: () {
+                          for (Appointment appointment in _appointmentList) {
+                            if (appointment.selected) {
+                              updateAppointmentStatus(
+                                  appointment.appointmentId, 1);
+                            }
+                          }
+                          setState(() {
+                            _appointmentList.clear();
+                            requestGetAppointments();
+                            controller.deselectAll();
+                          });
+                        })
                   ]
                 : null));
-  }
-
-  bool isShowAppointmentList() {
-    if (_appointmentList == null)
-      return false;
-    else
-      return true;
   }
 
   Widget itemBody(Appointment appointment) {
@@ -205,7 +204,8 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
     if (result.response.status == 1) {
       setState(() {
         _appointmentList = result.list;
-        controller.disableEditingWhenNoneSelected = true;;
+        controller.disableEditingWhenNoneSelected = true;
+        ;
         controller.set(_appointmentList.length);
       });
     } else {

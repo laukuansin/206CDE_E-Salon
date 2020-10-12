@@ -83,6 +83,7 @@ class ModelAppointmentAppointment extends Model{
 		;
 		return $this->db->query($sql)->rows;
 	}
+	
 	public function getAppointmentListByCustomerID($customerId)
 	{
 		$sql ="

@@ -19,7 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://192.168.8.103/"; //android emulator 10.0.2.2  192.168.68.107  192.168.8.103
+const tempDomainName = "http://192.168.68.107/"; //android emulator 10.0.2.2  192.168.68.107  192.168.8.103
 
 class RestApi
 {
