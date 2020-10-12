@@ -35,6 +35,11 @@ enum Status{
   CLOSE
 }
 
+enum ServiceAttr{
+  PRICE,
+  QTY,
+}
+
 class Appointment {
   static final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
   static final DateFormat dayDateMonthFormatter  = DateFormat("E MMM dd");

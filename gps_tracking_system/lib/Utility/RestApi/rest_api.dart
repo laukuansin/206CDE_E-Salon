@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_make_appointment_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/user.dart';
@@ -169,7 +171,6 @@ class _Customer{
       "confirm":endUser.confirm
     });
 
-    log(response.body);
     return signUpResponseFromJson(response.body);
   }
   
@@ -181,7 +182,7 @@ class _Customer{
       "credit":credit.toString(),
       "description": "Top up credit"
     });
-    log(response.body);
+
     return topUpResponseFromJson(response.body);
   }
 
@@ -198,5 +199,25 @@ class _Customer{
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
   }
+
+  Future<GetAppointmentAvailableTimeslotResponse> getAppointmentAvailableTimeSlot(String appointmentDate,  List<Service> services) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/appointment/getAvailableTimeSlot&api_key=" + User.getToken();
+    log("Calling get appointment available time slot API : " + url);
+
+    var body = json.encode({"services": services, "appointment_date": appointmentDate});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    return getAppointmentAvailableTimeslotResponseFromJson(response.body);
+  }
+
+  Future<MakeAppointmentResponse> makeAppointment(Appointment appointment, List<Service>services, String appointmentTime) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/appointment/makeAppointment&api_key=" + User.getToken();
+    log("Calling make appointment API : " + url);
+
+    var body = json.encode({"services": services, "appointment_date": appointment.getAppointmentDateStringDateMonthYear(), "appointment_time":appointmentTime, "address": appointment.address,});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    log(response.body);
+    return makeAppointmentResponseFromJson(response.body);
+  }
+  
 }
 

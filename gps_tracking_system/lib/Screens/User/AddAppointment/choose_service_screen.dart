@@ -7,6 +7,7 @@ import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.da
 import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
+import 'package:gps_tracking_system/Model/location.dart';
 
 class ChooseServiceScreen extends StatefulWidget{
   @override
@@ -14,13 +15,11 @@ class ChooseServiceScreen extends StatefulWidget{
 
 }
 
-
-
 class ChooseServiceScreenState extends State<ChooseServiceScreen>{
 
   List<Service>services = [];
   Appointment appointment;
-  Map<int, Map<ServiceAttr, double>>serviceQtyMap = {};
+  Location location;
   final GlobalKey<ScaffoldState>_scaffoldStateKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -28,9 +27,8 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
     super.initState();
     requestServices();
     appointment = Appointment();
+    location = Location();
   }
-
-
 
   void requestServices() async{
      GetServicesResponse getServicesResponse = await RestApi.customer.getAllServices();
@@ -38,11 +36,6 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
      if(getServicesResponse.response.status == 1){
        setState(() {
           services = getServicesResponse.services;
-          for(var service in services){
-            serviceQtyMap[service.serviceId] = {};
-            serviceQtyMap[service.serviceId][ServiceAttr.QTY] = 0;
-            serviceQtyMap[service.serviceId][ServiceAttr.PRICE] = service.servicePrice;
-          }
        });
      }
   }
@@ -60,7 +53,7 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
           itemCount: services.length,
           itemBuilder: (context, index){
             var serviceId =  services[index].serviceId;
-            var serviceQty = serviceQtyMap.containsKey(serviceId) ? serviceQtyMap[serviceId][ServiceAttr.QTY].toInt() : 0;
+            var serviceQty = services[index].quantity;
             return Container(
               color: primaryLightColor,
               margin: EdgeInsets.only(bottom: 2),
@@ -72,7 +65,7 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
                       : null,
                   onTap: (){
                     setState(() {
-                      serviceQtyMap[serviceId][ServiceAttr.QTY]++;});
+                      services[index].quantity++;});
                 },
               )
             );
@@ -102,7 +95,7 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
         label: "View your selected services",
         textColor: primaryLightColor,
         onPressed: (){
-          Navigator.of(context).pushNamed("/add_appointment", arguments: {"appointment": appointment, "serviceQtyMap" : serviceQtyMap}).then((value) {setState(() {});});}
+          Navigator.of(context).pushNamed("/add_appointment", arguments: {"appointment": appointment, "services" : services, "location": location}).then((value) {setState(() {});});}
       ),
       duration: Duration(days: 1),
     );
@@ -110,13 +103,13 @@ class ChooseServiceScreenState extends State<ChooseServiceScreen>{
 
   int _calcSumOfServices(){
     int sum = 0;
-    serviceQtyMap.forEach((key, value) => sum += value[ServiceAttr.QTY].toInt());
+    services.forEach((element) {sum += element.quantity;});
     return sum;
   }
 
   double _calcSumOfPrice(){
     double price = 0;
-    serviceQtyMap.forEach((key, value) {price += value[ServiceAttr.PRICE] * value[ServiceAttr.QTY];});
+    services.forEach((element) {price += (element.quantity * element.servicePrice);});
     return price;
   }
 
