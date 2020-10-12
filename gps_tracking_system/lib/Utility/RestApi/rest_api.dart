@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://175.138.37.52/";//"http://10.0.2.2/";
+const tempDomainName = "http://192.168.8.1030/";//"http://10.0.2.2/";http://175.138.37.52/
 
 class RestApi
 {

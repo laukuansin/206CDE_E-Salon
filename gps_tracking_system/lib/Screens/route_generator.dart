@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/location.dart';
+import 'package:gps_tracking_system/Screens/User/account/account_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Admin/payment/PaymentScreen.dart';
 import 'package:gps_tracking_system/Screens/Common/AppointmentInfo/appointment_info_screen.dart';
@@ -18,7 +19,7 @@ import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 
 class RouteGenerator{
 
-  static const bool _ADMIN_MODE = true;
+  static const bool _ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar})=> Scaffold(
       key: key,
@@ -62,6 +63,7 @@ class RouteGenerator{
         case "/add_appointment"                 :return _buildRoute(AddAppointmentScreen());
 	      case "/top_up"                          :return _buildRoute(TopUpScreen());
         case "/qr_code"                         :return _buildRoute(QRCodePaymentScreen());
+        case "/account_page"                    :return _buildRoute(AccountScreen());
         case "/home_page"                       :return _buildRoute(HomePageScreen());
         case "/location_picker"                 :
           if (args is Location)
