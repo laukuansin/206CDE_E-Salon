@@ -43,7 +43,8 @@
 						'status'			=> $appointmentResult['status'],
 						'status_id'			=> (int)$appointmentResult['status_id'],
 						'appointment_date' 	=> date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
-						'services'			=> $appointmentResult['services'],		
+						'services'			=> $appointmentResult['services'],	
+						'services_id'		=> $appointmentResult['services_id'],	
 					);
 				}
 
@@ -99,7 +100,8 @@
 						'status'			=> $appointmentResult['status'],
 						'status_id'			=> (int)$appointmentResult['status_id'],
 						'appointment_date' 	=> date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
-						'services'			=> $appointmentResult['services'],		
+						'services'			=> $appointmentResult['services'],
+						'services_id'		=> $appointmentResult['services_id']		
 					);
 				}
 
