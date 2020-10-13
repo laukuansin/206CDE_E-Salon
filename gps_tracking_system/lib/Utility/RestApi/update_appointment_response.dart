@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-MakeAppointmentResponse makeAppointmentResponseFromJson(String str) => MakeAppointmentResponse.fromJson(json.decode(str));
+UpdateAppointmentResponse updateAppointmentResponseFromJson(String str) => UpdateAppointmentResponse.fromJson(json.decode(str));
 
-String makeAppointmentResponseToJson(MakeAppointmentResponse data) => json.encode(data.toJson());
+String updateAppointmentResponseToJson(UpdateAppointmentResponse data) => json.encode(data.toJson());
 
-class MakeAppointmentResponse {
-  MakeAppointmentResponse({
+class UpdateAppointmentResponse {
+  UpdateAppointmentResponse({
     this.response,
   });
 
   Response response;
 
-  factory MakeAppointmentResponse.fromJson(Map<String, dynamic> json) => MakeAppointmentResponse(
+  factory UpdateAppointmentResponse.fromJson(Map<String, dynamic> json) => UpdateAppointmentResponse(
     response: Response.fromJson(json["response"]),
   );
 

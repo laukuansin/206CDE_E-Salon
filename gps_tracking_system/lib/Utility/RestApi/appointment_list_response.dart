@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:intl/intl.dart';
 
 AppointmentListResponse appointmentListResponseFromJson(String str) => AppointmentListResponse.fromJson(json.decode(str));
@@ -46,6 +45,7 @@ class Appointment {
   static final DateFormat monthYearFormatter = DateFormat("MMMM yyyy");
   static final DateFormat dayFormatter  = DateFormat("E");
   static final DateFormat dateFormatter  = DateFormat("dd");
+  static final DateFormat monthFormatter = DateFormat("MMM");
   static final DateFormat dateMonthYearFormatter = DateFormat("yyyy-MM-dd");
   static final DateFormat timeFormatter  = DateFormat().add_jm();
 
@@ -89,6 +89,9 @@ class Appointment {
       }
     }
 
+    DateTime appointmentDateTime = dateParser.parse(
+        json["appointment_date"].toString().toUpperCase());
+
     return Appointment(
       appointmentId: json["appointment_id"],
       customerId: json['customer_id'],
@@ -98,8 +101,8 @@ class Appointment {
       telephone: json["telephone"],
       address: json["address"],
       status: Status.values[json["status_id"].toInt()],
-      appointmentDate: dateParser.parse(
-          json["appointment_date"].toString().toUpperCase()),
+      appointmentDate: appointmentDateTime,
+      appointmentTime: timeFormatter.format(appointmentDateTime),
       services: json["services"],
       servicesId: servicesId,
     );
@@ -118,12 +121,16 @@ class Appointment {
       "services": services,
     };
 
-    String getAppointmentDateStringEMMMDD() => dayDateMonthFormatter.format(appointmentDate);
+    String getAppointmentStatusName() => status.toString().split('.').last;
+
+
+  String getAppointmentDateStringEMMMDD() => dayDateMonthFormatter.format(appointmentDate);
     String getAppointmentDateStringJM() => timeFormatter.format(appointmentDate);
-    String getAppointmentDateStringDay() => dayFormatter.format(appointmentDate);
-    String getAppointmentDateStringDate() => dateFormatter.format(appointmentDate);
-    String getAppointmentDateStringDateMonthYear() => dateMonthYearFormatter.format(appointmentDate);
-    String getAppointmentDateStringMonthYear() => monthYearFormatter.format(appointmentDate);
+    String getAppointmentDateStringE() => dayFormatter.format(appointmentDate);
+    String getAppointmentDateStringDD() => dateFormatter.format(appointmentDate);
+    String getAppointmentDateStringYYYYMMDD() => dateMonthYearFormatter.format(appointmentDate);
+    String getAppointmentDateStringMMMYYYY() => monthYearFormatter.format(appointmentDate);
+    String getAppointmentDateStringMMM() => monthFormatter.format(appointmentDate);
     static String convertAppointmentDateStringEMMMDD(DateTime appointmentDate) => dayDateMonthFormatter.format(appointmentDate);
     static String convertAppointmentDateStringJM(DateTime appointmentDate) => timeFormatter.format(appointmentDate);
     static String convertAppointmentDateStringDay(DateTime appointmentDate) => dayFormatter.format(appointmentDate);
@@ -131,7 +138,6 @@ class Appointment {
     static String convertAppointmentDateStringDateMonthYear(DateTime appointmentDate) => dateMonthYearFormatter.format(appointmentDate);
     static String convertAppointmentDateStringMonthYear(DateTime appointmentDate) => monthYearFormatter.format(appointmentDate);
 }
-
 
 class Response {
   Response({

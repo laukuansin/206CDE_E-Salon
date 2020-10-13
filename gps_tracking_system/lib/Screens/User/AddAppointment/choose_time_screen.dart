@@ -106,7 +106,7 @@ class ChooseTimeScreenState extends State<ChooseTimeScreen> {
   void requestAvailableTimeSlot() async {
     GetAppointmentAvailableTimeslotResponse result = await RestApi.customer
         .getAppointmentAvailableTimeSlot(
-            appointment.getAppointmentDateStringDateMonthYear(), services);
+            appointment.getAppointmentDateStringYYYYMMDD(), services);
 
     if (result.response.status == -1) {
       // Navigator.of(context).pushNamedAndRemoveUntil(newRouteName, (route) => false)

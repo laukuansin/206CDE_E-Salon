@@ -5,9 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -20,6 +21,7 @@ class HomePageScreen extends StatefulWidget {
 class HomePageScreenState extends State<HomePageScreen> {
   double creditAmount;
   FToast fToast;
+  List<Appointment> _appointmentList = [];
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class HomePageScreenState extends State<HomePageScreen> {
     fToast = FToast();
     fToast.init(context);
     creditAmount = 0.0;
+    requestAppointmentList();
     requestCurrentCustomerCredit();
   }
 
@@ -38,161 +41,251 @@ class HomePageScreenState extends State<HomePageScreen> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
+            color: primaryDeepLightColor,
             image: DecorationImage(
                 image: AssetImage("assets/images/home_background.png"),
                 fit: BoxFit.fill)),
-
-        child: Padding(
+        child: Container(
             padding: EdgeInsets.all(20),
-            child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Credit Balance", style:TextStyleFactory.heading4(color: primaryLightColor, fontWeight: FontWeight.normal)) ,
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                              child: Text("RM $creditAmount", style: TextStyleFactory.heading1(fontSize: 30, color:primaryLightColor))),
-                          RawMaterialButton(
-                              onPressed: () {},
-                              fillColor: primaryLightColor,
-                              child: Icon(
-                                Icons.person_outline,
-                                size: 30.0,
-                                color: primaryColor,
-                              ),
-                              padding: EdgeInsets.all(10.0),
-                              shape: CircleBorder())
-                        ],
-                      ),
-                    ),
-                    Padding(
-                        child: Row(children: [
-                          RoundedButton(
-                            press: (){Navigator.of(context).pushNamed("/top_up").then((_) {
-                              requestCurrentCustomerCredit();
-                            });},
-                            text: "+ Reload Credit",
-                            horizontalPadding: 25,
-                            verticalPadding: 15,
-                            fontSize: 12,
-                            color: primaryLightColor,
-                            textColor: primaryTextColor,
-                          )
-                        ]),
-                        padding: EdgeInsets.only(top: 20)),
-                    Padding(
-                        child: Card(
-                          elevation: 1,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Credit Balance",
+                    style: TextStyleFactory.heading4(
+                        color: primaryLightColor,
+                        fontWeight: FontWeight.normal)),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text("RM $creditAmount",
+                              style: TextStyleFactory.heading1(
+                                  fontSize: 30, color: primaryLightColor))),
+                      RawMaterialButton(
+                          onPressed: () {},
+                          fillColor: primaryLightColor,
+                          child: Icon(
+                            Icons.person_outline,
+                            size: 30.0,
+                            color: primaryColor,
                           ),
-                          child: Padding( 
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: RaisedButton(
-                                    elevation: 0,
-                                    color: primaryLightColor,
-                                    child: Column(
-                                      children: [
-                                        Icon(MdiIcons.qrcode, color: primaryColor, size: 40,),
-                                        Text("Pay", style: TextStyleFactory.p(),)
-                                      ],
-                                    ),
-                                    onPressed: (){Navigator.of(context).pushNamed("/qr_code").then((_) {
-                                      requestCurrentCustomerCredit();
-                                    });},
-                                  )
-                                ),
-                                Expanded(
-                                  child: RaisedButton(
-                                    elevation: 0,
-                                    color: primaryLightColor,
-                                    child: Column(
-                                      children: [
-                                        Icon(MdiIcons.calendarPlus, color: primaryColor, size: 40,),
-                                        Text("Appointment", style: TextStyleFactory.p(),)
-                                      ],
-                                    ),
-                                    onPressed: (){Navigator.of(context).pushNamed("/choose_service");},
-                                  ),
-                                )
-                              ],
+                          padding: EdgeInsets.all(10.0),
+                          shape: CircleBorder())
+                    ],
+                  ),
+                ),
+                Padding(
+                    child: _buildReloadCreditButton(context),
+                    padding: EdgeInsets.only(top: 20)),
+                Padding(
+                    child: _buildPayAppointmentCard(context),
+                    padding: EdgeInsets.only(top: 20)),
+                Padding(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text("Appointment",
+                            style: TextStyleFactory.heading3(
+                                fontWeight: FontWeight.w600)),
+                      ),
+                      IconButton(
+                        color: primaryLightColor,
+                        icon: Icon(
+                          Icons.notifications,
+                          color: primaryColor,
+                          size: 25,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/my_appointments");
+                        },
+                      )
+                    ],
+                  ),
+                  padding: EdgeInsets.only(top: 20),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _appointmentList.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: BorderSide(color: primaryDeepLightColor)),
+                          elevation: 0,
+                          child: Padding(
+                            child: ListTile(
+                              leading: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      _appointmentList[index]
+                                          .getAppointmentDateStringDD(),
+                                      style: TextStyleFactory.heading1(
+                                          color: dateColor)),
+                                  Text(
+                                      _appointmentList[index]
+                                          .getAppointmentDateStringMMM(),
+                                      style: TextStyleFactory.p())
+                                ],
+                              ),
+                              title: Text(_appointmentList[index].workerName),
+                              trailing: statusWidget(_appointmentList[index].status),
                             ),
                             padding: EdgeInsets.all(10),
-                          )
-                        ),
-                        padding: EdgeInsets.only(top: 20)),
-                    Padding(
-                      child: Text("Appointment", style: TextStyleFactory.heading3(fontWeight: FontWeight.normal)),
-                      padding: EdgeInsets.only(top: 20),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: EdgeInsets.only(top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Padding(
-                                child: ListTile(
-                                  leading: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Text("31",
-                                              style: TextStyleFactory.heading1(
-                                                  color: dateColor)),
-                                          Text("MAR", style: TextStyleFactory.p())
-                                        ],
-                                    ),
-                                    title: Text("Tan Hoe Theng"),
-                                    trailing: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.done, color: Colors.greenAccent,),
-                                        Text("Accepted",style: TextStyleFactory.p(color: Colors.greenAccent),)
-                                      ],
-                                    ),
-                                ),
-                                padding: EdgeInsets.all(10),
-                              ),
-                            );
-                          }),
-                    )
+                          ),
+                        );
+                      }),
+                )
               ],
-            )))));
+            ))));
   }
 
-  void requestCurrentCustomerCredit()async
-  {
-    final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
-    await progressDialog.show();
-    CustomerCreditResponse result=await RestApi.customer.getCustomerCredit();
-    progressDialog.hide();
+  RoundedButton _buildReloadCreditButton(BuildContext context) {
+    return RoundedButton(
+      press: () {
+        Navigator.of(context).pushNamed("/top_up").then((_) {
+          requestCurrentCustomerCredit();
+        });
+      },
+      text: "+ Reload Credit",
+      horizontalPadding: 25,
+      verticalPadding: 15,
+      fontSize: 12,
+      color: primaryLightColor,
+      textColor: primaryTextColor,
+    );
+  }
 
-    if(result.response.status == 1)
-    {
+  Card _buildPayAppointmentCard(BuildContext context) {
+    return Card(
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Padding(
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                  child: RaisedButton(
+                elevation: 0,
+                color: primaryLightColor,
+                child: Column(
+                  children: [
+                    Icon(
+                      MdiIcons.qrcode,
+                      color: primaryColor,
+                      size: 40,
+                    ),
+                    Text(
+                      "Pay",
+                      style: TextStyleFactory.p(),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/qr_code").then((_) {
+                    requestCurrentCustomerCredit();
+                  });
+                },
+              )),
+              Expanded(
+                child: RaisedButton(
+                  elevation: 0,
+                  color: primaryLightColor,
+                  child: Column(
+                    children: [
+                      Icon(
+                        MdiIcons.calendarPlus,
+                        color: primaryColor,
+                        size: 40,
+                      ),
+                      Text(
+                        "Appointment",
+                        style: TextStyleFactory.p(),
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/choose_service");
+                  },
+                ),
+              )
+            ],
+          ),
+          padding: EdgeInsets.all(10),
+        ));
+  }
+
+  Widget statusWidget(Status status) {
+    Color color;
+    IconData icon;
+    if (status == Status.ACCEPTED) {
+      color = Colors.greenAccent;
+      icon = Icons.done;
+    } else if (status == Status.REJECTED) {
+      color = Colors.red;
+      icon = Icons.close;
+    } else if (status == Status.PENDING) {
+      color = Colors.yellowAccent[700];
+      icon = MdiIcons.loading;
+    } else if (status == Status.CLOSE) {
+      color = Colors.green;
+      icon = Icons.done;
+    } else if (status == Status.CANCELLED) {
+      color = Colors.red;
+      icon = Icons.close;
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: color,
+        ),
+        Text(status.toString().split('.').last , style: TextStyleFactory.p(color: color))
+      ],
+    );
+  }
+
+  void requestCurrentCustomerCredit() async {
+    CustomerCreditResponse result = await RestApi.customer.getCustomerCredit();
+
+    if (result.response.status == 1) {
       setState(() {
         creditAmount = result.credit;
       });
-    }
-    else{
+    } else {
       creditAmount = 0.0;
-      fToast.showToast(child: ToastWidget(
+      fToast.showToast(
+          child: ToastWidget(
         status: result.response.status,
         msg: result.response.msg,
       ));
     }
   }
 
+  void requestAppointmentList() async {
+    final ProgressDialog progressDialog = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
+    await progressDialog.show();
+    AppointmentListResponse result =
+        await RestApi.customer.getAcceptedAppointmentList();
+    progressDialog.hide();
+
+    if (result.response.status == 1) {
+      setState(() {
+        _appointmentList = result.appointments;
+      });
+    } else {
+      _appointmentList = null;
+      fToast.showToast(
+          child: ToastWidget(
+        status: result.response.status,
+        msg: result.response.msg,
+      ));
+    }
+  }
 }

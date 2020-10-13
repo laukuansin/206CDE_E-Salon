@@ -1,6 +1,128 @@
 <?php
+// <<<<<<< HEAD
+// class ControllerApiAppointment extends Controller {
+
+	
+
+//     public function getAppointmentList()
+//     {
+//            //Must have function
+//         // !!!!!!!!!!!!!!!!!!!
+//         $json = array();
+//         $list= array();
+//         if(!$this->customer->isLogged()) {
+//             $json['response'] = array(
+//                 'status' => -1,
+//                 'msg' => 'Invalid token'
+//             );
+//             $this->response->setOutput(json_encode($json));
+//             return;
+//         }
+//         $this->load->model('appointment/appointment');
+//         $appointmentList=$this->model_appointment_appointment->getAppointmentListByCustomerID($this->customer->getId());
+//         if(empty($appointmentList))
+//         {
+//             $json['list']=array();
+//             $json['response'] = array(
+//                 'status' => 1,
+//                 'msg'   => 'Appointment is empty now'
+//             );
+//         }
+//         else{
+//             foreach($appointmentList as $appointment)
+//             {
+//                 $date=$appointment['appointment_date'];
+//                 $formatDate=date("d-M-Y-",strtotime($date));
+//                 $time=date('h:i a',strtotime($date));
+//                 $arrayDate=explode('-', $formatDate);
+//                 $year=$arrayDate[2];
+//                 $month=$arrayDate[1];
+//                 $day=$arrayDate[0];
+//                 $list[]=[
+//                     'appointment_id'=>(int)$appointment['appointment_id'],
+//                     'date'=>$date,
+//                     'year'=>$year,
+//                     'month'=>$month,
+//                     'time'=>$time,
+//                     'day'=>$day,
+//                     'status'=>$appointment['status'],
+//                     'service_name'=>$appointment['service_name']
+//                 ];
+//             }
+//             $json['list']=$list;
+//             $json['response'] = array(
+//                 'status' => 1,
+//                 'msg'   => 'Get Appointment Success'
+//             );
+//         }
+        
+        
+//         $this->response->setOutput(json_encode($json));
+//     }
+// }
+// =======
 
 	class ControllerApiAppointment extends Controller{
+
+		public function getCustomerAppointments(){
+			$json = array();
+	        if(!$this->customer->isLogged()) {
+	            $json['response'] = array(
+	                'status' => -1,
+	                'msg' => 'Invalid token'
+	            );
+	            $this->response->setOutput(json_encode($json));
+	            return;
+	        } else{
+				$this->load->model('appointment/appointment');
+
+				$filteredData = array(
+					'not_status_id'=> 3
+				);
+
+				if(isset($this->request->get['worker'])){
+					$data['selectedWorker'] = $this->request->get['worker'];
+					$filteredData['filter_worker'] = $this->request->get['worker'];
+				}
+
+				$data['selectedCustomer'] = $this->customer->getId();
+				$filteredData['filter_customer'] = $this->customer->getId();
+
+				if(isset($this->request->get['status_id'])){
+					$data['selectedStatus'] = $this->request->get['status_id'];
+					$filteredData['filter_status'] = $this->request->get['status_id'];
+				}
+				
+				$data['appointments'] = array();
+				$appointmentResults = $this->model_appointment_appointment->getCustomerAppointmentList($filteredData);
+				foreach($appointmentResults as $appointmentResult){
+					$data['appointments'][] = array(
+						'appointment_id'	=> $appointmentResult['appointment_id'],	
+						'customer_id'		=> $appointmentResult['customer_id'],
+						'customer_name' 	=> $appointmentResult['customer_name'],
+						'worker_id'			=> $appointmentResult['user_id'],
+						'worker_name'		=> $appointmentResult['user_name'],
+						'telephone'			=> $appointmentResult['telephone'],
+						'address'			=> $appointmentResult['appointment_address'],
+						'status'			=> $appointmentResult['status'],
+						'status_id'			=> (int)$appointmentResult['status_id'],
+						'appointment_date' 	=> date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
+						'services'			=> $appointmentResult['services'],	
+						'services_id'		=> $appointmentResult['services_id'],	
+					);
+				}
+
+				$json['response'] = array(
+					"status" => 1,
+					"msg"	 => "Success"
+				);
+				$json['appointments'] = $data['appointments'];
+
+			}
+
+			$this->response->setOutput(json_encode($json));
+		}
+
 
 		public function makeAppointment(){
 			$json = array();
@@ -193,3 +315,4 @@
 	}
 
 ?>
+
