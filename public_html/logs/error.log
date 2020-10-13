@@ -184,3 +184,7 @@
 2020-10-10 10:20:56 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
 2020-10-10 10:24:39 - PHP Notice:  Undefined index: appointment_time in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 202
 2020-10-10 10:24:39 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/appointment/appointment_request.php on line 209
+2020-10-12 12:43:24 - PHP Warning:  A non-numeric value encountered in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\controller\api\customer.php on line 113
+2020-10-12 12:43:24 - PHP Warning:  A non-numeric value encountered in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\controller\api\customer.php on line 113
+2020-10-13 12:56:51 - PHP Notice:  Undefined property: DB::$query in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\model\account\customer.php on line 31
+2020-10-13 12:56:51 - PHP Notice:  Trying to get property 'row' of non-object in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\model\account\customer.php on line 31

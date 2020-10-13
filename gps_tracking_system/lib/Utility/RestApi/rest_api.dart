@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/edit_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/logout_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
@@ -16,7 +20,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-const tempDomainName = "http://192.168.8.1030/";//"http://10.0.2.2/";http://175.138.37.52/
+const tempDomainName = "http://192.168.8.103/";//"http://10.0.2.2/";http://175.138.37.52/
 
 class RestApi
 {
@@ -189,6 +193,49 @@ class _Customer{
     log("Calling get customer credit API : " + url);
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);
+  }
+
+  Future<CustomerDetailResponse> getCustomerDetail() async{
+    String url= _DOMAIN_NAME + "index.php?route=api/customer/getCustomerDetail&api_key="+User.getToken();
+    log("Calling get customer detail API : " + url);
+    var response = await http.get(url);
+    return customerDetailResponseFromJson(response.body);
+  }
+
+  Future<LogoutResponse> logout() async{
+    String url= _DOMAIN_NAME + "index.php?route=api/customer/logout&api_key="+User.getToken();
+    log("Calling logout API : " + url);
+    var response = await http.get(url);
+    return logoutResponseFromJson(response.body);
+  }
+
+  Future<EditInfoResponse>editInfo(String firstName,String lastName,String telephone,String email) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/customer/editInformation&api_key="+User.getToken();
+    log("Calling edit information API : " + url);
+
+    var response = await http.post(url, body: {
+      "email": email,
+      "firstname": firstName,
+      "lastname": lastName,
+      "telephone":telephone,
+    });
+
+    log(response.body);
+    return editInfoResponseFromJson(response.body);
+  }
+
+  Future<ChangePasswordResponse>changePassword(String oldPassword,String newPassword,String confirmPassword) async{
+    String url = _DOMAIN_NAME + "index.php?route=api/customer/changePassword&api_key="+User.getToken();
+    log("Calling change password API : " + url);
+
+    var response = await http.post(url, body: {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
+      "confirm": confirmPassword,
+    });
+
+    log(response.body);
+    return changePasswordResponseFromJson(response.body);
   }
 }
 
