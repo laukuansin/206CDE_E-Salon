@@ -33,6 +33,8 @@
 				";
 
 			$whereClause = 'WHERE true ';
+
+
 			if(isset($data['filter_status']) && $data['filter_status'] != -1){
 				$whereClause .=" AND oc_appointment.status_id=".$data['filter_status'];	
 			} 

@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildUsernameTextFormField(){
     return TextFormField(
-      initialValue: 'worker',
+      initialValue: 'admin',
       decoration: InputDecoration(
           labelText: "Username",
           labelStyle: TextStyleFactory.p()
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildPasswordTextFormField(){
     return TextFormField(
-      initialValue: "worker",
+      initialValue: "123456",
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(result.response.status == 1) {
       User.createInstance(result.userToken, userGroupId: result.userGroupId);
       // Navigator.of(context).pushReplacementNamed("/appointment_list");
-      Navigator.of(context).pushNamed("/manage_appointment");
+      Navigator.of(context).pushReplacementNamed("/home");
 
     }
   }

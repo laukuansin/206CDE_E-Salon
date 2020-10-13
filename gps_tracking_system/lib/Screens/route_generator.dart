@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 
-import 'package:gps_tracking_system/Screens/Admin/manageAppointmennt/ManageAppointment.dart';
+import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_service_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_time_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
@@ -24,7 +24,7 @@ import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 class RouteGenerator{
 
 
-  static const bool _ADMIN_MODE = true;
+  static const bool _ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar})=> Scaffold(
       key: key,

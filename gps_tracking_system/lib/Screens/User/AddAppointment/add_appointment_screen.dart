@@ -60,7 +60,7 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
                               subtitle: appointment.appointmentDate == null
                                   ? Text("Select date")
                                   : Text(appointment
-                                      .getAppointmentDateStringDateMonthYear()),
+                                      .getAppointmentDateStringYYYYMMDD()),
                               trailing: Icon(Icons.chevron_right),
                             )),
                       ),
@@ -158,13 +158,13 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
   }
 
   void makeAppointment()  async{
-    appointment.address = location.address;
-    MakeAppointmentResponse result = await RestApi.customer.makeAppointment(appointment, services, selectedTime);
-    fToast.showToast(child: ToastWidget(status: result.response.status, msg: result.response.msg));
-    
-    if(result.response.status == 1){
-      Navigator.of(context).pushNamedAndRemoveUntil('/home_page', ModalRoute.withName("/home_page"));
-    }
+    // appointment.address = location.address;
+    // MakeAppointmentResponse result = await RestApi.customer.makeAppointment(appointment, services, selectedTime);
+    // fToast.showToast(child: ToastWidget(status: result.response.status, msg: result.response.msg));
+    //
+    // if(result.response.status == 1){
+    //   Navigator.of(context).pushNamedAndRemoveUntil('/home_page', ModalRoute.withName("/home_page"));
+    // }
   }
 
   DataTable _buildDataTable() {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/my_appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
@@ -32,35 +32,38 @@ class NotificationAppointmentsScreenState
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return RouteGenerator.buildScaffold(
         Container(
-          color: Colors.white,
+          height: size.height,
+          width: size.width,
+          color: primaryBgColor,
           child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: isShowAppointmentList() ? _appointmentList.length : 0,
               itemBuilder: (context, index) {
                 return Container(
-                  margin: EdgeInsets.only(top: 5),
+                  color: primaryLightColor,
+                  margin: EdgeInsets.only(bottom: 1),
                   child: Column(children: <Widget>[
                     Padding(
                         child: ListTile(
                           leading: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(_appointmentList[index].day,
+                              Text(_appointmentList[index].getAppointmentDateStringDD(),
                                   style: TextStyleFactory.heading1(
                                       color: dateColor)),
-                              Text(_appointmentList[index].month,
+                              Text(_appointmentList[index].getAppointmentDateStringMMM(),
                                   style: TextStyleFactory.p())
                             ],
                           ),
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(_appointmentList[index].serviceName),
+                              Text(_appointmentList[index].services),
                               Padding(
-                                  child: Text(_appointmentList[index].time,
+                                  child: Text(_appointmentList[index].appointmentTime,
                                       style: TextStyleFactory.p()),
                                   padding: EdgeInsets.only(top: 10))
                             ],
@@ -69,7 +72,6 @@ class NotificationAppointmentsScreenState
                               statusWidget(_appointmentList[index].status),
                         ),
                         padding: EdgeInsets.all(10)),
-                    Divider(color: primaryDeepLightColor, thickness: 0.5)
                   ]),
                 );
               }),
@@ -86,22 +88,22 @@ class NotificationAppointmentsScreenState
       return true;
   }
 
-  Widget statusWidget(String status) {
+  Widget statusWidget(Status status) {
     Color color;
     IconData icon;
-    if (status == "Accepted") {
+    if (status == Status.ACCEPTED) {
       color = Colors.greenAccent;
       icon = Icons.done;
-    } else if (status == "Rejected") {
+    } else if (status == Status.REJECTED) {
       color = Colors.red;
       icon = Icons.close;
-    } else if (status == "Pending") {
+    } else if (status == Status.PENDING) {
       color = Colors.yellowAccent[700];
       icon = MdiIcons.loading;
-    } else if (status == "Completed") {
+    } else if (status == Status.CLOSE) {
       color = Colors.green;
       icon = Icons.done;
-    } else if (status == "Cancelled") {
+    } else if (status == Status.CANCELLED) {
       color = Colors.red;
       icon = Icons.close;
     }
@@ -112,7 +114,7 @@ class NotificationAppointmentsScreenState
           icon,
           color: color,
         ),
-        Text(status, style: TextStyleFactory.p(color: color))
+        Text(status.toString().split('.').last, style: TextStyleFactory.p(color: color))
       ],
     );
   }
@@ -121,13 +123,12 @@ class NotificationAppointmentsScreenState
     final ProgressDialog progressDialog = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    MyAppointmentListResponse result =
-        await RestApi.customer.getAppointmentList();
+    AppointmentListResponse result = await RestApi.customer.getAppointmentList();
     progressDialog.hide();
 
     if (result.response.status == 1) {
       setState(() {
-        _appointmentList = result.list;
+        _appointmentList = result.appointments;
       });
     } else {
       _appointmentList = null;
