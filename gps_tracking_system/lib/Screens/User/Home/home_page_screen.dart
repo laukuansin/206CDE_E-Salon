@@ -65,7 +65,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                               style: TextStyleFactory.heading1(
                                   fontSize: 30, color: primaryLightColor))),
                       RawMaterialButton(
-                          onPressed: () {},
+                          onPressed: () { Navigator.of(context).pushNamed("/account_page");},
                           fillColor: primaryLightColor,
                           child: Icon(
                             Icons.person_outline,

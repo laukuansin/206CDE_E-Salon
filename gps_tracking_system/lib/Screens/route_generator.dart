@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 
+import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
+import 'package:gps_tracking_system/Screens/User/ChangePassword/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/User/EditCustomerInfo/edit_info_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_service_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_time_screen.dart';
@@ -23,7 +26,6 @@ import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.da
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 
 class RouteGenerator{
-
 
   static const bool _ADMIN_MODE = false;
 
@@ -77,6 +79,9 @@ class RouteGenerator{
           break;
 	      case "/top_up"                          :return _buildRoute(TopUpScreen());
         case "/qr_code"                         :return _buildRoute(QRCodePaymentScreen());
+        case "/account_page"                    :return _buildRoute(AccountScreen());
+        case "/edit_info"                       :return _buildRoute(EditInfoScreen());
+        case "/change_password"                 :return _buildRoute(ChangePasswordScreen());
         case "/home_page"                       :return _buildRoute(HomePageScreen());
         case "/my_appointments"                 :return _buildRoute(NotificationAppointmentsScreen());
         case "/choose_service"                  :return _buildRoute(ChooseServiceScreen());
