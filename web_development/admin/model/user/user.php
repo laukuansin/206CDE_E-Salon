@@ -34,9 +34,26 @@ class ModelUserUser extends Model {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 	}
+	public function updateUser($user_id,$data)
+	{
+		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "' WHERE user_id = '" . (int)$user_id . "'");
+	}
 
 	public function editPassword($user_id, $password) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', code = '' WHERE user_id = '" . (int)$user_id . "'");
+	}
+
+	public function validatePassword($username,$password)
+	{
+		$check=true;
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user` WHERE username='" . $this->db->escape($username) . "' AND password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "'");
+		
+		if(empty($query->row))
+		{
+			$check=false;
+		}
+		return $check;
+
 	}
 
 	public function editCode($email, $code) {
@@ -111,6 +128,12 @@ class ModelUserUser extends Model {
 
 	public function getTotalUsers() {
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user`");
+
+		return $query->row['total'];
+	}
+
+	public function getTotalUsersByUsername($username) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "user` WHERE username = '" . $this->db->escape($username) . "'");
 
 		return $query->row['total'];
 	}

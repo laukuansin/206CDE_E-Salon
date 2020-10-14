@@ -3,6 +3,8 @@ import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 
 import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/account/account_page_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/change_password/change_password_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_service_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_time_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
@@ -25,6 +27,8 @@ import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.da
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'Admin/edit_info/edit_info_screen.dart';
 
 
 class RouteGenerator{
@@ -84,7 +88,13 @@ class RouteGenerator{
                 ),
                 ListTile(
                     leading: Icon(Icons.account_circle),
-                    title: Text("Account")
+                    title: Text("Account"),
+                    onTap: ()
+                    {
+                      Navigator.of(context).pushNamedAndRemoveUntil("/account_page", (Route<dynamic> route) => false);
+
+                    },
+
                 ),
                 ListTile(
                     leading: Icon(Icons.settings),
@@ -92,7 +102,11 @@ class RouteGenerator{
                 ),
                 ListTile(
                     leading: Icon(MdiIcons.logout),
-                    title: Text("Logout")
+                    title: Text("Logout"),
+                    onTap: (){
+                      Navigator.of(context).pushNamedAndRemoveUntil("/login", (Route<dynamic> route) => false);
+                    },
+
                 )
               ],
             ),
@@ -126,6 +140,9 @@ class RouteGenerator{
         case "/payment"       				          :return _buildRoute(PaymentScreen());
         case "/manage_appointment"              :return _buildRoute(ManageAppointmentScreen());
         case "/home_page"                       :return _buildRoute(AdminHome.HomePageScreen());
+        case "/account_page"                    :return _buildRoute(AccountPageScreen());
+        case "/edit_info"                       :return _buildRoute(EditInfoPageScreen());
+        case "/change_password"                 :return _buildRoute(ChangePasswordPageScreen());
 
       }
     }

@@ -184,4 +184,142 @@ class ControllerApiUser extends Controller {
 
         return !$error;
     }
+
+    public function getUserDetail()
+    {
+        $json = array();
+        $detail = array();
+        $this->load->model('user/user');
+        $result=$this->model_user_user->getUser($this->user->getId());
+        if(empty($result))
+        {
+            $json['response'] = array(
+                'msg'       => 'User no found',
+                'status'    => 0
+            );
+            $json['detail'] = [];
+        }
+        else{
+            $detail=[
+                'name'=>$result['firstname'].$result['lastname'],
+                'first_name'=>$result['firstname'],
+                'last_name'=>$result['lastname'],
+                'user_name'=>$result['username'],
+                'image'=>"http://localhost/image/" .$result['image'],
+                'role'=>$result['user_group'],
+                'email'=>$result['email']    
+            ];
+            $json['response'] = array(
+                'msg'       => 'Get User Detail success',
+                'status'    => 1
+            );
+            $json['detail'] = $detail;
+        }
+        $this->response->setOutput(json_encode($json));
+
+    }
+
+    public function updateInfo()
+    {
+        $json = array();
+        $error = array();
+        $this->load->language('user/user');
+        $this->load->model('user/user');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateInfoForm($error))
+        {
+          
+            $this->model_user_user->updateUser($this->user->getId(), $this->request->post);
+            $json['response'] = array(
+                'status'    => 1,
+                'msg'       => $this->language->get('text_success')
+            );
+        }
+        else{
+            $json['response'] = array(
+                'msg'       => '',
+                'status'    => 0
+            );
+            $json['error'] = $error;
+        }
+        $this->response->setOutput(json_encode($json));
+
+    }
+    public function changePassword()
+    {
+        $json = array();
+        $error = array();
+        $this->load->language('user/user');
+        $this->load->model('user/user');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validatePasswordForm($error))
+        {
+          
+            $this->model_user_user->editPassword($this->user->getId(), $this->request->post['newPassword']);
+            $json['response'] = array(
+                'status'    => 1,
+                'msg'       => $this->language->get('text_success')
+            );
+        }
+        else{
+            $json['response'] = array(
+                'msg'       => '',
+                'status'    => 0
+            );
+            $json['error'] = $error;
+        }
+        $this->response->setOutput(json_encode($json));
+    }
+    protected function validatePasswordForm(&$error) {
+		if ((utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) < 4) || (utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) > 40)) {
+			$error['newPassword'] = $this->language->get('error_password');
+		}
+		if(!$this->model_user_user->validatePassword($this->user->getUserName(),$this->request->post['oldPassword'])){
+			$error['oldPassword'] = $this->language->get('error_oldPassword');
+		}
+
+		if ($this->request->post['confirmPassword'] != $this->request->post['newPassword']) {
+			$error['confirmPassword'] = $this->language->get('error_confirm');
+		}
+
+		return !$error;
+	}
+    protected function validateInfoForm(&$error) {
+		if (!$this->user->hasPermission('modify', 'user/user')) {
+			$error['warning'] = $this->language->get('error_permission');
+		}
+
+		if ((utf8_strlen($this->request->post['username']) < 3) || (utf8_strlen($this->request->post['username']) > 20)) {
+			$error['username'] = $this->language->get('error_username');
+		}
+
+
+        if (($this->user->getUserName() != $this->request->post['username']) && $this->model_user_user->getTotalUsersByUsername($this->request->post['username']))
+        {
+            $error['username'] = $this->language->get('error_exists_username');
+
+        }
+		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+			$error['firstname'] = $this->language->get('error_firstname');
+		}
+
+		if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+			$error['lastname'] = $this->language->get('error_lastname');
+		}
+
+		if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+			$error['email'] = $this->language->get('error_email');
+		}
+
+
+        if (($this->user->getEmail() != $this->request->post['email']) && $this->model_user_user->getTotalUsersByEmail($this->request->post['email']))
+        {
+            $error['email'] = $this->language->get('error_exists_email');
+		}
+
+	
+
+		return !$error;
+	}
+
 }

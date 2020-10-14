@@ -4,6 +4,7 @@ class User {
 	private $user_id;
 	private $user_group_id;
 	private $username;
+	private $email;
 	private $permission = array();
 
 	public function __construct($registry) {
@@ -17,6 +18,7 @@ class User {
 			if ($user_query->num_rows) {
 				$this->user_id = $user_query->row['user_id'];
 				$this->username = $user_query->row['username'];
+				$this->email = $user_query->row['email'];
 				$this->user_group_id = $user_query->row['user_group_id'];
 
 				$this->db->query("UPDATE " . DB_PREFIX . "user SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE user_id = '" . (int)$this->session->data['user_id'] . "'");
@@ -45,6 +47,7 @@ class User {
 			if($user_query->num_rows){
 				$this->user_id = $user_query->row['user_id'];
 				$this->username = $user_query->row['username'];
+				$this->email = $user_query->row['email'];
 				$this->user_group_id = $user_query->row['user_group_id'];
 				$user_group_query = $this->db->query("SELECT permission FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
@@ -69,6 +72,7 @@ class User {
 
 			$this->user_id = $user_query->row['user_id'];
 			$this->username = $user_query->row['username'];
+			$this->email = $user_query->row['email'];
 			$this->user_group_id = $user_query->row['user_group_id'];
 
 			$user_group_query = $this->db->query("SELECT permission FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
@@ -92,6 +96,7 @@ class User {
 
 		$this->user_id = '';
 		$this->username = '';
+		$this->email = '';
 	}
 
 	public function hasPermission($key, $value) {
@@ -112,6 +117,11 @@ class User {
 
 	public function getUserName() {
 		return $this->username;
+	}
+
+	public function getEmail()
+	{
+		return $this->email;
 	}
 
 	public function getGroupId() {
