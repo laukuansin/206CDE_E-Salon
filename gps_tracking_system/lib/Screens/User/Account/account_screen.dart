@@ -43,6 +43,7 @@ class AccountScreenState extends State<AccountScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              Text("My Account", style: TextStyleFactory.heading1(color: primaryLightColor, fontSize: 30),),
               Padding(
                   child: Card(
                     elevation: 0,
@@ -140,11 +141,13 @@ class AccountScreenState extends State<AccountScreen> {
           ),
         ),
         appbar: AppBar(
-          title: Text(
-            "Account",
-            style: TextStyleFactory.p(color: primaryTextColor),
+          backgroundColor: Color(0xFF65CBF2),
+          elevation: 0,
+          iconTheme: IconThemeData(
+              color: primaryLightColor
           ),
-        ));
+        )
+    );
   }
 
   void getCustomerDetail() async {
