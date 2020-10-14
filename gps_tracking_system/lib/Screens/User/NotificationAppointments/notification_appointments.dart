@@ -77,8 +77,7 @@ class NotificationAppointmentsScreenState
               }),
         ),
         appbar: AppBar(
-            title: Text("My Appointments",
-                style: TextStyleFactory.p(color: primaryTextColor))));
+            title: Text("Appointment Request", style: TextStyleFactory.p(color: primaryTextColor))));
   }
 
   bool isShowAppointmentList() {
@@ -98,8 +97,8 @@ class NotificationAppointmentsScreenState
       color = Colors.red;
       icon = Icons.close;
     } else if (status == Status.PENDING) {
-      color = Colors.yellowAccent[700];
-      icon = MdiIcons.loading;
+      color = Colors.amber;
+      icon = Icons.access_time;
     } else if (status == Status.CLOSE) {
       color = Colors.green;
       icon = Icons.done;
@@ -123,7 +122,7 @@ class NotificationAppointmentsScreenState
     final ProgressDialog progressDialog = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    AppointmentListResponse result = await RestApi.customer.getAppointmentList();
+    AppointmentListResponse result = await RestApi.customer.getAppointmentRequest();
     progressDialog.hide();
 
     if (result.response.status == 1) {

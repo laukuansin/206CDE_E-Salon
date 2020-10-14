@@ -49,7 +49,7 @@ class Service {
     this.serviceId,
     this.serviceName,
     this.servicePrice,
-    this.quantity = 0
+    this.quantity
   });
 
   int serviceId;
@@ -57,11 +57,15 @@ class Service {
   double servicePrice;
   int quantity;
 
+  double calcTotalPrice(){
+
+  }
+
   factory Service.fromJson(Map<String, dynamic> json) => Service(
     serviceId: json["service_id"],
     serviceName: json["service_name"],
     servicePrice: json["service_price"].toDouble(),
-    quantity: 0
+    quantity: json['quantity'] == null? 0 : json['quantity']
   );
 
   Map<String, dynamic> toJson() => {
