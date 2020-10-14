@@ -97,9 +97,9 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(appointment.getAppointmentDateStringDate(),
+          Text(appointment.getAppointmentDateStringDD(),
               style: TextStyleFactory.heading1(color: dateColor)),
-          Text(appointment.getAppointmentDateStringDay(),
+          Text(appointment.getAppointmentDateStringE(),
               style: TextStyleFactory.p())
         ],
       ),

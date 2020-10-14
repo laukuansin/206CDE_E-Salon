@@ -20,7 +20,7 @@
 		public function getAppointmentList($data = array()){
 			$sql = "
 					SELECT 
-						oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services
+						oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
 					FROM 
 						oc_appointment
 					LEFT JOIN oc_appointment_status ON oc_appointment.status_id = oc_appointment_status.status_id
@@ -33,6 +33,8 @@
 				";
 
 			$whereClause = 'WHERE true ';
+
+
 			if(isset($data['filter_status']) && $data['filter_status'] != -1){
 				$whereClause .=" AND oc_appointment.status_id=".$data['filter_status'];	
 			} 

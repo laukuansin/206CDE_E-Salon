@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-TopUpResponse topUpResponseFromJson(String str) => TopUpResponse.fromJson(json.decode(str));
+CommonResponse commonResponseFromJson(String str) => CommonResponse.fromJson(json.decode(str));
 
-String topUpResponseToJson(TopUpResponse data) => json.encode(data.toJson());
+String makeAppointmentResponseToJson(CommonResponse data) => json.encode(data.toJson());
 
-class TopUpResponse {
-  TopUpResponse({
+class CommonResponse {
+  CommonResponse({
     this.response,
   });
 
   Response response;
 
-  factory TopUpResponse.fromJson(Map<String, dynamic> json) => TopUpResponse(
+  factory CommonResponse.fromJson(Map<String, dynamic> json) => CommonResponse(
     response: Response.fromJson(json["response"]),
   );
 

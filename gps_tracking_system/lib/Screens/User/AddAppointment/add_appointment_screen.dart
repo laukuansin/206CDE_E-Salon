@@ -1,303 +1,306 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gps_tracking_system/Model/location.dart';
-import 'package:gps_tracking_system/color.dart';
-import 'package:intl/intl.dart';
 import 'dart:async';
-import 'package:numberpicker/numberpicker.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gps_tracking_system/Components/toast_widget';
+import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/location.dart';
+import 'package:gps_tracking_system/Screens/route_generator.dart';
+import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
+import 'package:gps_tracking_system/color.dart';
 
 class AddAppointmentScreen extends StatefulWidget {
-  AddAppointmentScreenState createState() => AddAppointmentScreenState();
+  final Appointment appointment;
+  final List<Service> services;
+  final Location location;
+
+  AddAppointmentScreen(Map<String, dynamic> arg)
+      : appointment = arg["appointment"],
+        services = arg["services"],
+        location = arg["location"];
+
+  AddAppointmentScreenState createState() =>
+      AddAppointmentScreenState(appointment, services, location);
 }
 
 class AddAppointmentScreenState extends State<AddAppointmentScreen> {
-  DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm');
-  DateTime dateTime;
-  DateTime selectDate;
-  TimeOfDay selectTime;
-  Location location;
-  String dateTimeStr;
-  String note;
-  int adult, kid;
+  final Appointment appointment;
+  final List<Service> services;
+  final Location location;
+  String selectedTime = "";
   FToast fToast;
+
+  AddAppointmentScreenState(this.appointment, this.services, this.location);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text("Add Appointment"),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: addAppointment,
-                  child: Icon(Icons.check),
-                ))
-          ],
-        ),
-        body: SingleChildScrollView(
-            child: Container(
-                child: Column(children: <Widget>[
-          new GestureDetector(
-              onTap: () => _selectDateTimePicker(context),
-              child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.all(20),
-                  child: Row(children: <Widget>[
-                    Expanded(
-                        child: Row(children: [
-                      Icon(Icons.calendar_today,
-                          size: 24, color: primaryColor),
-                      Padding(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Date and Time",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              Text(
-                                getDateTimeText(),
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[500]),
-                              )
-                            ]),
-                        padding: EdgeInsets.only(left: 15),
-                      )
-                    ])),
-                    Icon(Icons.chevron_right)
-                  ]))),
-          Divider(color: Colors.grey[500], height: 0),
-          new GestureDetector(
-            child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(20),
-                child: Row(children: <Widget>[
-                  Expanded(
-                      child: Row(children: [
-                    Icon(Icons.location_on, size: 24, color: primaryColor),
-                    Padding(
-                      child: Wrap(direction: Axis.vertical, children: <Widget>[
-                        Text(
-                          "Location",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Expanded(
-                            child: Container(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                child: Text(
-                                  getLocation(),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 10,
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[500]),
-                                )))
-                      ]),
-                      padding: EdgeInsets.only(left: 15),
-                    )
-                  ])),
-                  Icon(Icons.chevron_right)
-                ])),
-            onTap: () {
-              Navigator.of(context).pushNamed('/location_picker', arguments: this.location).
-              then((value){
-                setState(() {});
-              });
-            },
-          ),
-          Divider(color: Colors.grey[500], height: 0),
-          Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(20),
+    Size size = MediaQuery.of(context).size;
+    return RouteGenerator.buildScaffold(
+      // SingleChildScrollView(
+         Container(
+              height: size.height,
+              width: size.width,
+              color: primaryBgColor,
               child: Column(children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Row(children: [
-                      Icon(Icons.people, size: 24, color: primaryColor),
-                      Padding(
-                          child: Text("Pax", style: TextStyle(fontSize: 20)),
-                          padding: EdgeInsets.only(left: 15))
-                    ])),
-                Padding(
-                  child: Row(children: [
-                    Expanded(
-                        child: new GestureDetector(
-                            child: Text("Adult: $adult",
-                                style: TextStyle(fontSize: 20)),
-                            onTap: _showAdultDialog)),
-                    Expanded(
-                        child: new GestureDetector(
-                            child: Text("Kid: $kid",
-                                style: TextStyle(fontSize: 20)),
-                            onTap: _showKidDialog))
-                  ]),
-                  padding: EdgeInsets.only(left: 40),
+                Expanded(
+                    child: Column(children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 1),
+                        color: primaryLightColor,
+                        child: GestureDetector(
+                            onTap: () => _selectAppointmentDate(context),
+                            child: ListTile(
+                              leading:
+                                  Icon(Icons.calendar_today, color: primaryColor),
+                              title: Text("Date"),
+                              subtitle: appointment.appointmentDate == null
+                                  ? Text("Select date")
+                                  : Text(appointment
+                                      .getAppointmentDateStringYYYYMMDD()),
+                              trailing: Icon(Icons.chevron_right),
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 1),
+                        color: primaryLightColor,
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed("/choose_time",
+                                  arguments: {
+                                    "appointment": appointment,
+                                    "services": services
+                                  }).then((value) {
+                                setState(() {
+                                  if (value != null) selectedTime = value;
+                                });
+                              });
+                            },
+                            child: ListTile(
+                              leading: Icon(Icons.access_time, color: primaryColor),
+                              title: Text("Time"),
+                              subtitle: selectedTime.isEmpty
+                                  ? Text("Select time")
+                                  : Text(selectedTime),
+                              trailing: Icon(Icons.chevron_right),
+                            )),
+                      ),
+                      Container(
+                        color: primaryLightColor,
+                        child: GestureDetector(
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.location_on,
+                              color: primaryColor,
+                            ),
+                            title: Text("Address"),
+                            subtitle: location.address.isEmpty
+                                ? Text("Select location")
+                                : Text(location.address),
+                            trailing: Icon(Icons.chevron_right),
+                          ),
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed('/location_picker',
+                                    arguments: this.location)
+                                .then((value) {
+                              setState(() {});
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                          width: size.width,
+                          color: primaryLightColor,
+                          child: Column(children: [
+                            ListTile(
+                              leading: Icon(
+                                Icons.receipt,
+                                color: primaryColor,
+                              ),
+                              title: Text("Services"),
+                            ),
+                            SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: _buildDataTable())
+                          ])),
+                ])),
+                Container(
+                    color: primaryLightColor,
+                    margin: EdgeInsets.symmetric(horizontal: 5,),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    alignment: Alignment.centerRight,
+                    child:FlatButton(
+                      color: primaryColor,
+                      child:Container(
+                          child:Text(
+                            "Make Appointment",
+                            style: TextStyleFactory.p(color: primaryLightColor),
+                          )
+                      ),
+                      onPressed: makeAppointment
+                    )
                 )
               ])),
-          Divider(color: Colors.grey[500], height: 0),
-          Container(
-              color: Colors.white,
-              child: Padding(
-                  child: TextField(
-                      decoration: new InputDecoration(
+      appbar: AppBar(
+        title: Text(
+          "Add Appointment",
+          style: TextStyleFactory.p(color: primaryTextColor),
+        ),
+      ),
+    );
+  }
+
+  void makeAppointment()  async{
+    appointment.address = location.address;
+    CommonResponse result = await RestApi.customer.makeAppointment(appointment, services, selectedTime);
+    fToast.showToast(child: ToastWidget(status: result.response.status, msg: result.response.msg));
+
+    if(result.response.status == 1){
+      Navigator.of(context).pushNamedAndRemoveUntil('/home_page', ModalRoute.withName("/home_page"));
+    }
+  }
+
+  DataTable _buildDataTable() {
+    Size size = MediaQuery.of(context).size;
+    const MARGIN = 16.0;
+    List<DataRow> dataRow = [];
+
+    if (services.isNotEmpty)
+      services.forEach((element) {
+        if (element.quantity > 0)
+          dataRow.add(DataRow(
+              cells: [
+            DataCell(Container(
+                width: (size.width - MARGIN * 2) * 0.4,
+                child: Text(element.serviceName))),
+            DataCell(Container(
+              width: (size.width - MARGIN * 2) * 0.4,
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
                           icon: Icon(
-                            Icons.note_add,
-                            color: primaryColor,
+                            Icons.remove,
+                            size: 14,
                           ),
-                          labelText: "Note",
-                          labelStyle:
-                              TextStyle(color: Colors.black, fontSize: 20),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: primaryColor)),
-                          helperText: "*Optional"),
-                      onChanged: (text) {
-                        note = text;
-                      }),
-                  padding: EdgeInsets.only(
-                      left: 20, top: 10, right: 20, bottom: 20))),
-          Divider(color: Colors.grey[500], height: 0)
-        ]))));
+                          onPressed: () {
+                            setState(() {
+                              if (element.quantity > 0) element.quantity--;
+                            });
+                          },
+                        ),
+                        Text(element.quantity.toString()),
+                        IconButton(
+                          icon: Icon(Icons.add, size: 14),
+                          onPressed: () {
+                            setState(() {
+                              element.quantity++;
+                            });
+                          },
+                        ),
+                      ])),
+            )),
+            DataCell(Container(
+                width: (size.width - MARGIN * 2) * 0.2,
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                        (element.servicePrice * element.quantity).toString()))))
+          ]));
+      });
+
+    dataRow.add(DataRow(
+      cells:[
+        DataCell(
+          SizedBox(width: (size.width - MARGIN * 2) * 0.4),
+        ),
+        DataCell(
+          Container(
+            width: (size.width - MARGIN * 2) * 0.4,
+            child:Align(
+              alignment: Alignment.center,
+                child:Text(
+                  "Total Price",
+                  style: TextStyleFactory.heading6(),
+                )
+            )
+          )
+        ),
+        DataCell(Container(
+            width: (size.width - MARGIN * 2) * 0.2,
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(_calcTotalPrice().toString())
+            )))
+      ]
+
+    ));
+
+    return DataTable(
+        horizontalMargin: MARGIN,
+        columnSpacing: 0,
+        columns: [
+          DataColumn(
+              label: Container(
+                  width: (size.width - MARGIN * 2) * 0.4,
+                  child: Text(
+                    "Service",
+                    style: TextStyleFactory.p(),
+                  ))),
+          DataColumn(
+              label: Container(
+                  width: (size.width - MARGIN * 2) * 0.4,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Qty",
+                        style: TextStyleFactory.p(),
+                      )))),
+          DataColumn(
+              label: Container(
+                  width: (size.width - MARGIN * 2) * 0.2,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "Sub(RM)",
+                      style: TextStyleFactory.p(),
+                    ),
+                  ))),
+        ],
+        rows: dataRow
+    );
   }
 
-  void _showAdultDialog() {
-    showDialog<int>(
-        context: context,
-        builder: (BuildContext context) {
-          return new NumberPickerDialog.integer(
-            minValue: 0,
-            maxValue: 100,
-            initialIntegerValue: adult,
-            title: new Text("Pick the the amount of adult"),
-          );
-        }).then((int value) {
-      if (value != null) {
-        setState(() {
-          this.adult = value;
-        });
-      }
+  double _calcTotalPrice(){
+    double totalPrice = 0.0;
+    services.forEach((element) {
+      totalPrice += element.servicePrice * element.quantity;
     });
+    return totalPrice;
   }
 
-  void _showKidDialog() {
-    showDialog<int>(
-        context: context,
-        builder: (BuildContext context) {
-          return new NumberPickerDialog.integer(
-            minValue: 0,
-            maxValue: 100,
-            initialIntegerValue: kid,
-            title: new Text("Pick the the amount of kid"),
-          );
-        }).then((int value) {
-      if (value != null) {
-        setState(() {
-          this.kid = value;
-        });
-      }
-    });
-  }
-
-  String getLocation() {
-    if (location.address.isEmpty ||
-        location.latitude == 0 ||
-        location.longitude == 0) {
-      return "Select location";
-    } else {
-      return location.address;
-    }
-  }
-
-  String getDateTimeText() {
-    if (dateTime == null) {
-      return "Select date and Time";
-    } else {
-      return dateTimeStr;
-    }
-  }
-
-  void addAppointment() {
-    bool check = true;
-    if (dateTimeStr.isEmpty) {
-      check = false;
-      errorMessage("The date and time cannot be empty");
-    } else if (location.latitude == 0 ||
-        location.longitude == 0 ||
-        location.address.isEmpty) {
-      check = false;
-      errorMessage("The location cannot be empty");
-    } else if (adult == 0 && kid == 0) {
-      check = false;
-      errorMessage("The pax cannot be empty");
-    }
-
-    if (check) {
-      successMessage("Add appointment successfully");
-    }
-
-    print(dateTime);
-    print(location);
-    print(note);
-  }
-
-  void errorMessage(String errMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0), color: Colors.red),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.error_outline, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(errMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12))),
-        ]));
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(seconds: 2),
-        gravity: ToastGravity.BOTTOM);
-  }
-
-  void successMessage(String scsMsg) {
-    Widget toast = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: Colors.greenAccent),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.check, color: Colors.white),
-          SizedBox(width: 12.0),
-          Expanded(
-              child: Text(scsMsg,
-                  style: TextStyle(color: Colors.white, fontSize: 12)))
-        ]));
-    fToast.showToast(
-        child: toast,
-        toastDuration: Duration(seconds: 2),
-        gravity: ToastGravity.BOTTOM);
-  }
-
-  Future<void> _selectDateTimePicker(BuildContext context) async {
+  Future<void> _selectAppointmentDate(BuildContext context) async {
     final DateTime date = await showDatePicker(
         context: context,
-        initialDate: selectDate,
+        initialDate: appointment.appointmentDate == null
+            ? DateTime.now()
+            : appointment.appointmentDate,
         firstDate: DateTime.now(),
         lastDate: DateTime(2101));
+
     if (date != null) {
-      final TimeOfDay time = await showTimePicker(
-          context: context,
-          initialTime:
-              TimeOfDay(hour: selectTime.hour, minute: selectTime.minute));
-      if (time != null) {
-        setState(() {
-          selectDate = date;
-          selectTime = time;
-          this.dateTime = DateTime(selectDate.year, selectDate.month,
-              selectDate.day, selectTime.hour, selectTime.minute);
-          dateTimeStr = dateFormat.format(dateTime);
-        });
-      }
+      setState(() {
+        appointment.appointmentDate = date;
+      });
     }
   }
 
@@ -306,21 +309,5 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
     super.initState();
     fToast = FToast();
     fToast.init(context);
-    note = "";
-    location = new Location(latitude: 0, longitude: 0);
-    dateTime = null;
-    dateTimeStr = "";
-    adult = 0;
-    kid = 0;
-    selectDate = new DateTime.now();
-    selectTime = new TimeOfDay.now();
-  }
-
-  DateTime checkDate() {
-    if (selectDate == null) {
-      return new DateTime.now();
-    } else {
-      return selectDate;
-    }
   }
 }

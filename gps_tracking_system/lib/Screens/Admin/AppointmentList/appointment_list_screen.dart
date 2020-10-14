@@ -59,7 +59,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
 
     if (result.response.status == 1) {
       for (Appointment appointment in result.appointments) {
-        String dateString = appointment.getAppointmentDateStringDateMonthYear();
+        String dateString = appointment.getAppointmentDateStringYYYYMMDD();
         DateTime key = DateFormat("yyyy-MM-dd").parse(dateString);
 
         if (!appointmentList.containsKey(key)) appointmentList[key] = [];
