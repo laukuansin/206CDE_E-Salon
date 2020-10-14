@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,7 +22,6 @@ class ViewModel
   static const int _CAR_MARKER_SIZE               = 75;
   static const String _MARKER_DESTINATION_ID      = "destination";
   static const String _MARKER_ORIGIN_ID           = "origin";
-  static const int _REFRESH_RATE                  = 30;
 
   final Set<Marker> markerSet = {
     Marker(markerId: MarkerId(_MARKER_DESTINATION_ID)),
@@ -64,13 +64,14 @@ class ViewModel
 
     _customerLatLng = await MapHelper.addressToLatLng(customerAddress);
 
-    _calcDurationDistance(); // Async but i don't care if you slow, so no need await
+    if(workerLatLng != null)
+      _calcDurationDistance(); // Async but i don't care if you slow, so no need await
     updateMarkerLocation();
 
-    // Animate camera if worker lat lng not ready
-    if(!isWorkerReady) {
+    // // Animate camera if worker lat lng not ready
+    // if(!isWorkerReady) {
       animateCameraToRouteBound();
-    }
+    // }
 
     _callBackNotifyChanges();
   }
@@ -93,17 +94,19 @@ class ViewModel
     );
 
     // Add src marker
-    markerSet.add(
-      Marker(
-        markerId: MarkerId(_MARKER_ORIGIN_ID),
-        rotation: _carMarkerIconRotation,
-        position: workerLatLng,
-        draggable: false,
-        zIndex: 2,
-        flat: true,
-        icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
-      )
-    );
+    if(workerLatLng != null) {
+      markerSet.add(
+          Marker(
+              markerId: MarkerId(_MARKER_ORIGIN_ID),
+              rotation: _carMarkerIconRotation,
+              position: workerLatLng,
+              draggable: false,
+              zIndex: 2,
+              flat: true,
+              icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
+          )
+      );
+    }
   }
 
 
@@ -140,27 +143,52 @@ class ViewModel
   void animateCameraToRouteBound() async
   {
     GoogleMapController controller = await _mapControllerCompleter.future;
-    double maxLat, minLat, maxLon, minLon;
-    maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
-    maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);
-    minLat = min(workerLatLng.latitude, _customerLatLng.latitude);
-    minLon = min(workerLatLng.longitude, _customerLatLng.longitude);
 
-    controller.animateCamera(
-        CameraUpdate.newLatLngBounds(
-            LatLngBounds(
-                southwest: LatLng(
-                    minLat,
-                    minLon
+    if(workerLatLng != null) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        double maxLat, minLat, maxLon, minLon;
+        maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
+        maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);
+        minLat = min(workerLatLng.latitude, _customerLatLng.latitude);
+        minLon = min(workerLatLng.longitude, _customerLatLng.longitude);
+
+        controller.animateCamera(
+            CameraUpdate.newLatLngBounds(
+                LatLngBounds(
+                    southwest: LatLng(
+                        minLat,
+                        minLon
+                    ),
+                    northeast: LatLng(
+                        maxLat,
+                        maxLon
+                    )
                 ),
-                northeast: LatLng(
-                    maxLat,
-                    maxLon
-                )
-            ),
-            _MAP_BOUNDS_PADDING // Padding
-        )
-    );
+                _MAP_BOUNDS_PADDING // Padding
+            )
+        );
+      });
+
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        controller.animateCamera(
+            CameraUpdate.newLatLngBounds(
+                LatLngBounds(
+                    southwest: LatLng(
+                      _customerLatLng.latitude - 0.001,
+                      _customerLatLng.longitude - 0.001,
+                    ),
+                    northeast: LatLng(
+                        _customerLatLng.latitude + 0.001,
+                        _customerLatLng.longitude + 0.001
+                    )
+                ),
+                _MAP_BOUNDS_PADDING// Padding
+            )
+        );
+      });
+
+    }
   }
 
   GoogleMap buildMap() => GoogleMap(
@@ -169,26 +197,26 @@ class ViewModel
         onMapCreated: setGoogleMapController,
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
-          target: workerLatLng,
+          target: workerLatLng == null? _customerLatLng : workerLatLng,
           zoom: _INITIAL_CAMERA_ZOOM_RATIO,
         )
     );
 
 
-  RoundedButton buildNavigationButton()=>
-    RoundedButton(
-        text: "Navigation",
-        press: (){
-          try {
-            AppLauncher.openMap(
-                srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
-                destAddress: customerAddress
-            );
-          }
-          catch(e){
-            _callBackShowAlertDialog("Error", e);
-          }
-        }
-    );
+  // RoundedButton buildNavigationButton()=>
+  //   RoundedButton(
+  //       text: "Navigation",
+  //       press: (){
+  //         try {
+  //           AppLauncher.openMap(
+  //               srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
+  //               destAddress: customerAddress
+  //           );
+  //         }
+  //         catch(e){
+  //           _callBackShowAlertDialog("Error", e);
+  //         }
+  //       }
+  //   );
 
 }

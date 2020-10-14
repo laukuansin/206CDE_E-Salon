@@ -31,7 +31,8 @@ enum Status{
   REJECTED,
   PENDING,
   CANCELLED,
-  CLOSE
+  CLOSE,
+  ONGOING
 }
 
 enum ServiceAttr{
@@ -55,6 +56,8 @@ class Appointment {
     this.customerName,
     this.workerId,
     this.workerName,
+    this.workerImage,
+    this.workerTelephone,
     this.telephone,
     this.address,
     this.status,
@@ -70,6 +73,8 @@ class Appointment {
   String customerName;
   String workerId;
   String workerName;
+  String workerImage;
+  String workerTelephone;
   String telephone;
   String address;
   Status status;
@@ -98,6 +103,8 @@ class Appointment {
       customerName: json["customer_name"],
       workerId: json['worker_id'],
       workerName: json["worker_name"],
+      workerImage: json['worker_image'],
+      workerTelephone: json['worker_telephone'] == null? '': json['worker_telephone'],
       telephone: json["telephone"],
       address: json["address"],
       status: Status.values[json["status_id"].toInt()],

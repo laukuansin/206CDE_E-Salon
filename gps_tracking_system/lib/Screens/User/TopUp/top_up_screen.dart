@@ -6,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
-import 'package:gps_tracking_system/Utility/RestApi/user_top_up_customer_credit_ response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -171,7 +171,7 @@ class TopUpScreenState extends State<TopUpScreen> {
     final ProgressDialog progressDialog = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    TopUpResponse result = await RestApi.customer.topUpCustomerCredit(_creditAmount);
+    CommonResponse result = await RestApi.customer.topUpCustomerCredit(_creditAmount);
     progressDialog.hide();
 
     fToast.showToast(

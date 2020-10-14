@@ -32,6 +32,8 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body:Container(
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
         width :screenSize.width,
         height:screenSize.height,
         child:Stack(
@@ -40,25 +42,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
             SizedBox(
               child:viewModel.buildMap()
             ),
-            Positioned(
-              right:screenSize.width * 0.02,
-              top: screenSize.height * 0.04,
-              child:Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: primaryLightColor.withOpacity(0.95)
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.location_searching,
-                    color: primaryColor,
-                  ),
-                  onPressed: (){
-                    viewModel.animateCameraToRouteBound();
-                  }
-                )
-              )
-            )
           ]
         )
       )
@@ -87,5 +70,15 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   void updateWorkerLocation(bool isWorkerReady, LatLng workerLocation){
     viewModel.updateWorkerLocation(isWorkerReady, workerLocation);
     setState(() {});
+  }
+
+  void animateCameraToRouteBound(){
+    viewModel.animateCameraToRouteBound();
+  }
+
+  @override
+  void dispose() {
+    viewModel.workerLatLng = null;
+    super.dispose();
   }
 }

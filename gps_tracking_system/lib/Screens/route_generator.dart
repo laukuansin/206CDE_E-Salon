@@ -6,7 +6,8 @@ import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_service_s
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_time_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Admin/payment/PaymentScreen.dart';
-import 'package:gps_tracking_system/Screens/Common/AppointmentInfo/appointment_info_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart' as AdminAppointmentInfo;
+import 'package:gps_tracking_system/Screens/User/AppointmentInfo/appointment_info_screen.dart' as UserAppointmentInfo;
 import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/add_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
@@ -26,8 +27,9 @@ class RouteGenerator{
 
   static const bool _ADMIN_MODE = false;
 
-  static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar})=> Scaffold(
+  static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar, bool extendBodyBehindAppBar = false})=> Scaffold(
       key: key,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
       appBar: appbar,
       body: Material(
         child:SafeArea(
@@ -49,9 +51,9 @@ class RouteGenerator{
       {
         case"/"                                 :return _buildRoute(SplashScreen());
         case "/login"                           :return _buildRoute(AdminLogin.LoginScreen());
-        case "/appointmentInfo" :
+        case "/appointment_info" :
           if(args is Appointment)
-            return _buildRoute(AppointmentInfo(args));
+            return _buildRoute(AdminAppointmentInfo.AppointmentInfo(args));
           break;
         case "/appointment_list"                :return _buildRoute(AppointmentListScreen());
         case "/today_appointment"               :return _buildRoute(TodayAppointmentScreen());
@@ -83,9 +85,9 @@ class RouteGenerator{
           if (args is Location)
             return _buildRoute(LocationPickerScreen(args));
           break;
-        case "/appointmentInfo" :
+        case "/appointment_info" :
           if(args is Appointment)
-            return _buildRoute(AppointmentInfo(args));
+            return _buildRoute(UserAppointmentInfo.AppointmentInfo(args));
           break;
       }
     }
