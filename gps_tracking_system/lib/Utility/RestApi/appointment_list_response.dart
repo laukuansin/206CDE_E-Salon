@@ -61,6 +61,7 @@ class Appointment {
     this.telephone,
     this.address,
     this.status,
+    this.statusName,
     this.appointmentDate,
     this.appointmentTime,
     this.services,
@@ -77,6 +78,7 @@ class Appointment {
   String workerTelephone;
   String telephone;
   String address;
+  String statusName;
   Status status;
   DateTime appointmentDate;
   String appointmentTime;
@@ -103,11 +105,12 @@ class Appointment {
       customerName: json["customer_name"],
       workerId: json['worker_id'],
       workerName: json["worker_name"],
-      workerImage: json['worker_image'],
+      workerImage: json['worker_image'] == null? "" : json["worker_image"],
       workerTelephone: json['worker_telephone'] == null? '': json['worker_telephone'],
       telephone: json["telephone"],
       address: json["address"],
       status: Status.values[json["status_id"].toInt()],
+      statusName: json['status'],
       appointmentDate: appointmentDateTime,
       appointmentTime: timeFormatter.format(appointmentDateTime),
       services: json["services"],
@@ -127,8 +130,6 @@ class Appointment {
       "appointment_date": appointmentDate,
       "services": services,
     };
-
-    String getAppointmentStatusName() => status.toString().split('.').last;
 
 
   String getAppointmentDateStringEMMMDD() => dayDateMonthFormatter.format(appointmentDate);

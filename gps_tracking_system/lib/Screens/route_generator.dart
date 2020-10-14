@@ -27,7 +27,7 @@ import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 
 class RouteGenerator{
 
-  static const bool _ADMIN_MODE = false;
+  static const bool _ADMIN_MODE = true;
 
   static Scaffold buildScaffold(Widget widget, {Key key, AppBar appbar, bool extendBodyBehindAppBar = false})=> Scaffold(
       key: key,

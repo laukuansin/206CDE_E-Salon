@@ -8,18 +8,9 @@ class AppLauncher
 {
   AppLauncher._();
 
-  static Future<void> openMap({List<double>srcLatLng, String srcAddress, List<double> destLatLng, String destAddress}) async {
+  static Future<void> openMap({List<double> destLatLng, String destAddress}) async {
     String origin = "";
     String destination = "";
-
-    if(srcLatLng != null){
-      origin += srcLatLng[0].toString();
-      origin += ",";
-      origin += srcLatLng[1].toString();
-    }
-    else{
-      origin = URLEncoder.encodeURLParameter(srcAddress);
-    }
 
     if(destLatLng != null){
       destination += destLatLng[0].toString();
@@ -30,8 +21,7 @@ class AppLauncher
       destination =  URLEncoder.encodeURLParameter(destAddress);
     }
 
-    String googleUrl = 'https://www.google.com/maps/dir/?api=1&origin=';
-    googleUrl += origin;
+    String googleUrl = 'https://www.google.com/maps/dir/?api=1';
     googleUrl += "&destination=";
     googleUrl += destination;
     googleUrl += "&travelmode=driving&dir_action=navigate";
