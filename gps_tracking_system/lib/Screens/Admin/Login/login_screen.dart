@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(result.response.status == 1) {
       User.createInstance(result.userToken, userGroupId: result.userGroupId);
       // Navigator.of(context).pushReplacementNamed("/appointment_list");
-      Navigator.of(context).pushReplacementNamed("/home");
+      Navigator.of(context).pushReplacementNamed("/home_page");
 
     }
   }
