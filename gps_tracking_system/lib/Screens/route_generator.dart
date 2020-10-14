@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Model/location.dart';
-import 'package:gps_tracking_system/Screens/User/account/account_screen.dart';
-import 'package:gps_tracking_system/Screens/User/change_password/change_password_screen.dart';
-import 'package:gps_tracking_system/Screens/User/edit_info/edit_info_screen.dart';
+import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
+import 'package:gps_tracking_system/Screens/User/ChangePassword/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/User/EditCustomerInfo/edit_info_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/Admin/payment/PaymentScreen.dart';
 import 'package:gps_tracking_system/Screens/Common/AppointmentInfo/appointment_info_screen.dart';

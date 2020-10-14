@@ -100,23 +100,24 @@ class ControllerApiCustomer extends Controller {
         // !!!!!!!!!!!!!!!!!!!
 		$json = array();
 		$data  = array();
-       if(!$this->customer->isLogged()) {
+       	if(!$this->customer->isLogged()) {
             $json['response'] = array(
                 'status' => -1,
                 'msg' => 'Invalid token'
             );
             $this->response->setOutput(json_encode($json));
             return;
-        }  
-		$data=[
+        }
+
+		$json['detail']= array(
 			'customer_id'=>$this->customer->getId(),
 			'first_name'=>$this->customer->getFirstName(),
 			'last_name'=>$this->customer->getLastName(),
 			'name'=>$this->customer->getFirstName() . " " .$this->customer->getLastName(),
 			'contact_no'=>$this->customer->getTelephone(),
 			'email'=>$this->customer->getEmail()
-		];
-		$json['detail'] =$data;
+		);
+
 		$json['response'] = array(
             'status' => 1,
             'msg'   => 'Get Customer detail successfully'
@@ -125,6 +126,7 @@ class ControllerApiCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
 
 	}
+
 	public function editInformation()
 	{
 		 //Must have function
@@ -141,6 +143,7 @@ class ControllerApiCustomer extends Controller {
             $this->response->setOutput(json_encode($json));
             return;
 		}  
+
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateInfoForm($error)){
 			$this->model_account_customer->editCustomer($this->customer->getId(), $this->request->post);
 
@@ -159,6 +162,8 @@ class ControllerApiCustomer extends Controller {
 
 		$this->response->setOutput(json_encode($json));
 	}
+
+	
 	public function  logout()
 	{
 		 //Must have function
@@ -227,9 +232,8 @@ class ControllerApiCustomer extends Controller {
 		if ((utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) < 4) || (utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) > 40)) {
 			$error['newPassword'] = $this->language->get('error_password');
 		}
-		if(!$this->model_account_customer->validatePassword($this->customer->getEmail(),$this->request->post['oldPassword'])){
+		if(!$this->customer->login($this->customer->getEmail(),$this->request->post['oldPassword'])){
 			$error['oldPassword'] = $this->language->get('error_oldPassword');
-
 		}
 
 		if ($this->request->post['confirm'] != $this->request->post['newPassword']) {

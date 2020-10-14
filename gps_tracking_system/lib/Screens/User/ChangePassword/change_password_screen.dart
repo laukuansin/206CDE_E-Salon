@@ -22,7 +22,6 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fToast = FToast();
     fToast.init(context);

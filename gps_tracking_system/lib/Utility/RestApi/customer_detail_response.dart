@@ -6,26 +6,26 @@ String customerDetailResponseToJson(CustomerDetailResponse data) => json.encode(
 
 class CustomerDetailResponse {
   CustomerDetailResponse({
-    this.detail,
+    this.customerDetail,
     this.response,
   });
 
-  Detail detail;
+  CustomerDetail customerDetail;
   Response response;
 
   factory CustomerDetailResponse.fromJson(Map<String, dynamic> json) => CustomerDetailResponse(
-    detail: Detail.fromJson(json["detail"]),
+    customerDetail: CustomerDetail.fromJson(json["detail"]),
     response: Response.fromJson(json["response"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "detail": detail.toJson(),
+    "detail": customerDetail.toJson(),
     "response": response.toJson(),
   };
 }
 
-class Detail {
-  Detail({
+class CustomerDetail {
+  CustomerDetail({
     this.customerId,
     this.name,
     this.firstName,
@@ -41,7 +41,7 @@ class Detail {
   String contactNo;
   String email;
 
-  factory Detail.fromJson(Map<String, dynamic> json) => Detail(
+  factory CustomerDetail.fromJson(Map<String, dynamic> json) => CustomerDetail(
     customerId: json["customer_id"],
     name: json["name"],
     firstName: json["first_name"],

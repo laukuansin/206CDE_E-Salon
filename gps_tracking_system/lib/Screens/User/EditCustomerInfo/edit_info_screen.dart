@@ -106,10 +106,10 @@ class EditInfoScreenState extends State<EditInfoScreen> {
 
     if (result.response.status == 1) {
       setState(() {
-        firstName = result.detail.firstName;
-        lastName = result.detail.lastName;
-        contactNo = result.detail.contactNo;
-        email = result.detail.email;
+        firstName = result.customerDetail.firstName;
+        lastName = result.customerDetail.lastName;
+        contactNo = result.customerDetail.contactNo;
+        email = result.customerDetail.email;
         print(firstName);
       });
     } else {

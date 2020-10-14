@@ -188,3 +188,6 @@
 2020-10-12 12:43:24 - PHP Warning:  A non-numeric value encountered in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\controller\api\customer.php on line 113
 2020-10-13 12:56:51 - PHP Notice:  Undefined property: DB::$query in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\model\account\customer.php on line 31
 2020-10-13 12:56:51 - PHP Notice:  Trying to get property 'row' of non-object in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\model\account\customer.php on line 31
+2020-10-14 13:03:08 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/customer.php on line 111
+2020-10-14 13:03:30 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/customer.php on line 111
+2020-10-14 13:04:06 - PHP Notice:  Array to string conversion in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/customer.php on line 111
