@@ -35,7 +35,7 @@ class HomePageScreenState extends State<HomePageScreen> {
         backgroundColor: Color(0xFF65CBF2),
         elevation: 0,
         title: Text(
-          "Home Page", style: TextStyleFactory.p(color: primaryLightColor),
+          "Home Page", style: TextStyleFactory.heading5(color: primaryLightColor),
         ),
         iconTheme: IconThemeData(
             color: primaryLightColor

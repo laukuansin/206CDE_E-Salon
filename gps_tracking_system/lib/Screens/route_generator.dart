@@ -12,7 +12,7 @@ import 'package:gps_tracking_system/Screens/Admin/ChangePassword/change_password
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_service_screen.dart';
 import 'package:gps_tracking_system/Screens/User/AddAppointment/choose_time_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
-import 'package:gps_tracking_system/Screens/Admin/payment/PaymentScreen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart' as AdminAppointmentInfo;
 import 'package:gps_tracking_system/Screens/User/AppointmentInfo/appointment_info_screen.dart' as UserAppointmentInfo;
 import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_screen.dart';
@@ -88,7 +88,7 @@ class RouteGenerator {
             title: Text("Appointment"),
             onTap: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/manage_appointment", (Route<dynamic> route) => false);
+                  "/appointment_list", (Route<dynamic> route) => false);
             },
           ),
           ListTile(

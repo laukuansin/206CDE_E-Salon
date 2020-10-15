@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/change_user_password_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -62,7 +62,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
     await progressDialog.show();
 
     _formKey.currentState.save();
-    ChangeUserPasswordResponse result = await RestApi.admin.changeUserPassword(oldPassword, newPassword, confirmPassword);
+    ChangePasswordResponse result = await RestApi.admin.changeUserPassword(oldPassword, newPassword, confirmPassword);
     progressDialog.hide();
     clearErrorMessage();
 
@@ -75,7 +75,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
           gravity: ToastGravity.BOTTOM);
     }
     else{
-      _errConfirmPassword   = result.error.confirmPassword;
+      _errConfirmPassword   = result.error.confirm;
       _errOldPassword  = result.error.oldPassword;
       _errNewPassword  = result.error.newPassword;
       _formKey.currentState.validate();

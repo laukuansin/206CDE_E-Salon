@@ -126,6 +126,7 @@ class AccountPageScreenState extends State<AccountPageScreen> {
     ),
        appbar: AppBar(
          backgroundColor: Color(0xFF65CBF2),
+         title: Text("Account",style: TextStyleFactory.heading5(color: primaryLightColor),),
          elevation: 0,
          iconTheme: IconThemeData(
              color: primaryLightColor

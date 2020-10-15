@@ -88,7 +88,7 @@ class ControllerApiLogin extends Controller {
 
 
 			$json['username'] = $this->customer->getFirstName(). " ". $this->customer->getLastName();
-			$json['email'] 	  = $this->custoemr->getEmail();
+			$json['email'] 	  = $this->customer->getEmail();
 			$json['token']	  = $token; 	
 			$json['response'] = array(
 				'status' => 1,
