@@ -153,7 +153,7 @@ class RouteGenerator {
           return _buildRoute(EditInfoPageScreen());
         case "/change_password" :
           return _buildRoute(ChangePasswordPageScreen());
-        case "/appointmentInfo" :
+        case "/appointment_info" :
           if (args is Appointment)
             return _buildRoute(AdminAppointmentInfo.AppointmentInfo(args));
           break;
