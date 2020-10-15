@@ -10,15 +10,15 @@ enum Role{
   CUSTOMER
 }
 
-class User{
-  static User _user;
+class LoggedUser{
+  static LoggedUser _user;
   String token;
   String username;
   String email;
   String userImage;
   Role role;
 
-  User._(final this.token,final this.username, final this.email, final this.userImage, final this.role);
+  LoggedUser._(final this.token,final this.username, final this.email, final this.userImage, final this.role);
 
 
   static void createInstance(String token, String username, String email, {String userImage , int userGroupId = -1} ){
@@ -35,7 +35,7 @@ class User{
           role = Role.CUSTOMER;
           break;
       }
-      _user = User._(token, username, email, userImage, role);
+      _user = LoggedUser._(token, username, email, userImage, role);
     }
   }
 

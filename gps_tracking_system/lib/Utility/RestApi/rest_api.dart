@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/admin.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 
 import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
@@ -14,7 +16,7 @@ import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_availab
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as CustomerLogin;
@@ -97,35 +99,27 @@ class _Admin {
     return AdminLogin.loginResponseFromJson(response.body);
   }
 
-  Future<AddWorkerResponse> addWorker(String username,
-      String userGroup,
-      String firstName,
-      String lastName,
-      String email,
-      String imagePath,
-      String password,
-      String status,
-      String confirm) async {
+  Future<AddWorkerResponse> addWorker(Admin user) async {
     String url = DOMAIN_NAME + "index.php?route=api/user/add&api_key=" +
-        User.getToken();
+        LoggedUser.getToken();
     log("Calling add user API : " + url);
 
     var request = http.MultipartRequest("POST", Uri.parse(url));
     //add text fields
-    request.fields["username"] = username;
-    request.fields["user_group_id"] = userGroup;
-    request.fields["firstname"] = firstName;
-    request.fields["lastname"] = lastName;
-    request.fields["email"] = email;
-    request.fields["password"] = password;
-    request.fields["status"] = status;
-    request.fields["confirm"] = confirm;
+    request.fields["username"] = user.username;
+    request.fields["user_group_id"] = user.userGroup.userGroupId;
+    request.fields["firstname"] = user.firstName;
+    request.fields["lastname"] = user.lastName;
+    request.fields["email"] = user.email;
+    request.fields["password"] = user.password;
+    request.fields["status"] = user.status.statusId.toString();
+    request.fields["confirm"] = user.confirm;
 
     //create multipart using filepath, string or bytes
-    if (imagePath.isNotEmpty)
-      request.files.add(await http.MultipartFile.fromPath("file", imagePath,
+    if (user.image.isNotEmpty)
+      request.files.add(await http.MultipartFile.fromPath("file", user.image,
           contentType: MediaType(
-              "image", p.extension(imagePath).substring(1))));
+              "image", p.extension(user.image).substring(1))));
 
     var response = await request.send();
     var responseData = await response.stream.toBytes();
@@ -135,7 +129,7 @@ class _Admin {
   Future<UserGroupResponse> getUserGroup() async {
     String url = DOMAIN_NAME +
         "index.php?route=api/user_group/getUserGroup&api_key=" +
-        User.getToken();
+        LoggedUser.getToken();
     log("Calling getUserGroup API : " + url);
 
     var response = await http.post(url, body: {});
@@ -145,7 +139,7 @@ class _Admin {
   Future<CommonResponse> updateAppointment(String appointmentID, Status status) async {
     String url = DOMAIN_NAME +
         "index.php?route=api/appointment/updateAppointmentStatus&api_key=" +
-        User.getToken();
+        LoggedUser.getToken();
     log("Calling updateAppointment API : " + url);
 
     var response = await http.post(url, body: {
@@ -158,13 +152,13 @@ class _Admin {
 
   Future<AppointmentListResponse> getAcceptedAppointmentList() async{
     String url = DOMAIN_NAME;
-    if(User.getRole() == Role.OWNER) {
+    if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/appointment/getAllAppointments&status_id=1,6,5&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling get appointment list (Owner)  API : " + url);
     } else {
       url += "index.php?route=api/appointment/getWorkerAppointments&status_id=1,6,5&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling get appointment list (Worker)  API : " + url);
     }
 
@@ -174,9 +168,9 @@ class _Admin {
 
   Future<AppointmentListResponse> getAppointmentRequests() async{
     String url = DOMAIN_NAME;
-    if(User.getRole() == Role.OWNER) {
+    if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/appointment/getAppointmentRequests&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling get appointment request (Owner)  API : " + url);
     } else {
       log("No permission. Only owner can call this api.");
@@ -187,7 +181,7 @@ class _Admin {
   }
   
   Future<GetServicesResponse> getAppointmentServices(String appointmentId) async{
-    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentServices&appointment_id=$appointmentId&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentServices&appointment_id=$appointmentId&api_key=" + LoggedUser.getToken();
     log("Calling get appointment services API : " + url);
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
@@ -196,16 +190,16 @@ class _Admin {
   Future<UserDetailResponse> getUserDetail() async{
     String url = DOMAIN_NAME;
       url += "index.php?route=api/user/getUserDetail&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling get user detail request (Owner)  API : " + url);
     var response = await http.get(url);
     return userDetailResponseFromJson(response.body);
   }
   Future<EditUserInfoResponse> editUserInfo(String username,String firstName,String lastName,String email) async{
     String url = DOMAIN_NAME;
-    if(User.getRole() == Role.OWNER) {
+    if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/user/updateInfo&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling update information request (Owner)  API : " + url);
     } else {
       log("No permission. Only owner can call this api.");
@@ -222,9 +216,9 @@ class _Admin {
   }
   Future<ChangePasswordResponse> changeUserPassword(String oldPassword,String newPassword,String confirmPassword) async{
     String url = DOMAIN_NAME;
-    if(User.getRole() == Role.OWNER) {
+    if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/user/changePassword&api_key=" +
-          User.getToken();
+          LoggedUser.getToken();
       log("Calling change password request (Owner)  API : " + url);
     } else {
       log("No permission. Only owner can call this api.");
@@ -236,6 +230,16 @@ class _Admin {
       "confirmPassword":confirmPassword
     });
     return changePasswordResponseFromJson(response.body);
+  }
+
+  Future<GetUsersResponse>getWorkers()async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/user/getUsers&api_key=" +
+        LoggedUser.getToken();
+    url += "&user_group_id=10";
+    log("Calling get user detail request (Owner)  API : " + url);
+    var response = await http.get(url);
+    return getUsersResponseFromJson(response.body);
   }
 
 }
@@ -271,7 +275,7 @@ class _Customer{
   }
   
    Future<CommonResponse> topUpCustomerCredit(double credit) async{
-    String url= DOMAIN_NAME + "index.php?route=api/credit/topUpCustomerCredit&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/credit/topUpCustomerCredit&api_key="+LoggedUser.getToken();
     log("Calling top up customer credit API : " + url);
 
     var response = await http.post(url,body: {
@@ -283,28 +287,28 @@ class _Customer{
   }
 
   Future<CustomerCreditResponse> getCustomerCredit() async{
-    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCredit&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCredit&api_key="+LoggedUser.getToken();
     log("Calling get customer credit API : " + url);
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);
   }
 
   Future<CustomerDetailResponse> getCustomerDetail() async{
-    String url= DOMAIN_NAME + "index.php?route=api/customer/getCustomerDetail&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/customer/getCustomerDetail&api_key="+LoggedUser.getToken();
     log("Calling get customer detail API : " + url);
     var response = await http.get(url);
     return customerDetailResponseFromJson(response.body);
   }
 
   Future<LogoutResponse> logout() async{
-    String url= DOMAIN_NAME + "index.php?route=api/customer/logout&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/customer/logout&api_key="+LoggedUser.getToken();
     log("Calling logout API : " + url);
     var response = await http.get(url);
     return logoutResponseFromJson(response.body);
   }
 
   Future<EditInfoResponse>editInfo(String firstName,String lastName,String telephone,String email) async{
-    String url = DOMAIN_NAME + "index.php?route=api/customer/editInformation&api_key="+User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/customer/editInformation&api_key="+LoggedUser.getToken();
     log("Calling edit information API : " + url);
 
     var response = await http.post(url, body: {
@@ -318,7 +322,7 @@ class _Customer{
   }
 
   Future<ChangePasswordResponse>changePassword(String oldPassword,String newPassword,String confirmPassword) async{
-    String url = DOMAIN_NAME + "index.php?route=api/customer/changePassword&api_key="+User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/customer/changePassword&api_key="+LoggedUser.getToken();
     log("Calling change password API : " + url);
 
     var response = await http.post(url, body: {
@@ -332,7 +336,7 @@ class _Customer{
   }
 
   Future<AppointmentListResponse> getAcceptedAppointmentList() async{
-    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
     url += "&status_id=1,6";
     log("Calling get accepted appointment list API : " + url);
     var response = await http.get(url);
@@ -340,14 +344,14 @@ class _Customer{
   }
 
   Future<AppointmentListResponse> getAppointmentList() async{
-    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
     log("Calling get all appointment list API : " + url);
     var response = await http.get(url);
     return appointmentListResponseFromJson(response.body);
   }
 
   Future<AppointmentListResponse> getAppointmentRequest() async{
-    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+User.getToken();
+    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
     url += "&status_id=2,3";
     log("Calling get appointment request API : " + url);
     var response = await http.get(url);
@@ -356,14 +360,14 @@ class _Customer{
 
 
   Future<GetServicesResponse> getAllServices() async{
-    String url = DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + LoggedUser.getToken();
     log("Calling get services API : " + url);
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
   }
 
   Future<GetServicesResponse> getAppointmentServices(String appointmentId) async{
-    String url = DOMAIN_NAME + "index.php?route=api/service/getCustomerServices&appointment_id=$appointmentId&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/service/getCustomerServices&appointment_id=$appointmentId&api_key=" + LoggedUser.getToken();
     log("Calling get appointment services API : " + url);
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
@@ -371,7 +375,7 @@ class _Customer{
 
 
   Future<GetAppointmentAvailableTimeslotResponse> getAppointmentAvailableTimeSlot(String appointmentDate,  List<Service> services) async{
-    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAvailableTimeSlot&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAvailableTimeSlot&api_key=" + LoggedUser.getToken();
     log("Calling get appointment available time slot API : " + url);
 
     var body = json.encode({"services": services, "appointment_date": appointmentDate});
@@ -380,7 +384,7 @@ class _Customer{
   }
 
   Future<CommonResponse> makeAppointment(Appointment appointment, List<Service>services, String appointmentTime) async{
-    String url = DOMAIN_NAME + "index.php?route=api/appointment/makeAppointment&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/makeAppointment&api_key=" + LoggedUser.getToken();
     log("Calling make appointment API : " + url);
 
     var body = json.encode({"services": services, "appointment_date": appointment.getAppointmentDateStringYYYYMMDD(), "appointment_time":appointmentTime, "address": appointment.address,});
@@ -389,7 +393,7 @@ class _Customer{
   }
 
   Future<CommonResponse> cancelAppointment(String appointmentId) async{
-    String url = DOMAIN_NAME + "index.php?route=api/appointment/cancelAppointment&api_key=" + User.getToken();
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/cancelAppointment&api_key=" + LoggedUser.getToken();
     log("Calling updateAppointment API : " + url);
 
     var response = await http.post(url, body: {

@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if (result.response.status == 1) {
-      User.createInstance(result.token,result.username, result.email);
+      LoggedUser.createInstance(result.token,result.username, result.email);
       Navigator.of(context).pushReplacementNamed("/home_page");
     }
   }

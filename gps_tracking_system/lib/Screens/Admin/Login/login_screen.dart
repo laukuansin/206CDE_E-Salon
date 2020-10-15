@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
   {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    
+
     LoginResponse result    = await RestApi.admin.login(_username, _password);
     progressDialog.hide();
 
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if(result.response.status == 1) {
-      User.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
+      LoggedUser.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
       // Navigator.of(context).pushReplacementNamed("/appointment_list");
       Navigator.of(context).pushReplacementNamed("/home_page");
     }

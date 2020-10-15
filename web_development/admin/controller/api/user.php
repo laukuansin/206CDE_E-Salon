@@ -325,4 +325,58 @@ class ControllerApiUser extends Controller {
 		return !$error;
 	}
 
+
+    public function getUsers(){
+        $this->load->model('user/user');
+
+        $json = array();
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'username';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        $filter_data = array(
+            'sort'  => $sort,
+            'order' => $order,
+        );
+
+        if (isset($this->request->get['user_group_id'])) {
+            $filter_data['user_group_id'] = $this->request->get['user_group_id'];
+        } 
+
+
+        $results = $this->model_user_user->getUsers($filter_data);
+
+        foreach ($results as $result) {
+            $json['users'][] = array(
+                'user_id'    => $result['user_id'],
+                'username'   => $result['username'],
+                'firstname'  => $result['firstname'],
+                'lastname'   => $result['lastname'],
+                'email'      => $result['email'],
+                'image'      => $result['image'],
+                'telephone'  => $result['telephone'],
+                'user_group_id'=> $result['user_group_id'],
+                'status_name'=> ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'status_id'  => $result['status'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+            );
+        }
+
+        $json['response'] = array(
+            'msg'       => 'Get users successfully',
+            'status'    => 1
+        );
+
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

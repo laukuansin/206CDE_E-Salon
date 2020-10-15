@@ -1,0 +1,10 @@
+2020-10-15 13:21:07 - PHP Notice:  Undefined index: warning in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 102
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
+2020-10-15 13:23:30 - PHP Notice:  Undefined variable: data in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 367

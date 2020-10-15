@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Utility/real_time_db.dart';
 
@@ -17,7 +17,7 @@ class GoogleMapListener{
        _workerLocationUpdated = workerLocationUpdated;
 
   void startServices(){
-    switch(User.getRole()){
+    switch(LoggedUser.getRole()){
       case Role.CUSTOMER:
         RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
         break;
@@ -34,7 +34,7 @@ class GoogleMapListener{
   }
 
   void stopServices(){
-    switch(User.getRole()){
+    switch(LoggedUser.getRole()){
       case Role.CUSTOMER:
         RealTimeDb.stopListenWorkerLocationChanges();
         break;

@@ -89,13 +89,17 @@ class ModelUserUser extends Model {
 	}
 
 	public function getUsers($data = array()) {
-		$sql = "SELECT * FROM `" . DB_PREFIX . "user`";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "user` ";
 
 		$sort_data = array(
 			'username',
 			'status',
 			'date_added'
 		);
+
+		if(isset($data['user_group_id'])){
+			$sql .= " WHERE user_group_id IN(".$this->db->escape($data['user_group_id']).") ";
+		}
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];

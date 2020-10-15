@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
-import 'package:gps_tracking_system/Model/worker.dart' as MyWorker;
+import 'package:gps_tracking_system/Model/admin.dart' as MyWorker;
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 
 
