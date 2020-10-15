@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if (result.response.status == 1) {
-      User.createInstance(result.token);
+      User.createInstance(result.token,result.username, result.email);
       Navigator.of(context).pushReplacementNamed("/home_page");
     }
   }

@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_info_response.dart';
@@ -23,7 +26,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 
-const tempDomainName = "http://192.168.68.107/";//"http://10.0.2.2/";
+const tempDomainName = "http://192.168.68.107/";//"http://10.0.2.2/";192.168.68.107
 
 
 class RestApi
@@ -174,7 +177,7 @@ class _Admin {
     var response = await http.post(url, body: {});
     return appointmentListResponseFromJson(response.body);
   }
-
+  
   Future<GetServicesResponse> getAppointmentServices(String appointmentId) async{
     String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentServices&appointment_id=$appointmentId&api_key=" + User.getToken();
     log("Calling get appointment services API : " + url);
@@ -182,7 +185,50 @@ class _Admin {
     return getServicesResponseFromJson(response.body);
   }
 
+  Future<UserDetailResponse> getUserDetail() async{
+    String url = DOMAIN_NAME;
+      url += "index.php?route=api/user/getUserDetail&api_key=" +
+          User.getToken();
+      log("Calling get user detail request (Owner)  API : " + url);
+    var response = await http.get(url);
+    return userDetailResponseFromJson(response.body);
+  }
+  Future<EditUserInfoResponse> editUserInfo(String username,String firstName,String lastName,String email) async{
+    String url = DOMAIN_NAME;
+    if(User.getRole() == Role.OWNER) {
+      url += "index.php?route=api/user/updateInfo&api_key=" +
+          User.getToken();
+      log("Calling update information request (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
 
+    var response = await http.post(url, body: {
+      "username":username,
+      "firstname":firstName,
+      "lastname":lastName,
+      "email":email
+
+    });
+    return editUserInfoResponseFromJson(response.body);
+  }
+  Future<ChangePasswordResponse> changeUserPassword(String oldPassword,String newPassword,String confirmPassword) async{
+    String url = DOMAIN_NAME;
+    if(User.getRole() == Role.OWNER) {
+      url += "index.php?route=api/user/changePassword&api_key=" +
+          User.getToken();
+      log("Calling change password request (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
+
+    var response = await http.post(url, body: {
+      "oldPassword":oldPassword,
+      "newPassword":newPassword,
+      "confirmPassword":confirmPassword
+    });
+    return changePasswordResponseFromJson(response.body);
+  }
 
 }
 

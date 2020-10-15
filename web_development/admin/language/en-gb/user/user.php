@@ -30,6 +30,7 @@ $_['error_permission']      = 'Warning: You do not have permission to modify use
 $_['error_account']         = 'Warning: You can not delete your own account!';
 $_['error_exists_username'] = 'Warning: Username is already in use!';
 $_['error_username']        = 'Username must be between 3 and 20 characters!';
+$_['error_oldPassword']     = 'The old password is wrong!';
 $_['error_password']        = 'Password must be between 4 and 20 characters!';
 $_['error_confirm']         = 'Password and password confirmation do not match!';
 $_['error_firstname']       = 'First Name must be between 1 and 32 characters!';

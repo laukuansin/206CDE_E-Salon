@@ -33,6 +33,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return RouteGenerator.buildScaffold(
         Container(
+          margin: EdgeInsets.only(top: 10),
             color: primaryBgColor,
             width: screenSize.width,
             height: screenSize.height,
@@ -41,12 +42,17 @@ class _AppointmentListState extends State<AppointmentListScreen> {
               Expanded(child: _buildAppointmentListByDate()),
             ])),
         appbar: AppBar(
+          backgroundColor: Color(0xFF65CBF2),
+          elevation: 0,
           title: Text(
             appBarTitle,
-            style: TextStyleFactory.heading5(fontWeight: FontWeight.normal),
+            style: TextStyleFactory.heading5(color: primaryLightColor),
           ),
-          elevation: 0,
-        ));
+          iconTheme: IconThemeData(
+              color: primaryLightColor
+          ),
+        ), drawer:RouteGenerator.buildDrawer(context)
+    );
   }
 
   @override

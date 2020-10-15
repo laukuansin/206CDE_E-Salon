@@ -13,32 +13,35 @@ enum Role{
 class User{
   static User _user;
   String token;
+  String username;
+  String email;
   EndUser endUserProfile;
   Role role;
 
-  User._(final String token, final Role role):token = token, role = role;
+  User._(final this.token,final this.username, final this.email,  final this.role);
 
 
-  static void createInstance(String token, {int userGroupId = -1}){
+  static void createInstance(String token, String username, String email, {int userGroupId = -1} ){
     if(_user == null) {
       Role role;
       switch(userGroupId){
         case 1:
           role = Role.OWNER;
           break;
-        case 10: // 10
+        case 10:
           role = Role.WORKER;
           break;
         default:
           role = Role.CUSTOMER;
           break;
       }
-      _user = User._(token, role);
+      _user = User._(token, username, email, role);
     }
   }
 
   static bool isAuthenticated() => _user != null;
   static String getToken() => _user.token;
   static Role getRole()=> _user.role;
-  static EndUser getEndUserProfile()=>_user.endUserProfile;
+  static String getEmail() => _user.email;
+  static String getUsername() => _user.username;
 }
