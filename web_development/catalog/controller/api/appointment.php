@@ -1,66 +1,4 @@
 <?php
-// <<<<<<< HEAD
-// class ControllerApiAppointment extends Controller {
-
-	
-
-//     public function getAppointmentList()
-//     {
-//            //Must have function
-//         // !!!!!!!!!!!!!!!!!!!
-//         $json = array();
-//         $list= array();
-//         if(!$this->customer->isLogged()) {
-//             $json['response'] = array(
-//                 'status' => -1,
-//                 'msg' => 'Invalid token'
-//             );
-//             $this->response->setOutput(json_encode($json));
-//             return;
-//         }
-//         $this->load->model('appointment/appointment');
-//         $appointmentList=$this->model_appointment_appointment->getAppointmentListByCustomerID($this->customer->getId());
-//         if(empty($appointmentList))
-//         {
-//             $json['list']=array();
-//             $json['response'] = array(
-//                 'status' => 1,
-//                 'msg'   => 'Appointment is empty now'
-//             );
-//         }
-//         else{
-//             foreach($appointmentList as $appointment)
-//             {
-//                 $date=$appointment['appointment_date'];
-//                 $formatDate=date("d-M-Y-",strtotime($date));
-//                 $time=date('h:i a',strtotime($date));
-//                 $arrayDate=explode('-', $formatDate);
-//                 $year=$arrayDate[2];
-//                 $month=$arrayDate[1];
-//                 $day=$arrayDate[0];
-//                 $list[]=[
-//                     'appointment_id'=>(int)$appointment['appointment_id'],
-//                     'date'=>$date,
-//                     'year'=>$year,
-//                     'month'=>$month,
-//                     'time'=>$time,
-//                     'day'=>$day,
-//                     'status'=>$appointment['status'],
-//                     'service_name'=>$appointment['service_name']
-//                 ];
-//             }
-//             $json['list']=$list;
-//             $json['response'] = array(
-//                 'status' => 1,
-//                 'msg'   => 'Get Appointment Success'
-//             );
-//         }
-        
-        
-//         $this->response->setOutput(json_encode($json));
-//     }
-// }
-// =======
 
 	class ControllerApiAppointment extends Controller{
 
@@ -76,9 +14,14 @@
 	        } else{
 				$this->load->model('appointment/appointment');
 
-				$filteredData = array(
-					'not_status_id'=> 3
-				);
+
+				$filteredData = array();
+
+				if(isset($this->request->get['not_status_id'])){
+					$filteredData['not_status_id'] = $this->request->get['not_status_id'];
+				} else {
+					$filteredData['not_status_id'] = -1;
+				}
 
 				if(isset($this->request->get['worker'])){
 					$data['selectedWorker'] = $this->request->get['worker'];
@@ -102,6 +45,8 @@
 						'customer_name' 	=> $appointmentResult['customer_name'],
 						'worker_id'			=> $appointmentResult['user_id'],
 						'worker_name'		=> $appointmentResult['user_name'],
+						'worker_image'		=> 'image/'.$appointmentResult['image'],
+						'worker_telephone'  => $appointmentResult['worker_telephone'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],
 						'status'			=> $appointmentResult['status'],
@@ -122,6 +67,7 @@
 
 			$this->response->setOutput(json_encode($json));
 		}
+
 
 
 		public function makeAppointment(){
@@ -272,47 +218,76 @@
 			$appointmentInterval 	= 0;
 			$startTime      		= '';
 			$endTime 				= '';
-			$this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration);
+			if($this->initServiceSetting($date, $startTime, $endTime,$appointmentInterval, $travelDuration)){
 
-			$timeline 		= array();
-			$workers 		= $this->getWorkersTimetable($workerGroupId,$date, $startTime, $endTime, $appointmentInterval, $travelDuration);
+				$timeline 		= array();
+				$workers 		= $this->getWorkersTimetable($workerGroupId,$date, $startTime, $endTime, $appointmentInterval, $travelDuration);
 
-			// Find time slot which allow for curent appointment duration 
-			foreach($workers as $workerId => $workerTimetable){
-				$counter 	= 0;
-				foreach($workerTimetable as $time => $isAvailable){
-					if($isAvailable){
-						$counter+=$appointmentInterval;
-					}
-					else{
-						$counter = 0;
-					}
+				// Find time slot which allow for curent appointment duration 
+				foreach($workers as $workerId => $workerTimetable){
+					$counter 	= 0;
+					foreach($workerTimetable as $time => $isAvailable){
+						if($isAvailable){
+							$counter+=$appointmentInterval;
+						}
+						else{
+							$counter = 0;
+						}
 
-					if($counter > $durationForCurrentAppointment){
-						$durationForCurrentAppointmentInSec = $durationForCurrentAppointment * 60;
-						$timeline[strtotime($time) - $durationForCurrentAppointmentInSec] = true;
+						if($counter > $durationForCurrentAppointment){
+							$durationForCurrentAppointmentInSec = $durationForCurrentAppointment * 60;
+							$timeline[strtotime($time) - $durationForCurrentAppointmentInSec] = true;
+						}
 					}
 				}
-			}
 
-			// Sort time by using second, then convert back to readable string format
-			ksort($timeline);
-			foreach ($timeline as $time => $value) {
-				$timeline[date('g:ia', $time)] = $timeline[$time];
-				unset($timeline[$time]);
-			}
+				// Sort time by using second, then convert back to readable string format
+				ksort($timeline);
+				foreach ($timeline as $time => $value) {
+					$timeline[date('g:ia', $time)] = $timeline[$time];
+					unset($timeline[$time]);
+				}
 
-			// Previously using associative array to remove duplicate value, so need convert back to normal array
-			$json['timeline'] = array_keys($timeline);
-            $json['response'] = array(
-                'status' => 1,
-                'msg' => 'Get time slot successfully'
-            );
+				// Previously using associative array to remove duplicate value, so need convert back to normal array
+				$json['timeline'] = array_keys($timeline);
+	            $json['response'] = array(
+	                'status' => 1,
+	                'msg' => 'Get time slot successfully'
+	            );
+	        } else {
+	        	$json['timeline'] = array();
+	            $json['response'] = array(
+	                'status' => 1,
+	                'msg' => 'Get time slot successfully'
+	            );
+	        }
 
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($json));
 		}
-	}
 
+		public function cancelAppointment()
+        {
+            $json = array();
+            $this->load->model('appointment/appointment');
+
+            
+            if(isset($this->request->post['appointment_id'])){
+             	$this->model_appointment_appointment->cancelAppointment($this->request->post['appointment_id']);
+      
+                $json['response'] = [
+                    'status' => 1,
+                    'msg'   => 'Update Appointment successfully.'
+                ];
+            } else {
+                $json['response'] = [
+                    'status' => 0,
+                    'msg'   => 'Paramter missing.'
+                ];
+            }
+            $this->response->setOutput(json_encode($json));
+        }
+
+	}
 ?>
 

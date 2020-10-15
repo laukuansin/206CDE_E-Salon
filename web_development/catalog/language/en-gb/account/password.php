@@ -11,6 +11,8 @@ $_['text_success']   = 'Success: Your password has been successfully updated.';
 $_['entry_password'] = 'Password';
 $_['entry_confirm']  = 'Password Confirm';
 
+
 // Error
 $_['error_password'] = 'Password must be between 4 and 20 characters!';
+$_['error_oldPassword'] = 'The old password  is wrong!';
 $_['error_confirm']  = 'Password confirmation does not match password!';

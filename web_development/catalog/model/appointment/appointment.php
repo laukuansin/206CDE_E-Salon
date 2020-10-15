@@ -66,7 +66,7 @@ class ModelAppointmentAppointment extends Model{
 	public function getCustomerAppointmentList($data = array()){
 		$sql = "
 				SELECT 
-					oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
+					oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, oc_user.image, oc_user.telephone AS worker_telephone ,CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
 				FROM 
 					oc_appointment
 				LEFT JOIN oc_appointment_status ON oc_appointment.status_id = oc_appointment_status.status_id
@@ -82,7 +82,7 @@ class ModelAppointmentAppointment extends Model{
 
 
 		if(isset($data['filter_status']) && $data['filter_status'] != -1){
-			$whereClause .=" AND oc_appointment.status_id=".$data['filter_status'];	
+			$whereClause .=" AND oc_appointment.status_id IN(".$data['filter_status'].")";	
 		} 
 
 		if(isset($data['not_status_id'])){
@@ -117,6 +117,39 @@ class ModelAppointmentAppointment extends Model{
 
 		return $this->db->query($sql)->rows;
 	}
+
+	public function acceptAppointment($appointmentId){
+		$this->udpateAppointmentStatus($appointmentId, 1);
+	}
+
+	public function rejectAppointment($appointmentId){
+		$this->udpateAppointmentStatus($appointmentId, 2);
+	}
+
+	public function cancelAppointment($appointmentId){
+		$this->udpateAppointmentStatus($appointmentId, 4);
+	}
+
+	public function closeAppointment($appointmentId){
+		$this->udpateAppointmentStatus($appointmentId, 5);
+	}
+
+
+	private function udpateAppointmentStatus($appointmentId, $statusId){
+		$sql = sprintf("
+			UPDATE %sappointment 
+			SET status_id=%d
+			WHERE appointment_id=%d
+			"
+			, DB_PREFIX
+			, $this->db->escape($statusId)
+			, $this->db->escape($appointmentId)
+		);
+
+		$this->db->query($sql);
+	}
+
+
 }
 
 ?>

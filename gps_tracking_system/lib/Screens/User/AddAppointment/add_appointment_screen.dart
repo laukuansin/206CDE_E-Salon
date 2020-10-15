@@ -10,7 +10,7 @@ import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
-import 'package:gps_tracking_system/Utility/RestApi/user_make_appointment_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/color.dart';
 
 class AddAppointmentScreen extends StatefulWidget {
@@ -158,13 +158,13 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
   }
 
   void makeAppointment()  async{
-    // appointment.address = location.address;
-    // MakeAppointmentResponse result = await RestApi.customer.makeAppointment(appointment, services, selectedTime);
-    // fToast.showToast(child: ToastWidget(status: result.response.status, msg: result.response.msg));
-    //
-    // if(result.response.status == 1){
-    //   Navigator.of(context).pushNamedAndRemoveUntil('/home_page', ModalRoute.withName("/home_page"));
-    // }
+    appointment.address = location.address;
+    CommonResponse result = await RestApi.customer.makeAppointment(appointment, services, selectedTime);
+    fToast.showToast(child: ToastWidget(status: result.response.status, msg: result.response.msg));
+
+    if(result.response.status == 1){
+      Navigator.of(context).pushNamedAndRemoveUntil('/home_page', ModalRoute.withName("/home_page"));
+    }
   }
 
   DataTable _buildDataTable() {
