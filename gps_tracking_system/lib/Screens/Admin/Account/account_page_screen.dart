@@ -29,7 +29,8 @@ class AccountPageScreenState extends State<AccountPageScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return RouteGenerator.buildAdminScaffold(Container(
+    return RouteGenerator.buildScaffold(
+        Container(
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assets/images/home_background.png"),
@@ -123,15 +124,15 @@ class AccountPageScreenState extends State<AccountPageScreen> {
         ],
       ),
     ),
-       true,
-       context,
        appbar: AppBar(
          backgroundColor: Color(0xFF65CBF2),
          elevation: 0,
          iconTheme: IconThemeData(
              color: primaryLightColor
          ),
-       ));
+       ),
+      drawer: RouteGenerator.buildDrawer(context)
+    );
   }
   void getUserDetail()async
   {

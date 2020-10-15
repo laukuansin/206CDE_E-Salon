@@ -31,7 +31,7 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return RouteGenerator.buildAdminScaffold(
+    return RouteGenerator.buildScaffold(
         Container(
             height: size.height,
             width: size.width,
@@ -89,8 +89,6 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
                         child: _buildAppointmentContainer(index, appointment),
                       ));
                 })),
-        true,
-        context,
         appbar: AppBar(
             title: Text("Manage Appointment", style: TextStyleFactory.p(color: primaryTextColor)),
             leading: _multiSelectionController.isSelecting
@@ -133,7 +131,8 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
                           });
                         })
                   ]
-                : null));
+                : null),
+    drawer: RouteGenerator.buildDrawer(context));
   }
 
   Container _buildAppointmentContainer(int index, Appointment appointment) {

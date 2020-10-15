@@ -8,14 +8,20 @@ class LoginResponse {
   LoginResponse({
     this.token,
     this.response,
+    this.email,
+    this.username
   });
 
   String token;
   Response response;
+  String email;
+  String username;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
     token: json["token"],
     response: Response.fromJson(json["response"]),
+    email: json['email'] == null? "" : json['email'],
+    username: json['username'] == null? "":json['username']
   );
 
   Map<String, dynamic> toJson() => {

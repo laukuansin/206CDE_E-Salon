@@ -87,6 +87,8 @@ class ControllerApiLogin extends Controller {
 			$token  = $this->model_account_customer->getCustomerTokenById($this->customer->getId())['customer_token'];
 
 
+			$json['username'] = $this->customer->getFirstName(). " ". $this->customer->getLastName();
+			$json['email'] 	  = $this->custoemr->getEmail();
 			$json['token']	  = $token; 	
 			$json['response'] = array(
 				'status' => 1,

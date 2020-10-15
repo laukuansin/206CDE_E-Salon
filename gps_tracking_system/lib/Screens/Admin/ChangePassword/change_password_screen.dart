@@ -22,7 +22,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RouteGenerator.buildAdminScaffold(
+    return RouteGenerator.buildScaffold(
         SingleChildScrollView(
             child: Container(
                 color:primaryLightColor,
@@ -38,8 +38,6 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
 
             )
         )
-        , false
-        , context
         , appbar: AppBar(
             title: Text(
               "Change Password",

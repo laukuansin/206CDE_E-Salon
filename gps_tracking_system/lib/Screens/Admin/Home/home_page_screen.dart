@@ -15,7 +15,7 @@ class HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return RouteGenerator.buildAdminScaffold(
+    return RouteGenerator.buildScaffold(
       Container(
           height: size.height,
           width: size.width,
@@ -30,14 +30,18 @@ class HomePageScreenState extends State<HomePageScreen> {
 
           ),
         ),
-      ),true,
-      context,
+      ),
       appbar: AppBar(
+        backgroundColor: Color(0xFF65CBF2),
+        elevation: 0,
         title: Text(
-          "Home Page",
-          style: TextStyleFactory.p(color: primaryTextColor),
-        )
-      )
+          "Home Page", style: TextStyleFactory.p(color: primaryLightColor),
+        ),
+        iconTheme: IconThemeData(
+            color: primaryLightColor
+        ),
+      ),
+      drawer: RouteGenerator.buildDrawer(context)
     );
   }
 

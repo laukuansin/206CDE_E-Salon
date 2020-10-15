@@ -245,6 +245,8 @@ class ControllerApiUser extends Controller {
         $this->response->setOutput(json_encode($json));
 
     }
+
+
     public function changePassword()
     {
         $json = array();
@@ -270,6 +272,7 @@ class ControllerApiUser extends Controller {
         }
         $this->response->setOutput(json_encode($json));
     }
+    
     protected function validatePasswordForm(&$error) {
 		if ((utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) < 4) || (utf8_strlen(html_entity_decode($this->request->post['newPassword'], ENT_QUOTES, 'UTF-8')) > 40)) {
 			$error['newPassword'] = $this->language->get('error_password');

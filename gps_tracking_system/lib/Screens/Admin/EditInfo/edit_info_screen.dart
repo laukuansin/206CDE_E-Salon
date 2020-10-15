@@ -23,7 +23,7 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RouteGenerator.buildAdminScaffold(
+    return RouteGenerator.buildScaffold(
         SingleChildScrollView(
             child: Container(
                 color: primaryLightColor,
@@ -39,8 +39,6 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
                 )
             )
         ),
-        false,
-        context,
         appbar: AppBar(
             title: Text(
               "Edit Information",
