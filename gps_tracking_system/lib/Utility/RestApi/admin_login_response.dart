@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
+
 LoginResponse loginResponseFromJson(String str) => LoginResponse.fromJson(json.decode(str));
 
 String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
@@ -10,6 +12,7 @@ class LoginResponse {
     this.response,
     this.userGroupId,
     this.username,
+    this.userImage,
     this.email
   });
 
@@ -17,6 +20,7 @@ class LoginResponse {
   int userGroupId;
   String email;
   String username;
+  String userImage;
   Response response;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
@@ -24,6 +28,7 @@ class LoginResponse {
     response: Response.fromJson(json["response"]),
     userGroupId: json['user_group_id'] == null? -1 :json['user_group_id'],
     username: json['username'] == null? "": json["username"],
+    userImage: json['image'] == null ? "" : json["image"],
     email: json['email'] == null ? "": json['email']
   );
 

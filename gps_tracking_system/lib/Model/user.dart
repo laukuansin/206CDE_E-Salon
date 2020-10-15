@@ -15,13 +15,13 @@ class User{
   String token;
   String username;
   String email;
-  EndUser endUserProfile;
+  String userImage;
   Role role;
 
-  User._(final this.token,final this.username, final this.email,  final this.role);
+  User._(final this.token,final this.username, final this.email, final this.userImage, final this.role);
 
 
-  static void createInstance(String token, String username, String email, {int userGroupId = -1} ){
+  static void createInstance(String token, String username, String email, {String userImage , int userGroupId = -1} ){
     if(_user == null) {
       Role role;
       switch(userGroupId){
@@ -35,8 +35,12 @@ class User{
           role = Role.CUSTOMER;
           break;
       }
-      _user = User._(token, username, email, role);
+      _user = User._(token, username, email, userImage, role);
     }
+  }
+
+  static void logout(){
+    _user = null;
   }
 
   static bool isAuthenticated() => _user != null;
@@ -44,4 +48,5 @@ class User{
   static Role getRole()=> _user.role;
   static String getEmail() => _user.email;
   static String getUsername() => _user.username;
+  static String getUserImage() => _user.userImage;
 }

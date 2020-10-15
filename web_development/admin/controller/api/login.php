@@ -15,6 +15,14 @@ class ControllerApiLogin extends Controller {
 			$json['user_group_id'] = (int)$this->user->getGroupId();
 			$json['email'] = $this->user->getEmail();
 			$json['username'] = $this->user->getUserName();
+
+			$this->load->model('tool/image');
+			if (is_file(DIR_IMAGE . $this->user->getUserImage())) {
+				$json['image'] = $this->model_tool_image->resize($this->user->getUserImage(), 250, 250);
+			} else {
+				$json['image'] = $this->model_tool_image->resize('profile.png', 250, 250);
+			}
+
 			$json['response']   = array(
 				'status' => 1,
 				'msg'	 => $this->language->get('text_login_success'),

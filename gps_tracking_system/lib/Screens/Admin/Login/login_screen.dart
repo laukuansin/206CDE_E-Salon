@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/user.dart';
@@ -23,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildUsernameTextFormField(){
     return TextFormField(
-      initialValue: 'worker',
+      initialValue: 'admin',
       decoration: InputDecoration(
           labelText: "Username",
           labelStyle: TextStyleFactory.p()
@@ -35,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildPasswordTextFormField(){
     return TextFormField(
-      initialValue: "worker",
+      initialValue: "123456",
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
@@ -120,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
   {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-
+    
     LoginResponse result    = await RestApi.admin.login(_username, _password);
     progressDialog.hide();
 
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if(result.response.status == 1) {
-      User.createInstance(result.userToken,result.username, result.email, userGroupId: result.userGroupId, );
+      User.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
       // Navigator.of(context).pushReplacementNamed("/appointment_list");
       Navigator.of(context).pushReplacementNamed("/home_page");
     }

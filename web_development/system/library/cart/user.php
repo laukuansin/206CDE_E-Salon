@@ -5,6 +5,7 @@ class User {
 	private $user_group_id;
 	private $username;
 	private $email;
+	private $user_image;
 	private $permission = array();
 
 	public function __construct($registry) {
@@ -48,6 +49,7 @@ class User {
 				$this->user_id = $user_query->row['user_id'];
 				$this->username = $user_query->row['username'];
 				$this->email = $user_query->row['email'];
+				$this->user_image = $user_query->row['image'];
 				$this->user_group_id = $user_query->row['user_group_id'];
 				$user_group_query = $this->db->query("SELECT permission FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
@@ -74,6 +76,7 @@ class User {
 			$this->username = $user_query->row['username'];
 			$this->email = $user_query->row['email'];
 			$this->user_group_id = $user_query->row['user_group_id'];
+			$this->user_image = $user_query->row['image'];
 
 			$user_group_query = $this->db->query("SELECT permission FROM " . DB_PREFIX . "user_group WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'");
 
@@ -126,5 +129,9 @@ class User {
 
 	public function getGroupId() {
 		return $this->user_group_id;
+	}
+
+	public function getUserImage(){
+		return $this->user_image;
 	}
 }
