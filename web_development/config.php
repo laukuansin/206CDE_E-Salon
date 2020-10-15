@@ -1,9 +1,9 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost/');
+define('HTTP_SERVER', 'http://35.240.241.182/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost/');
+define('HTTPS_SERVER', 'http://35.240.241.182/');
 
 // DIR
 define('DIR_APPLICATION', '/home/tanhoetheng/Desktop/git_repository/ RealWorldProject/web_development/catalog/');
