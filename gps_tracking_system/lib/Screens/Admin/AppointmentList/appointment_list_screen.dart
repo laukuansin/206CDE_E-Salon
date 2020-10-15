@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -61,7 +62,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
   }
 
   void requestAppointmentList() async {
-    AppointmentListResponse result = await RestApi.admin.getAppointmentList();
+    AppointmentListResponse result = await RestApi.admin.getAcceptedAppointmentList();
 
     if (result.response.status == 1) {
       for (Appointment appointment in result.appointments) {
@@ -85,6 +86,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
     LatLng origin = MapHelper.positionToLatLng(await getCurrentPosition());
     appointmentList.forEach((date, list) async {
       for (Appointment appointment in list) {
+        if(User.getRole() == Role.OWNER && appointment.status != Status.ONGOING) continue;
         LatLng destination =
             await MapHelper.addressToLatLng(appointment.address);
         Map<String, int> timeDistanceMap =
@@ -129,7 +131,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   ),
                   () {
                     return timeTaken.isEmpty
-                        ? SkeletonAnimation(
+                        ? (appointment.status == Status.ONGOING || User.getRole() == Role.WORKER) ? SkeletonAnimation(
                             child: Container(
                               height: 15,
                               width: MediaQuery.of(context).size.width * 0.6,
@@ -137,27 +139,30 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                                   borderRadius: BorderRadius.circular(10.0),
                                   color: Colors.grey[300]),
                             ),
-                          )
+                          ) : Text("-")
                         : Text(timeTaken);
                   }()
                 ]),
-            trailing: (){
-              switch(appointment.status) {
-                case Status.ACCEPTED:
-                  return Icon(Icons.access_alarm, color: Colors.amber);
-                case Status.PENDING:
-                  return Icon(Icons.directions_car, color: Colors.blueAccent);
-                case Status.CANCELLED:
-                  return Icon(Icons.cancel, color:Colors.redAccent);
-                default:
-                  return Icon(Icons.done,color:Colors.greenAccent);
-              }}(),
+            trailing: _getStatusIcon(appointment.status),
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/appointmentInfo", arguments: appointment);
+                  .pushNamed("/appointment_info", arguments: appointment);
             },
           )
         ]));
+  }
+
+  Icon _getStatusIcon(Status status){
+    switch(status) {
+      case Status.ACCEPTED:
+        return Icon(Icons.access_alarm, color: Colors.amber);
+      case Status.CANCELLED:
+        return Icon(Icons.cancel, color: Colors.redAccent);
+      case Status.CLOSE:
+        return Icon(Icons.done, color: Colors.greenAccent);
+      case Status.ONGOING:
+        return Icon(Icons.directions_car, color: primaryColor,);
+    }
   }
 
   Container _buildAppointmentListByDate() {
@@ -205,7 +210,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
         for (Appointment appointment in appointmentSelected[selectedDate]) {
           if (appointment.status == Status.CANCELLED ||
               appointment.status == Status.REJECTED) continue;
-          if (appointment.status == Status.PENDING ||
+          if (appointment.status == Status.ONGOING ||
               appointment.status == Status.ACCEPTED) {
             totalTask += 1;
           }

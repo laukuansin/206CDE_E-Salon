@@ -19,24 +19,24 @@
 		*/
 		public function getAppointmentList($data = array()){
 			$sql = "
-					SELECT 
-						oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
-					FROM 
-						oc_appointment
-					LEFT JOIN oc_appointment_status ON oc_appointment.status_id = oc_appointment_status.status_id
-					LEFT JOIN oc_appointment_service ON oc_appointment.appointment_id = oc_appointment_service.appointment_id
-					LEFT JOIN oc_customer ON oc_customer.customer_id = oc_appointment.customer_id
-					LEFT JOIN oc_service ON oc_service.service_id = oc_appointment_service.service_id
-                    LEFT JOIN oc_user ON oc_user.user_id = oc_appointment.user_id
-					%s
-					GROUP BY oc_appointment_service.appointment_id
+				SELECT 
+					oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, oc_user.image, oc_user.telephone AS worker_telephone ,CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
+				FROM 
+					oc_appointment
+				LEFT JOIN oc_appointment_status ON oc_appointment.status_id = oc_appointment_status.status_id
+				LEFT JOIN oc_appointment_service ON oc_appointment.appointment_id = oc_appointment_service.appointment_id
+				LEFT JOIN oc_customer ON oc_customer.customer_id = oc_appointment.customer_id
+				LEFT JOIN oc_service ON oc_service.service_id = oc_appointment_service.service_id
+                LEFT JOIN oc_user ON oc_user.user_id = oc_appointment.user_id
+				%s
+				GROUP BY oc_appointment_service.appointment_id
 				";
 
 			$whereClause = 'WHERE true ';
 
 
 			if(isset($data['filter_status']) && $data['filter_status'] != -1){
-				$whereClause .=" AND oc_appointment.status_id=".$data['filter_status'];	
+				$whereClause .=" AND oc_appointment.status_id IN(".$data['filter_status'].")";	
 			} 
 
 			if(isset($data['not_status_id'])){

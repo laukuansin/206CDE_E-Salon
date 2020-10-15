@@ -28,6 +28,7 @@ class GoogleMapListener{
         break;
 
       case Role.OWNER:
+        RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
         break;
     }
   }
@@ -43,6 +44,7 @@ class GoogleMapListener{
         break;
 
       case Role.OWNER:
+        RealTimeDb.stopListenWorkerLocationChanges();
         break;
     }
   }

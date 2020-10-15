@@ -12,9 +12,12 @@
 			} else {
 				$this->load->model('appointment/appointment');
 
-				$filteredData = array(
-					'not_status_id'=> 3
-				);
+				$filteredData = array();
+
+				if(isset($this->request->get['not_status_id'])){
+					$filteredData['not_status_id'] = $this->request->get['not_status_id'];
+				}
+
 
 				if(isset($this->request->get['worker'])){
 					$data['selectedWorker'] = $this->request->get['worker'];
@@ -25,9 +28,9 @@
 					$data['selectedCustomer'] = $this->request->get['customer'];
 					$filteredData['filter_customer'] = $this->request->get['customer'];
 				}
-				if(isset($this->request->get['status'])){
-					$data['selectedStatus'] = $this->request->get['status'];
-					$filteredData['filter_status'] = $this->request->get['status'];
+				if(isset($this->request->get['status_id'])){
+					$data['selectedStatus'] = $this->request->get['status_id'];
+					$filteredData['filter_status'] = $this->request->get['status_id'];
 				}
 				
 				$data['appointments'] = array();
@@ -39,6 +42,8 @@
 						'customer_name' 	=> $appointmentResult['customer_name'],
 						'worker_id'			=> $appointmentResult['user_id'],
 						'worker_name'		=> $appointmentResult['user_name'],
+						'worker_image'		=> 'image/'.$appointmentResult['image'],
+						'worker_telephone'  => $appointmentResult['worker_telephone'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],
 						'status'			=> $appointmentResult['status'],
@@ -60,6 +65,44 @@
 			$this->response->setOutput(json_encode($json));
 		}
 
+		public function getAppointmentServices(){
+	       
+	       if(!$this->user->isLogged()){
+				$json['response'] = array(
+					"status" => -1,
+					"msg"	 => "Invalid token"
+				);
+				$this->response->setOutput(json_encode($json));
+	            return;
+			} 
+
+	        if(!isset($this->request->get) || !isset($this->request->get['appointment_id'])){
+	            $json['response'] = array(
+	                'status' => 0,
+	                'msg' => 'Parameter missing'
+	            );
+	            $this->response->setOutput(json_encode($json));
+	            return;
+	        }
+
+
+			$json = array();
+			$this->load->model('service/service');
+			$results = $this->model_service_service->getAppointmentServices($this->request->get['appointment_id']);
+			foreach($results as $result){
+				$json['services'][] = array(
+					'service_id' => (int)$result['service_id']
+					,'service_name' => $result['service_name']
+					,'service_price' => (float)$result['service_price']
+					,'quantity'		=> (int)$result['qty']				
+				);
+			}
+			 $json['response'] = [
+		            'status' => 1,
+		            'msg'   => 'Get services successfully.'
+		        ];
+			$this->response->setOutput(json_encode($json));
+		}
 
         public function getAppointmentRequests(){
             $json = array();
@@ -90,22 +133,24 @@
                 
                 $data['appointments'] = array();
                 $appointmentResults = $this->model_appointment_appointment->getAppointmentList($filteredData);
-                foreach($appointmentResults as $appointmentResult){
-                    $data['appointments'][] = array(
-                        'appointment_id'    => $appointmentResult['appointment_id'],    
-                        'customer_id'       => $appointmentResult['customer_id'],
-                        'customer_name'     => $appointmentResult['customer_name'],
-                        'worker_id'         => $appointmentResult['user_id'],
-                        'worker_name'       => $appointmentResult['user_name'],
-                        'telephone'         => $appointmentResult['telephone'],
-                        'address'           => $appointmentResult['appointment_address'],
-                        'status'            => $appointmentResult['status'],
-                        'status_id'         => (int)$appointmentResult['status_id'],
-                        'appointment_date'  => date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
-                        'services'          => $appointmentResult['services'],  
-                        'services_id'       => $appointmentResult['services_id'],   
-                    );
-                }
+				foreach($appointmentResults as $appointmentResult){
+					$data['appointments'][] = array(
+						'appointment_id'	=> $appointmentResult['appointment_id'],	
+						'customer_id'		=> $appointmentResult['customer_id'],
+						'customer_name' 	=> $appointmentResult['customer_name'],
+						'worker_id'			=> $appointmentResult['user_id'],
+						'worker_name'		=> $appointmentResult['user_name'],
+						'worker_image'		=> 'image/'.$appointmentResult['image'],
+						'worker_telephone'  => $appointmentResult['worker_telephone'],
+						'telephone'			=> $appointmentResult['telephone'],
+						'address'			=> $appointmentResult['appointment_address'],
+						'status'			=> $appointmentResult['status'],
+						'status_id'			=> (int)$appointmentResult['status_id'],
+						'appointment_date' 	=> date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
+						'services'			=> $appointmentResult['services'],	
+						'services_id'		=> $appointmentResult['services_id'],	
+					);
+				}
 
                 $json['response'] = array(
                     "status" => 1,
@@ -126,13 +171,12 @@
 
             
             if(isset($this->request->post['appointment_id']) && isset($this->request->post['status_id'])){
-                if($this->request->post['status_id']=="1")
-                {
+                if($this->request->post['status_id']=="1"){
                      $this->model_appointment_appointment->acceptAppointment($this->request->post['appointment_id']);
-                }
-                else{
+                }else if($this->request->post['status_id']=="2"){
                     $this->model_appointment_appointment->rejectAppointment($this->request->post['appointment_id']);
-
+                }else if($this->request->post['status_id'] == "4"){
+                	$this->model_appointment_appointment->cancelAppointment($this->request->post['appointment_id']);
                 }
 
                 $json['response'] = [
@@ -159,19 +203,20 @@
 			} else {
 				$this->load->model('appointment/appointment');
 
-				$filteredData = array(
-					'not_status_id'=> 2
-				);
-
 				$filteredData['filter_worker'] = $this->user->getId();
+
+
+				if(isset($this->request->get['not_status_id'])){
+					$filteredData['not_status_id'] = $this->request->get['not_status_id'];
+				}
 
 				if(isset($this->request->get['customer'])){
 					$data['selectedCustomer'] = $this->request->get['customer'];
 					$filteredData['filter_customer'] = $this->request->get['customer'];
 				}
-				if(isset($this->request->get['status'])){
-					$data['selectedStatus'] = $this->request->get['status'];
-					$filteredData['filter_status'] = $this->request->get['status'];
+				if(isset($this->request->get['status_id'])){
+					$data['selectedStatus'] = $this->request->get['status_id'];
+					$filteredData['filter_status'] = $this->request->get['status_id'];
 				}
 				
 				$appointmentResults = $this->model_appointment_appointment->getAppointmentList($filteredData);
@@ -179,18 +224,20 @@
 				$data['appointments'] = array();
 				foreach($appointmentResults as $appointmentResult){
 					$data['appointments'][] = array(
-						'appointment_id'	=> $appointmentResult['appointment_id'],
-						'customer_id'		=> $appointmentResult['customer_id'],	
+						'appointment_id'	=> $appointmentResult['appointment_id'],	
+						'customer_id'		=> $appointmentResult['customer_id'],
 						'customer_name' 	=> $appointmentResult['customer_name'],
 						'worker_id'			=> $appointmentResult['user_id'],
 						'worker_name'		=> $appointmentResult['user_name'],
+						'worker_image'		=> 'image/'.$appointmentResult['image'],
+						'worker_telephone'  => $appointmentResult['worker_telephone'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],
 						'status'			=> $appointmentResult['status'],
 						'status_id'			=> (int)$appointmentResult['status_id'],
 						'appointment_date' 	=> date('Y-m-d g:ia', strtotime($appointmentResult['appointment_date'])),
-						'services'			=> $appointmentResult['services'],
-						'services_id'		=> $appointmentResult['services_id']		
+						'services'			=> $appointmentResult['services'],	
+						'services_id'		=> $appointmentResult['services_id'],	
 					);
 				}
 

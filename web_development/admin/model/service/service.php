@@ -52,6 +52,20 @@ class ModelServiceService extends Model{
 		return $this->db->query($sql)->rows;
 	}
 
+	public function getAppointmentServices($appointmentId){
+		$sql = "
+			SELECT 
+				oc_service.*, oc_appointment_service.qty
+			FROM 
+				oc_appointment_service, oc_service
+			WHERE 
+				oc_appointment_service.service_id = oc_service.service_id
+			AND 
+				oc_appointment_service.appointment_id =".(int)$appointmentId;
+
+		return $this->db->query($sql)->rows;
+	}
+
 	public function getService($service_id){
 		$sql = sprintf("SELECT * FROM %s WHERE service_id = %d AND is_deleted=0"
 				, $this->mdb

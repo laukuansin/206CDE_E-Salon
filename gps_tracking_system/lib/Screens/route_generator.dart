@@ -36,7 +36,6 @@ import 'Admin/EditInfo/edit_info_screen.dart';
 
 class RouteGenerator {
 
-
   static const bool _ADMIN_MODE = true;
 
   static Scaffold buildScaffold(Widget widget,

@@ -36,15 +36,12 @@ class ViewModel
   Uint8List _carMarkerIcon; double _carMarkerIconRotation;
   String customerAddress;
   LatLng _customerLatLng, workerLatLng;
-  int _totalDistanceInMeter, _totalDurationInSeconds;
 
   ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
         _customerLatLng = LatLng(0,0),
         _carMarkerIconRotation = 0,
         _callBackNotifyChanges = notifyChanges,
-        _callBackShowAlertDialog = showAlertDialog,
-        _totalDurationInSeconds = 0,
-        _totalDistanceInMeter = 0 {
+        _callBackShowAlertDialog = showAlertDialog{
     this.initRoute();
   }
 
@@ -69,9 +66,9 @@ class ViewModel
     updateMarkerLocation();
 
     // // Animate camera if worker lat lng not ready
-    // if(!isWorkerReady) {
+    if(workerLatLng == null ||  !isWorkerReady) {
       animateCameraToRouteBound();
-    // }
+    }
 
     _callBackNotifyChanges();
   }
@@ -133,11 +130,6 @@ class ViewModel
     |   }                          |
     +------------------------------+
     */
-    Map<String, int> timeDistance = await MapHelper
-        .getRouteTimeDistance([workerLatLng, _customerLatLng]);
-    _totalDurationInSeconds = timeDistance['duration'];
-    _totalDistanceInMeter   = timeDistance['distance'];
-
   }
 
   void animateCameraToRouteBound() async

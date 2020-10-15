@@ -69,6 +69,8 @@ class RestApi
     var response = await http.get(url);
     return jsonDecode(response.body);
   }
+
+
 }
 
 class _Admin {
@@ -132,7 +134,6 @@ class _Admin {
     return userGroupResponseFromJson(response.body);
   }
 
-
   Future<CommonResponse> updateAppointment(String appointmentID, Status status) async {
     String url = DOMAIN_NAME +
         "index.php?route=api/appointment/updateAppointmentStatus&api_key=" +
@@ -147,14 +148,14 @@ class _Admin {
     return commonResponseFromJson(response.body);
   }
 
-  Future<AppointmentListResponse> getAppointmentList() async{
+  Future<AppointmentListResponse> getAcceptedAppointmentList() async{
     String url = DOMAIN_NAME;
     if(User.getRole() == Role.OWNER) {
-      url += "index.php?route=api/appointment/getAllAppointments&api_key=" +
+      url += "index.php?route=api/appointment/getAllAppointments&status_id=1,6,5&api_key=" +
           User.getToken();
       log("Calling get appointment list (Owner)  API : " + url);
     } else {
-      url += "index.php?route=api/appointment/getWorkerAppointments&api_key=" +
+      url += "index.php?route=api/appointment/getWorkerAppointments&status_id=1,6,5&api_key=" +
           User.getToken();
       log("Calling get appointment list (Worker)  API : " + url);
     }
@@ -175,6 +176,13 @@ class _Admin {
 
     var response = await http.post(url, body: {});
     return appointmentListResponseFromJson(response.body);
+  }
+  
+  Future<GetServicesResponse> getAppointmentServices(String appointmentId) async{
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentServices&appointment_id=$appointmentId&api_key=" + User.getToken();
+    log("Calling get appointment services API : " + url);
+    var response = await http.get(url);
+    return getServicesResponseFromJson(response.body);
   }
 
   Future<UserDetailResponse> getUserDetail() async{
@@ -221,6 +229,7 @@ class _Admin {
     });
     return changePasswordResponseFromJson(response.body);
   }
+
 }
 
 class _Customer{
@@ -353,7 +362,6 @@ class _Customer{
   }
 
 
-
   Future<GetAppointmentAvailableTimeslotResponse> getAppointmentAvailableTimeSlot(String appointmentDate,  List<Service> services) async{
     String url = DOMAIN_NAME + "index.php?route=api/appointment/getAvailableTimeSlot&api_key=" + User.getToken();
     log("Calling get appointment available time slot API : " + url);
@@ -369,7 +377,6 @@ class _Customer{
 
     var body = json.encode({"services": services, "appointment_date": appointment.getAppointmentDateStringYYYYMMDD(), "appointment_time":appointmentTime, "address": appointment.address,});
     var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
-    log(response.body);
     return commonResponseFromJson(response.body);
   }
 
@@ -381,7 +388,6 @@ class _Customer{
       "appointment_id": appointmentId,
     });
 
-    log(response.body);
     return commonResponseFromJson(response.body);
   }
 
