@@ -131,7 +131,8 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
                           });
                         })
                   ]
-                : null));
+                : null),
+    drawer: RouteGenerator.buildDrawer(context));
   }
 
   Container _buildAppointmentContainer(int index, Appointment appointment) {

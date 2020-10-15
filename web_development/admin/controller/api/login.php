@@ -13,6 +13,8 @@ class ControllerApiLogin extends Controller {
 
 			$json['user_token'] = $token;
 			$json['user_group_id'] = (int)$this->user->getGroupId();
+			$json['email'] = $this->user->getEmail();
+			$json['username'] = $this->user->getUserName();
 			$json['response']   = array(
 				'status' => 1,
 				'msg'	 => $this->language->get('text_login_success'),
