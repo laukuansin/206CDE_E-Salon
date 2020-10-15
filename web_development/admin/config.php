@@ -12,8 +12,8 @@ define('HTTP_SERVER', 'http://35.240.241.182/admin/');
 define('HTTP_CATALOG', 'http://35.240.241.182/');
 
 // HTTPS
-define('HTTP_SERVER', 'http://35.240.241.182/admin/');
-define('HTTP_CATALOG', 'http://35.240.241.182/');
+define('HTTPS_SERVER', 'http://35.240.241.182/admin/');
+define('HTTPS_CATALOG', 'http://35.240.241.182/');
 
 // DIR
 define('DIR_APPLICATION', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/web_development/admin/');
