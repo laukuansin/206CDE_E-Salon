@@ -79,10 +79,10 @@ class HomePageScreenState extends State<HomePageScreen> {
                 ),
                 Padding(
                     child: _buildReloadCreditButton(context),
-                    padding: EdgeInsets.only(top: 20)),
+                    padding: EdgeInsets.only(top: 5)),
                 Padding(
                     child: _buildPayAppointmentCard(context),
-                    padding: EdgeInsets.only(top: 20)),
+                    padding: EdgeInsets.only(top: 5)),
                 Padding(
                   child: Row(
                     children: <Widget>[
@@ -104,7 +104,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                       )
                     ],
                   ),
-                  padding: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.only(top: 5),
                 ),
                 () {
                   return _appointmentList.length > 0 ?
