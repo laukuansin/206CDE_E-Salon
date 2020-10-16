@@ -39,6 +39,31 @@ class ControllerApiUser extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function edit() {
+        $this->load->language('user/user');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('user/user');
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
+
+            $json['response'] = array(
+                'status'    => 1,
+                'msg'       => $this->language->get('text_success')
+            );
+        } else {
+            $json['response'] = array(
+                'msg'       => '',
+                'status'    => 0
+            );
+            $json['error'] = $error;
+        }
+
+        $this->response->setOutput(json_encode($json));
+    }
+
 
     protected function upload(&$error){
         $this->load->language('common/filemanager');
