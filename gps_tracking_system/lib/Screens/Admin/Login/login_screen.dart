@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -19,13 +20,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   FToast fToast;
-  String _username;
-  String _password;
+  String _username = "";
+  String _password = "";
+  String _apiKey = "";
   bool _isPasswordVisible;
 
   TextFormField _buildUsernameTextFormField(){
     return TextFormField(
-      initialValue: 'admin',
       decoration: InputDecoration(
           labelText: "Username",
           labelStyle: TextStyleFactory.p()
@@ -37,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildPasswordTextFormField(){
     return TextFormField(
-      initialValue: "123456",
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
@@ -123,7 +123,13 @@ class _LoginScreenState extends State<LoginScreen> {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
 
-    LoginResponse result    = await RestApi.admin.login(_username, _password);
+    LoginResponse result;
+    if(_apiKey.isNotEmpty) {
+      result = await RestApi.admin.loginByApiKey(_apiKey);
+    } else {
+      result = await RestApi.admin.login(_username, _password);
+    }
+
     progressDialog.hide();
 
     fToast.showToast(
@@ -132,9 +138,10 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if(result.response.status == 1) {
-      LoggedUser.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
-      // Navigator.of(context).pushReplacementNamed("/appointment_list");
+      await LoggedUser.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
       Navigator.of(context).pushReplacementNamed("/home_page");
+    } else {
+      _apiKey = "";
     }
   }
 
@@ -144,5 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
     _isPasswordVisible = false;
     fToast = FToast();
     fToast.init(context);
+    autoLogin();
+  }
+
+
+  void autoLogin()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _apiKey =  prefs.getString("apiKey") ?? "";
+    if(_apiKey.isNotEmpty) _login();
   }
 }

@@ -17,7 +17,7 @@ import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_res
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_modified_worker_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_login_response.dart' as AdminLogin;
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as CustomerLogin;
 import 'package:gps_tracking_system/Utility/RestApi/user_sign_up_response.dart';
@@ -36,7 +36,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://35.240.241.182/";
+const tempDomainName = "http://192.168.68.107/";
 
 
 class RestApi
@@ -93,13 +93,25 @@ class _Admin {
 
     var response = await http.post(url, body: {
       "username": username,
-      "password": password
+      "password": password,
     });
 
     return AdminLogin.loginResponseFromJson(response.body);
   }
 
-  Future<AddWorkerResponse> addWorker(Admin user) async {
+  Future<AdminLogin.LoginResponse> loginByApiKey(String apiKey) async {
+    String url = DOMAIN_NAME + "index.php?route=api/login";
+    log("Calling login API : " + url);
+
+    var response = await http.post(url, body: {
+      "api_key": apiKey
+    });
+
+    return AdminLogin.loginResponseFromJson(response.body);
+  }
+
+
+  Future<ModifiedUserResponse> addWorker(Admin user) async {
     String url = DOMAIN_NAME + "index.php?route=api/user/add&api_key=" +
         LoggedUser.getToken();
     log("Calling add user API : " + url);
@@ -123,8 +135,36 @@ class _Admin {
 
     var response = await request.send();
     var responseData = await response.stream.toBytes();
-    return addWorkerResponseFromJson(String.fromCharCodes(responseData));
+    return modifiedUserResponseFromJson(String.fromCharCodes(responseData));
   }
+
+  Future<ModifiedUserResponse> editUser(Admin user) async {
+    String url = DOMAIN_NAME + "index.php?route=api/user/edit&api_key=" +
+        LoggedUser.getToken();
+    url += "&user_id=" + user.id;
+    log("Calling add user API : " + url);
+
+    var request = http.MultipartRequest("POST", Uri.parse(url));
+    //add text fields
+    request.fields["username"] = user.username;
+    request.fields["user_group_id"] = user.userGroup.userGroupId;
+    request.fields["firstname"] = user.firstName;
+    request.fields["lastname"] = user.lastName;
+    request.fields["email"] = user.email;
+    request.fields["image"] = user.image;
+    request.fields["status"] = user.status.statusId.toString();
+
+    if(user.password.isNotEmpty) {
+      request.fields["password"] = user.password;
+      request.fields["confirm"] = user.confirm;
+    }
+    
+    var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    log(String.fromCharCodes(responseData));
+    return modifiedUserResponseFromJson(String.fromCharCodes(responseData));
+  }
+
 
   Future<UserGroupResponse> getUserGroup() async {
     String url = DOMAIN_NAME +
@@ -254,6 +294,16 @@ class _Customer{
     var response = await http.post(url, body: {
       "email": email,
       "password": password
+    });
+    return CustomerLogin.loginResponseFromJson(response.body);
+  }
+
+  Future<CustomerLogin.LoginResponse> loginByApiKey(String apiKey) async {
+    String url = DOMAIN_NAME + "index.php?route=api/login";
+    log("Calling login API : " + url);
+
+    var response = await http.post(url, body: {
+      "api_key": apiKey
     });
     return CustomerLogin.loginResponseFromJson(response.body);
   }
