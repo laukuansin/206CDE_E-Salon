@@ -43,7 +43,9 @@ class _ManageWorkerScreenState extends State<ManageWorkerScreen>{
         ),
         actions: [
           IconButton(icon:Icon(Icons.add),
-            onPressed: (){Navigator.of(context).pushNamed("/add_worker");},
+            onPressed: (){Navigator.of(context).pushNamed("/add_worker").then((_){setState(() {
+
+            });} );},
           )
         ],
       ),

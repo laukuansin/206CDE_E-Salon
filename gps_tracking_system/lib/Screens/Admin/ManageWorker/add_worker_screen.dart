@@ -8,11 +8,9 @@ import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/end_user_factory.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
-import 'package:gps_tracking_system/Model/end_user.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_modified_worker_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -115,7 +113,6 @@ class AddWorkerState extends State<AddWorker> {
 
   TextFormField _buildUserName() {
     return TextFormField(
-      initialValue: "ah huat",
       validator: (_) => (_errUsername.isEmpty) ? null : _errUsername,
       onSaved: (value) {
         user.username = value;
@@ -127,7 +124,6 @@ class AddWorkerState extends State<AddWorker> {
 
   TextFormField _buildFirstName() {
     return TextFormField(
-      initialValue: "Ah",
       validator: (_) => _errFirstname.isEmpty ? null : _errFirstname,
       decoration: standardInputDecoration("First Name", Icons.font_download),
       style: TextStyleFactory.p(color: primaryTextColor),
@@ -139,7 +135,6 @@ class AddWorkerState extends State<AddWorker> {
 
   TextFormField _buildLastName() {
     return TextFormField(
-      initialValue: "Huat",
       validator: (_) => _errLastname.isEmpty ? null : _errLastname,
       decoration: standardInputDecoration("Last Name", Icons.font_download),
       style: TextStyleFactory.p(color: primaryTextColor),
@@ -151,7 +146,6 @@ class AddWorkerState extends State<AddWorker> {
 
   TextFormField _buildEmail() {
     return TextFormField(
-      initialValue: "ahhuat@gmail.com",
       validator: (_) => _errEmail.isEmpty ? null : _errEmail,
       decoration: standardInputDecoration("Email", Icons.email),
       style: TextStyleFactory.p(color: primaryTextColor),
@@ -163,7 +157,6 @@ class AddWorkerState extends State<AddWorker> {
 
   TextFormField _buildPassword() {
     return TextFormField(
-      initialValue: "123456",
       validator: (_) => _errPassword.isEmpty ? null : _errPassword,
       obscureText: _hiddenPassword,
       style: TextStyleFactory.p(color: primaryTextColor),
@@ -196,7 +189,6 @@ class AddWorkerState extends State<AddWorker> {
       onSaved: (value) {
         user.confirm = value;
       },
-      initialValue: "123456",
       style: TextStyleFactory.p(color: primaryTextColor),
       validator: (_) => _errConfirm.isEmpty ? null : _errConfirm,
       obscureText: _hiddenConfirmPassword,
@@ -225,7 +217,7 @@ class AddWorkerState extends State<AddWorker> {
       title: "User Group",
       data: user.userGroup == null ? "" : user.userGroup.name,
       dropdownTitle: "Select User Group",
-      dropdownSelection: getUserGroupNameList(),
+      dropdownSelection: _userGroupList.map((e) => e.name).toList(),
       leadingIconData: Icons.people,
       trailingIconData: Icons.chevron_right,
       context: context,
@@ -293,7 +285,7 @@ class AddWorkerState extends State<AddWorker> {
     await progressDialog.show();
 
     _formKey.currentState.save();
-    AddWorkerResponse result = await RestApi.admin.addWorker(user);
+    ModifiedUserResponse result = await RestApi.admin.addWorker(user);
     progressDialog.hide();
     clearErrorMessage();
 
@@ -303,6 +295,7 @@ class AddWorkerState extends State<AddWorker> {
               status: result.response.status, msg: result.response.msg),
           toastDuration: Duration(seconds: 2),
           gravity: ToastGravity.BOTTOM);
+      Navigator.of(context).pop();
     } else {
       _errEmail = result.error.email;
       _errFirstname = result.error.firstname;
@@ -312,39 +305,6 @@ class AddWorkerState extends State<AddWorker> {
       _errUsername = result.error.username;
       _formKey.currentState.validate();
     }
-  }
-
-  List<String> getUserGroupNameList() {
-    if (_userGroupList == null) return [];
-
-    List<String> userGroupNameList = [];
-    for (UserGroup userGroup in _userGroupList)
-      userGroupNameList.add(userGroup.name);
-
-    return userGroupNameList;
-  }
-
-  List<String> getStatusNameList() {
-    if (_userStatusList == null) return [];
-
-    List<String> userStatusList = [];
-    for (UserStatus userStatus in _userStatusList)
-      userStatusList.add(userStatus.name);
-    return userStatusList;
-  }
-
-  String getIdFromGroupName(String name) {
-    for (UserGroup userGroup in _userGroupList) {
-      if (userGroup.name == name) return userGroup.userGroupId;
-    }
-    return '-1';
-  }
-
-  String getIdFromStatusName(String name) {
-    for (UserStatus userStatus in _userStatusList) {
-      if (userStatus.name == name) return userStatus.statusId.toString();
-    }
-    return '-1';
   }
 }
 

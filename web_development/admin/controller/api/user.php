@@ -200,7 +200,7 @@ class ControllerApiUser extends Controller {
             }
         }
 
-        if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
+        if (isset($this->request->post['password']) || (!isset($this->request->get['user_id']))) {
             if ((utf8_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) < 4) || (utf8_strlen(html_entity_decode($this->request->post['password'], ENT_QUOTES, 'UTF-8')) > 40)) {
                 $error['password'] = $this->language->get('error_password');
             }

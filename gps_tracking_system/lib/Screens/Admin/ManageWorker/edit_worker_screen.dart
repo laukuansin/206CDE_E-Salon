@@ -5,15 +5,12 @@ import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/dropdown.dart';
-import 'package:gps_tracking_system/Components/image_picker.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
-import 'package:gps_tracking_system/Factory/end_user_factory.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_add_worker_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_modified_worker_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -226,7 +223,7 @@ class EditWorkerScreenState extends State<EditWorkerScreen> {
       title: "User Group",
       data: user.userGroup.name.isEmpty ? _userGroupList.isNotEmpty ? _userGroupList.where((element) => element.userGroupId == user.userGroup.userGroupId).toList().first.name :  "" : user.userGroup.name,
       dropdownTitle: "Select User Group",
-      dropdownSelection: getUserGroupNameList(),
+      dropdownSelection: _userGroupList.map((element) => element.name).toList(),
       leadingIconData: Icons.people,
       trailingIconData: Icons.chevron_right,
       context: context,
@@ -291,67 +288,30 @@ class EditWorkerScreenState extends State<EditWorkerScreen> {
     await progressDialog.show();
 
     _formKey.currentState.save();
-    // AddWorkerResponse result = await RestApi.admin.addWorker(
-    //     _username,
-    //     getIdFromGroupName(_userGroup),
-    //     _firstName,
-    //     _lastName,
-    //     _email,
-    //     _password,
-    //     getIdFromStatusName(_status),
-    //     _confirm);
-    // progressDialog.hide();
-    // clearErrorMessage();
-    //
-    // if (result.response.status == 1) {
-    //   _fToast.showToast(
-    //       child: ToastWidget(
-    //           status: result.response.status, msg: result.response.msg),
-    //       toastDuration: Duration(seconds: 2),
-    //       gravity: ToastGravity.BOTTOM);
-    // } else {
-    //   _errEmail = result.error.email;
-    //   _errFirstname = result.error.firstname;
-    //   _errLastname = result.error.lastname;
-    //   _errConfirm = result.error.confirm;
-    //   _errPassword = result.error.password;
-    //   _errUsername = result.error.username;
-    //   _formKey.currentState.validate();
-    // }
-  }
+    ModifiedUserResponse result = await RestApi.admin.editUser(user);
+    progressDialog.hide();
+    clearErrorMessage();
 
-  List<String> getUserGroupNameList() {
-    if (_userGroupList == null) return [];
-
-    List<String> userGroupNameList = [];
-    for (UserGroup userGroup in _userGroupList)
-      userGroupNameList.add(userGroup.name);
-
-    return userGroupNameList;
-  }
-
-  List<String> getStatusNameList() {
-    if (_userStatusList == null) return [];
-
-    List<String> userStatusList = [];
-    for (UserStatus userStatus in _userStatusList)
-      userStatusList.add(userStatus.name);
-    return userStatusList;
-  }
-
-  String getIdFromGroupName(String name) {
-    for (UserGroup userGroup in _userGroupList) {
-      if (userGroup.name == name) return userGroup.userGroupId;
+    if (result.response.status == 1) {
+      _fToast.showToast(
+          child: ToastWidget(
+              status: result.response.status, msg: result.response.msg),
+          toastDuration: Duration(seconds: 2),
+          gravity: ToastGravity.BOTTOM);
+      Navigator.of(context).pop();
+    } else {
+      _errEmail = result.error.email;
+      _errFirstname = result.error.firstname;
+      _errLastname = result.error.lastname;
+      _errConfirm = result.error.confirm;
+      _errPassword = result.error.password;
+      _errUsername = result.error.username;
+      _formKey.currentState.validate();
     }
-    return '-1';
   }
 
-  String getIdFromStatusName(String name) {
-    for (UserStatus userStatus in _userStatusList) {
-      if (userStatus.name == name) return userStatus.statusId.toString();
-    }
-    return '-1';
-  }
+
+
 }
 
 
