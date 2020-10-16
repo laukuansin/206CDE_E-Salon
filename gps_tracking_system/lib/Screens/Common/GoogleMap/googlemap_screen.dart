@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -6,19 +8,21 @@ import 'package:gps_tracking_system/Screens/Common/GoogleMap/view_model.dart';
 class GoogleMapScreen extends StatefulWidget{
   final String customerAddress;
   final LatLng workerLatLng;
+  final Size size;
 
   @override
   State<StatefulWidget> createState() => GoogleMapScreenState();
-  GoogleMapScreen({Key key, @required this.customerAddress, @required this.workerLatLng}): super(key:key);
+  GoogleMapScreen({Key key, this.size, @required this.customerAddress, @required this.workerLatLng, }): super(key:key);
 }
 
 class GoogleMapScreenState extends State<GoogleMapScreen>{
   ViewModel viewModel;
+  Size size;
 
   @override
   void initState() {
     super.initState();
-
+    size = widget.size;
     viewModel = ViewModel(
       customerAddress:widget.customerAddress,
       workerLatLng: widget.workerLatLng,
@@ -29,13 +33,12 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body:Container(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.zero,
-        width :screenSize.width,
-        height:screenSize.height,
+        width :size.width,
+        height:size.height,
         child:Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -80,5 +83,11 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   void dispose() {
     viewModel.workerLatLng = null;
     super.dispose();
+  }
+
+  void setMapSize(Size size){
+    setState(() {
+      this.size = size;
+    });
   }
 }

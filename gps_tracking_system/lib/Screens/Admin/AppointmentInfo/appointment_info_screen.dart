@@ -290,6 +290,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             Expanded(
                 child: GoogleMapScreen(
                   key: _googleMapKey,
+                  size: Size(screenSize.width, screenSize.height - _minHeightOfSlidingUpPanel),
                   workerLatLng: (appointment.status == Status.ONGOING)
                       ? LatLng(_workerLocation.latitude, _workerLocation.longitude)
                       : null,

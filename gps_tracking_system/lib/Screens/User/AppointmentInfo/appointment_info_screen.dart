@@ -63,6 +63,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
       setState(() {
         _minHeightOfSlidingUpPanel =
             _keySlidingUpPanel.currentContext.size.height;
+        Size screenSize = MediaQuery.of(context).size;
+        _googleMapKey.currentState.setMapSize(Size(screenSize.width, screenSize.height - _minHeightOfSlidingUpPanel));
       });
     });
   }
@@ -277,6 +279,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             Expanded(
                 child: GoogleMapScreen(
               key: _googleMapKey,
+              size: Size(screenSize.width, screenSize.height - _minHeightOfSlidingUpPanel),
               workerLatLng: (appointment.status == Status.ONGOING)
                   ? LatLng(_workerLocation.latitude, _workerLocation.longitude)
                   : null,
