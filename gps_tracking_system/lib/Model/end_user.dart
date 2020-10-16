@@ -13,5 +13,7 @@ class EndUser{
     ,this.lastName = ""
     ,this.email = ""
     ,this.contactNo = ""
+    ,this.password = ""
+    ,this.confirm = ""
   });
 }

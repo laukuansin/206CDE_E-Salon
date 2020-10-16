@@ -1,8 +1,6 @@
-// To parse this JSON data, do
-//
-//     final userGroupResponse = userGroupResponseFromJson(jsonString);
-
 import 'dart:convert';
+
+import 'package:gps_tracking_system/Model/admin.dart';
 
 UserGroupResponse userGroupResponseFromJson(String str) => UserGroupResponse.fromJson(json.decode(str));
 
@@ -24,22 +22,4 @@ class UserGroupResponse {
   };
 }
 
-class UserGroup {
-  UserGroup({
-    this.userGroupId,
-    this.name,
-  });
 
-  String userGroupId;
-  String name;
-
-  factory UserGroup.fromJson(Map<String, dynamic> json) => UserGroup(
-    userGroupId: json["user_group_id"],
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "user_group_id": userGroupId,
-    "name": name,
-  };
-}

@@ -5,12 +5,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/rounded_button.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -21,13 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
   FToast fToast;
   String _email;
   String _password;
+  String _apiKey;
   bool _isPasswordVisible;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   TextFormField _buildEmailTextFormField() {
     return TextFormField(
-      initialValue: "lengzai@gmail.com",
       decoration:
           InputDecoration(labelText: "Email", labelStyle: TextStyleFactory.p()),
       validator: (email) => email.isEmpty ? "Email is required" : null,
@@ -39,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextFormField _buildPasswordTextFormField() {
     return TextFormField(
-      initialValue: "123456",
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
           labelText: "Password",
@@ -147,7 +147,13 @@ class _LoginScreenState extends State<LoginScreen> {
         type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
 
-    LoginResponse result = await RestApi.customer.login(_email, _password);
+
+    LoginResponse result;
+
+    if(_apiKey.isNotEmpty)
+      result = await RestApi.customer.loginByApiKey(_apiKey);
+    else
+      result = await RestApi.customer.login(_email, _password);
     await progressDialog.hide();
 
     fToast.init(_scaffoldKey.currentContext);
@@ -158,8 +164,10 @@ class _LoginScreenState extends State<LoginScreen> {
         gravity: ToastGravity.BOTTOM);
 
     if (result.response.status == 1) {
-      User.createInstance(result.token,result.username, result.email);
+      await LoggedUser.createInstance(result.token,result.username, result.email);
       Navigator.of(context).pushReplacementNamed("/home_page");
+    } else {
+      _apiKey = "";
     }
   }
 
@@ -169,5 +177,12 @@ class _LoginScreenState extends State<LoginScreen> {
     _isPasswordVisible = false;
     fToast = FToast();
     fToast.init(_scaffoldKey.currentContext);
+    autoLogin();
+  }
+
+  void autoLogin()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _apiKey =  prefs.getString("api_key") ?? "";
+    if(_apiKey.isNotEmpty) _login();
   }
 }

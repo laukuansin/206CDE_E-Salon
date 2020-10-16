@@ -93,17 +93,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           children: <Widget>[
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("First Name"),initialValue: "Mr", onSaved: (value){_customer.firstName = value;}, validator: (_)=> _errFirstname.isEmpty? null : _errFirstname,),
+            TextFormField(decoration: getStandardInputDecoration("First Name"), onSaved: (value){_customer.firstName = value;}, validator: (_)=> _errFirstname.isEmpty? null : _errFirstname,),
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("Last name"), initialValue: "Nobody", onSaved: (value){_customer.lastName = value;}, validator: (_)=>_errLastname.isEmpty? null : _errLastname,),
+            TextFormField(decoration: getStandardInputDecoration("Last name"), onSaved: (value){_customer.lastName = value;}, validator: (_)=>_errLastname.isEmpty? null : _errLastname,),
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("Email"), initialValue: "mrnobody@gmail.com", onSaved: (value){_customer.email = value;}, validator: (_)=>_errEmail.isEmpty ? null : _errEmail),
+            TextFormField(decoration: getStandardInputDecoration("Email"), onSaved: (value){_customer.email = value;}, validator: (_)=>_errEmail.isEmpty ? null : _errEmail),
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("Telephone"), initialValue: "0123456789", onSaved: (value){_customer.contactNo = value;}, validator: (_)=>_errTelephone.isEmpty? null: _errTelephone,),
+            TextFormField(decoration: getStandardInputDecoration("Telephone"), onSaved: (value){_customer.contactNo = value;}, validator: (_)=>_errTelephone.isEmpty? null: _errTelephone,),
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("Password"), initialValue: "123456", onSaved: (value){_customer.password = value;}, validator: (_)=>_errPassword.isEmpty? null : _errPassword,),
+            TextFormField(decoration: getStandardInputDecoration("Password"), onSaved: (value){_customer.password = value;}, validator: (_)=>_errPassword.isEmpty? null : _errPassword,),
             SizedBox(height: 15,),
-            TextFormField(decoration:getStandardInputDecoration("Password confirm"), initialValue: "123456", onSaved: (value){_customer.confirm = value;}, validator: (_)=>_errConfirm.isEmpty ? null: _errConfirm ),
+            TextFormField(decoration:getStandardInputDecoration("Password confirm"), onSaved: (value){_customer.confirm = value;}, validator: (_)=>_errConfirm.isEmpty ? null: _errConfirm ),
             SizedBox(height: 25,)
           ],
         ),

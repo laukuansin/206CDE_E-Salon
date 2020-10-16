@@ -118,6 +118,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
     return TextFormField(
       validator: (_) => _errNewPassword.isEmpty ? null : _errNewPassword,
       obscureText: _hiddenNewPassword,
+      style: TextStyleFactory.p(color: primaryTextColor),
       decoration: new InputDecoration(
         icon: Icon(Icons.lock, color: primaryColor,),
         labelText: "New Password",
@@ -135,6 +136,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
     return TextFormField(
       validator: (_) => _errOldPassword.isEmpty ? null : _errOldPassword,
       obscureText: _hiddenOldPassword,
+      style: TextStyleFactory.p(color: primaryTextColor),
       decoration: new InputDecoration(
         icon: Icon(Icons.lock, color: primaryColor,),
         labelText: "Old Password",
@@ -153,6 +155,7 @@ class ChangePasswordPageScreenState extends State<ChangePasswordPageScreen> {
       onSaved: (value) {confirmPassword = value;},
       validator: (_) => _errConfirmPassword.isEmpty? null : _errConfirmPassword,
       obscureText: _hiddenConfirmPassword,
+      style: TextStyleFactory.p(color: primaryTextColor),
       decoration: new InputDecoration(
           icon: Icon(Icons.lock, color: primaryColor,),
           suffixIcon: IconButton(

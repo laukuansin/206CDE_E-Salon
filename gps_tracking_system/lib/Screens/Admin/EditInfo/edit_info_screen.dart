@@ -116,6 +116,7 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
   TextFormField _buildUserName() {
     return TextFormField(
       key: Key(_username),
+      style: TextStyleFactory.p(color: primaryTextColor),
       initialValue: _username,
       validator: (_) => (_errUsername.isEmpty) ? null : _errUsername,
       onSaved: (value) {_username = value;},
@@ -126,6 +127,7 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
   TextFormField _buildFirstName() {
     return TextFormField(
       key: Key(_firstName),
+      style: TextStyleFactory.p(color: primaryTextColor),
       initialValue: _firstName,
       validator: (_) => _errFirstname.isEmpty ? null : _errFirstname,
       decoration: standardInputDecoration("First Name", Icons.font_download),
@@ -136,6 +138,7 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
   TextFormField _buildLastName() {
     return TextFormField(
       key: Key(_lastName),
+      style: TextStyleFactory.p(color: primaryTextColor),
       initialValue: _lastName,
       validator: (_) => _errLastname.isEmpty ? null : _errLastname,
       decoration: standardInputDecoration("Last Name", Icons.font_download),
@@ -146,6 +149,7 @@ class EditInfoPageScreenState extends State<EditInfoPageScreen> {
   TextFormField _buildEmail() {
     return TextFormField(
       key: Key(_email),
+      style: TextStyleFactory.p(color: primaryTextColor),
       initialValue: _email,
       validator: (_) => _errEmail.isEmpty ? null : _errEmail,
       decoration: standardInputDecoration("Email", Icons.email),

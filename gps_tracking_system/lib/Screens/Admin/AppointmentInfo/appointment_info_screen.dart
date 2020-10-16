@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
@@ -290,6 +290,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             Expanded(
                 child: GoogleMapScreen(
                   key: _googleMapKey,
+                  size: Size(screenSize.width, screenSize.height - _minHeightOfSlidingUpPanel),
                   workerLatLng: (appointment.status == Status.ONGOING)
                       ? LatLng(_workerLocation.latitude, _workerLocation.longitude)
                       : null,
@@ -393,7 +394,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   }
 
   Container _buildStartNavigationButton(Size screenSize) {
-    return appointment.status != Status.ONGOING && User.getRole() != Role.OWNER
+    return appointment.status != Status.ONGOING && LoggedUser.getRole() != Role.OWNER
         ? Container(
       color: primaryLightColor,
       width: screenSize.width,

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:gps_tracking_system/Factory/end_user_factory.dart';
 import 'package:gps_tracking_system/Model/end_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Role{
   OWNER,
@@ -10,18 +11,18 @@ enum Role{
   CUSTOMER
 }
 
-class User{
-  static User _user;
+class LoggedUser{
+  static LoggedUser _user;
   String token;
   String username;
   String email;
   String userImage;
   Role role;
 
-  User._(final this.token,final this.username, final this.email, final this.userImage, final this.role);
+  LoggedUser._(final this.token,final this.username, final this.email, final this.userImage, final this.role);
 
 
-  static void createInstance(String token, String username, String email, {String userImage , int userGroupId = -1} ){
+  static Future<void> createInstance(String token, String username, String email, {String userImage , int userGroupId = -1} ) async{
     if(_user == null) {
       Role role;
       switch(userGroupId){
@@ -35,12 +36,17 @@ class User{
           role = Role.CUSTOMER;
           break;
       }
-      _user = User._(token, username, email, userImage, role);
+      _user = LoggedUser._(token, username, email, userImage, role);
     }
+
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("api_key", token);
   }
 
-  static void logout(){
+  static void logout() async {
     _user = null;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.remove("api_key");
   }
 
   static bool isAuthenticated() => _user != null;

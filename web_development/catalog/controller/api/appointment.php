@@ -38,14 +38,22 @@
 				
 				$data['appointments'] = array();
 				$appointmentResults = $this->model_appointment_appointment->getCustomerAppointmentList($filteredData);
+
+				$this->load->model('tool/image');
 				foreach($appointmentResults as $appointmentResult){
+					if (is_file(DIR_IMAGE . $appointmentResult['image'])) {
+						$image = $this->model_tool_image->resize($appointmentResult['image'], 250, 250);
+					} else {
+						$image = $this->model_tool_image->resize('profile.png', 250, 250);
+					}
+
 					$data['appointments'][] = array(
 						'appointment_id'	=> $appointmentResult['appointment_id'],	
 						'customer_id'		=> $appointmentResult['customer_id'],
 						'customer_name' 	=> $appointmentResult['customer_name'],
 						'worker_id'			=> $appointmentResult['user_id'],
 						'worker_name'		=> $appointmentResult['user_name'],
-						'worker_image'		=> 'image/'.$appointmentResult['image'],
+						'worker_image'		=> $image,
 						'worker_telephone'  => $appointmentResult['worker_telephone'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],

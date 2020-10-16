@@ -3,7 +3,7 @@ import 'package:flutter/painting.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/logout_response.dart';
@@ -180,7 +180,7 @@ class AccountScreenState extends State<AccountScreen> {
     LogoutResponse result = await RestApi.customer.logout();
     if (result.response.status == 1) {
       setState(() {
-        User.logout();
+        LoggedUser.logout();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       });
