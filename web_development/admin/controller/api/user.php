@@ -46,7 +46,10 @@ class ControllerApiUser extends Controller {
 
         $this->load->model('user/user');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+        $json = array();
+        $error = array();
+
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm($error)) {
             $this->model_user_user->editUser($this->request->get['user_id'], $this->request->post);
 
             $json['response'] = array(
