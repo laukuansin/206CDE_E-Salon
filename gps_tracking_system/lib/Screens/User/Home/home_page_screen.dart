@@ -156,7 +156,6 @@ class HomePageScreenState extends State<HomePageScreen> {
                                 trailing: CircleAvatar(
                                   radius: 30.0,
                                   backgroundImage: NetworkImage(
-                                      RestApi.customer.DOMAIN_NAME +
                                           _appointmentList[index].workerImage),
                                   backgroundColor: Colors.transparent,
                                 ),

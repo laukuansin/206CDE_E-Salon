@@ -173,8 +173,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                   )),
               trailing: CircleAvatar(
                 radius: 30.0,
-                backgroundImage: NetworkImage(
-                    RestApi.customer.DOMAIN_NAME + appointment.workerImage),
+                backgroundImage: NetworkImage(appointment.workerImage),
                 backgroundColor: Colors.transparent,
               ))
         ]));
