@@ -1,5 +1,7 @@
 <?php
 	class ControllerAppointmentAppointmentRequest extends Controller{
+		private $error = array();
+
 		public function index(){
 			$this->load->language('appointment/appointment_request');
 			$this->load->model('service/service');
@@ -208,12 +210,40 @@
 				$this->model_appointment_appointment->updateAppointmentInfo($data);				
 				$this->response->redirect($this->url->link('appointment/appointment_request', 'user_token='.$this->session->data['user_token'].$url, true));
 			}
+
+			$this->getForm();
 		}
 
 		private function validateForm(){
+			$this->load->language('appointment/appointment_form');
+
+			if(empty($this->request->post['appointment_address'])){
+				$this->error['appointment_address'] = $this->language->get('error_appointment_address');
+			} 
+
+			foreach ($this->request->post['service'] as $data) {
+				if(empty($data)){
+					$this->error['pax'] = $this->language->get('error_empty_pax');
+				} else if(!is_numeric($data)){
+					$this->error['pax'] = $this->language->get('error_pax');
+				} else if($data < 1){
+					$this->error['pax'] = $this->language->get('error_pax_range');
+				}
+				
+			}
+
+			if(empty($this->request->post['appointment_date'])){
+				$this->error['appointment_date'] = $this->language->get('error_empty_datepicker');
+			} else if ($this->request->post['appointment_date'] < date('Y-m-d')){
+				$this->error['appointment_date'] = $this->language->get('error_datepicker');
+			}
+
+			if(empty($this->request->post['appointment_time'])){
+				$this->error['appointment_time'] = $this->language->get('error_empty_time');
+			} 
 
 			//TODO
-			return true;
+			return !$this->error;
 		}
 
 
@@ -222,8 +252,32 @@
 			$this->load->language('appointment/appointment_form');
 			$appointmentId = $this->request->get['appointment_id'];
 
+			if(isset($this->error['appointment_address'])){
+				$data['error_appointment_address'] = $this->error['appointment_address'];
+			} else {
+				$data['error_appointment_address'] = '';
+			}
+
+			if (isset($this->error['pax'])) {
+				$data['error_pax'] = $this->error['pax'];
+			} else {
+				$data['error_pax'] = '';
+			}
+
+			if (isset($this->error['appointment_date'])) {
+				$data['error_datepicker'] = $this->error['appointment_date'];
+			} else {
+				$data['error_datepicker'] = '';
+			}
+
+			if (isset($this->error['appointment_time'])) {
+				$data['error_empty_time'] = $this->error['appointment_time'];
+			} else {
+				$data['error_empty_time'] = '';
+			}
+
 			// Sort
-			$url = '';
+			$url = '&appointment_id='.$this->request->get['appointment_id'];
 			if(isset($this->request->get['sort'])){
 				$sort = $this->request->get['sort'];
 				$url .= '&sort='.$this->request->get['sort'];
@@ -242,7 +296,7 @@
 			$data['header'] 		= $this->load->controller('common/header');
 			$data['column_left'] 	= $this->load->controller('common/column_left');
 			$data['footer'] 		= $this->load->controller('common/footer');
-	 		$data['cancel']			= $this->url->link('service/services', 'user_token='.$this->session->data['user_token']. $url, true);
+	 		$data['cancel']			= $this->url->link('appointment/appointment_request', 'user_token='.$this->session->data['user_token']. $url, true);
 			$data['breadcrumbs'] = array();
 			$data['breadcrumbs'][] = array(
 				'text' => $this->language->get('text_home'),
@@ -256,6 +310,23 @@
 			// Get appointment data
 			$this->load->model('appointment/appointment');
 			$appointmentResult = $this->model_appointment_appointment->getAppointmentById($appointmentId);
+
+			if(isset($this->request->post['appointment_address'])){
+				$address = $this->request->post['appointment_address'];
+				//echo $this->request->post[$service[0]];
+			} else if (!empty($appointmentResult)){
+				$address = $appointmentResult['appointment_address'];
+			} else {
+				$address = '';
+			}
+
+			if(isset($this->request->post['appointment_date'])){
+				$datepicker = $this->request->post['appointment_date'];
+			} else if (!empty($appointmentResult)){
+				$datepicker = date('Y-m-d', strtotime($appointmentResult['appointment_date']));
+			} else {
+				$datepicker = '';
+			}
 
 			$this->load->model('service/service');
 			$serviceList = array();
@@ -281,13 +352,13 @@
 				'worker_name'		=> $appointmentResult['user_name'],
 				'worker_id'			=> $appointmentResult['user_id'],
 				'telephone'			=> $appointmentResult['telephone'],
-				'address'			=> $appointmentResult['appointment_address'],
-				'appointment_date' 	=> date('Y-m-d', strtotime($appointmentResult['appointment_date'])),
+				'address'			=> $address,
+				'appointment_date' 	=> $datepicker,
 				'appointment_time'	=> date('g:ia', strtotime($appointmentResult['appointment_date'])),
 				'services'			=> json_encode($current_service)
 			);
 
-			$data['action_save'] = $this->url->link('appointment/appointment_request/save', 'user_token='.$this->session->data['user_token'], true);
+			$data['action_save'] = $this->url->link('appointment/appointment_request/save', 'user_token='.$this->session->data['user_token'].$url, true);	
 
 			$this->load->model('user/user');
 			$userResults = $this->model_user_user->getEnableUsersByGroupId(10);

@@ -141,14 +141,21 @@ class ControllerServiceServices extends Controller{
 			$this->error['service_price'] = $this->language->get('error_empty_service_price');
 		} else if(!is_numeric($this->request->post['service_price'])){
 			$this->error['service_price'] = $this->language->get('error_service_price');
+		}else if(($this->request->post['service_price']) < 0){
+			$this->error['service_price'] = $this->language->get('error_negative_service_price');
 		}
 
 		if(empty($this->request->post['service_duration'])){
-			$this->error['serivce_duration'] = $this->language->get('error_empty_service_duration');
+			$this->error['service_duration'] = $this->language->get('error_empty_service_duration');
 		} else if(!is_numeric($this->request->post['service_duration']) 
 			|| floor($this->request->post['service_duration']) != $this->request->post['service_duration']){
 			$this->error['service_duration'] = $this->language->get('error_service_duration');
 		}
+		else if(($this->request->post['service_duration']) < 15 
+			|| ($this->request->post['service_duration']) > 1020){
+			$this->error['service_duration'] = $this->language->get('error_service_duration_range');
+		}
+
 
 		return !$this->error;
 	}

@@ -191,7 +191,33 @@
         }
 
         $scope.postMakeAppointment = function(){
-            if($scope.selectedServiceList.length > 0 
+
+            if($scope.selectedServiceList.length < 1){
+                alert('Select at least ONE service!');
+            }
+
+            else if($scope.address.length < 1){
+                alert('Address must not be empty!');
+            }
+
+            else if($scope.appointmentDate == null){
+                alert('Date MUST NOT be empty!');
+            }
+
+            else if($scope.model.selectedTime.length < 1){
+                alert('Time slot MUST BE selected!');
+            }
+
+            else if($scope.selectedServiceList.length > 0){
+                for(i = 0 ; i < $scope.selectedServiceList.length; i++){
+                    if($scope.selectedServiceList[i].qty < 1){
+                        alert('Pax MUST not less than ONE!');
+                    }
+                    break;
+                }
+            }
+
+             if($scope.selectedServiceList.length > 0 
                 && $scope.appointmentDate !== null
                 && $scope.address.length > 0
                 && $scope.model.selectedTime.length > 0){
@@ -218,7 +244,7 @@
             }
             else
                 alert('No ' + $scope.model.selectedTime);
-        } 
+            }
 
     });
     </script>

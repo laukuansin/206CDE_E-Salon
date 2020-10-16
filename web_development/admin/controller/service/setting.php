@@ -39,6 +39,12 @@ class ControllerServiceSetting extends Controller{
 			$data['error_warning'] = '';
 		}
 
+		if(isset($this->error['business_hour'])){
+			$data['error_business_hour'] = $this->error['business_hour'];
+		} else {
+			$data['error_business_hour'] = '';
+		}
+
 		if(isset($this->error['cancellation_time'])){
 			$data['error_cancellation_time'] = $this->error['cancellation_time'];
 		} else {
@@ -111,6 +117,26 @@ class ControllerServiceSetting extends Controller{
 	public function validateForm(){
 		if(!$this->user->hasPermission('modify', 'service/setting')){
 			$this->error['warning'] = $this->language->get('error_permission');
+		}
+
+		foreach($this->request->post['business_hour'] as $data){
+			if($data['is_open'] == 1){
+				if(empty($data['start_time']) || empty($data['end_time'])){
+					$this->error['business_hour'] = $this->language->get('error_empty_business_hour');
+				} else if(!is_numeric($data['start_time']) || !is_numeric($data['end_time'])){
+					$this->error['business_hour'] = $this->language->get('error_business_hour');
+				}
+				else if((($data['start_time']) < 7) && (($data['start_meridiem']) == "AM")
+					|| ($data['start_time']) < 1 
+					|| ($data['start_time']) > 12.59){
+					$this->error['business_hour'] = $this->language->get('error_business_hour_range');
+				} else if((($data['end_time']) < 7) && (($data['end_meridiem']) == "AM")
+					|| ($data['end_time']) < 1
+					|| ($data['end_time']) > 12.59){
+					$this->error['business_hour'] = $this->language->get('error_business_hour_range');
+				}
+			}
+			
 		}
 
 		if(empty($this->request->post['cancellation_time'])){

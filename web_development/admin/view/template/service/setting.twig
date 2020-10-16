@@ -73,6 +73,9 @@
                       <option value='{{text_pm}}'selected>{{text_pm}}</option>
                     {% endif %}
                   </select>
+                  {% if data['is_open'] == true and error_business_hour %}
+                    <div class="text-danger" style='margin-left:25px;'>{{ error_business_hour }}</div>
+                  {% endif %}
               </div>
               <script type="text/javascript">
                 $('#{{'container-'~day}} *').prop('readonly', {{data['is_open'] ? false: true}});

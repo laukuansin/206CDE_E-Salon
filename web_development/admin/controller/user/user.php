@@ -19,7 +19,7 @@ class ControllerUserUser extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('user/user');
-
+	
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$userTokenList = $this->model_user_user->getUserToken();
 
@@ -456,11 +456,19 @@ class ControllerUserUser extends Controller {
 			}
 		}
 
-		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+		if(is_numeric($this->request->post['firstname'])){
+			$this->error['firstname'] = $this->language->get('error_firstname_num');
+		}  else if(preg_match('/[^a-z0-9 _]+/i', $this->request->post['firstname'])) {
+			$this->error['firstname'] = $this->language->get('error_firstname_special');
+		}  else if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
 			$this->error['firstname'] = $this->language->get('error_firstname');
 		}
 
-		if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
+		if(is_numeric($this->request->post['lastname'])){
+			$this->error['lastname'] = $this->language->get('error_lastname_num');
+		}  else if(preg_match('/[^a-z0-9 _]+/i', $this->request->post['lastname'])) {
+			$this->error['lastname'] = $this->language->get('error_lastname_special');
+		}  else if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
 			$this->error['lastname'] = $this->language->get('error_lastname');
 		}
 

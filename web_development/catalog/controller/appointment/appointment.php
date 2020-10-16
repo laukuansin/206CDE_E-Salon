@@ -37,7 +37,16 @@
 
 			// TODO Validation
 			$date 					= date('Y/m/d', strtotime($postData['appointment_date'])); 
+			if ($date  < date('Y-m-d')) {
+				$this->error['appointment_date'] = $this->language->get('error_datepicker');
+			}
 
+			if (isset($this->error['appointment_date'])) {
+				$data['error_datepicker'] = $this->error['appointment_date'];
+			} else {
+				$data['error_datepicker'] = '';
+			}
+			
 			// Get business hour of the day
 			$travelDuration 		= 0;
 			$appointmentInterval 	= 0;
@@ -54,7 +63,6 @@
 			foreach($postData['services'] as $service){
 				$data['services'][$service['service_id']] = $service['qty'];
 			}
-
 			
 			$workers = $this->getWorkersTimetable(
 				10

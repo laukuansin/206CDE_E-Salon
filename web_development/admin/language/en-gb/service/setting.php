@@ -14,6 +14,9 @@ $_['label_appointment_interval']	 = 'Appointment Interval';
 
 
 $_['error_permission']				 = 'Warning: You do not have permission to modify services setting!';
+$_['error_empty_business_hour']      = "Business hour must not empty";
+$_['error_business_hour']      		 = "Business hour must contain only number";
+$_['error_business_hour_range']		 = 'Business hour must between 7.00a.m. - 12.00p.m. (12 hour-format)';
 $_['error_empty_cancellation_time']  = "Cancellation time must not empty";
 $_['error_cancellation_time']		 = 'Cancellation time must contain only number';
 $_['error_empty_travel_time']		 = 'Travel time must not empty';
