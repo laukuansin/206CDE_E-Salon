@@ -26,7 +26,7 @@ class SettingPageScreenState extends State<SettingPageScreen> {
   @override
   Widget build(BuildContext context) {
     return RouteGenerator.buildScaffold(
-        SingleChildScrollView(
+        setting != null ? SingleChildScrollView(
           child: Container(
             color: primaryLightColor,
             child: Form(
@@ -84,7 +84,7 @@ class SettingPageScreenState extends State<SettingPageScreen> {
               ),
             ),
           ),
-        ),
+        ): Container(),
         key: _scaffoldKey,
         appbar: AppBar(
             backgroundColor: Color(0xFF65CBF2),
@@ -193,7 +193,6 @@ class SettingPageScreenState extends State<SettingPageScreen> {
           labelStyle: TextStyleFactory.p());
 
   TextFormField _buildCancelTime() {
-    if (setting == null) return TextFormField();
     return TextFormField(
       key: Key(setting.cancellationTime.toString()),
       keyboardType: TextInputType.number,
@@ -207,7 +206,6 @@ class SettingPageScreenState extends State<SettingPageScreen> {
   }
 
   TextFormField _buildTravelTime() {
-    if (setting == null) return TextFormField();
     return TextFormField(
       key: Key(setting.travelTime.toString()),
       initialValue: setting.travelTime.toString(),
@@ -221,7 +219,6 @@ class SettingPageScreenState extends State<SettingPageScreen> {
   }
 
   TextFormField _buildAppointmentInterval() {
-    if (setting == null) return TextFormField();
     return TextFormField(
       key: Key(setting.appointmentInterval.toString()),
       initialValue: setting.appointmentInterval.toString(),
