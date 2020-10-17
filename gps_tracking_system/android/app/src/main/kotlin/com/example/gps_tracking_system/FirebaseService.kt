@@ -73,6 +73,7 @@ class FirebaseService: Service() {
         super.onStart(intent, startId)
         val bundle = intent?.getBundleExtra("firebaseWorkerId")
         workerId = bundle?.get("worker_id") as String
+        appointmentId = bundle.get("appointment_id") as String
         Log.d("FirebaseService", workerId)
 
         FirebaseApp.initializeApp(this)
@@ -105,30 +106,30 @@ class FirebaseService: Service() {
     }
 
     override fun onDestroy() {
-        Log.d("FirebaseService", "destory: ")
-        val bundle = Bundle()
-        bundle.putString("worker_id", workerId)
-
-        var rootIntent = Intent()
-        rootIntent.action = "restartservice";
-        rootIntent.setClass(this, FirebaseReceiver::class.java)
-        rootIntent.putExtra("firebaseWorkerId", bundle)
-        sendBroadcast(rootIntent)
+//        Log.d("FirebaseService", "destory: ")
+//        val bundle = Bundle()
+//        bundle.putString("worker_id", workerId)
+//
+//        var rootIntent = Intent()
+//        rootIntent.action = "restartservice";
+//        rootIntent.setClass(this, FirebaseReceiver::class.java)
+//        rootIntent.putExtra("firebaseWorkerId", bundle)
+//        sendBroadcast(rootIntent)
         super.onDestroy()
     }
 
 
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.d("FirebaseService", "onTaskRemoved: ")
-        val bundle = Bundle()
-        bundle.putString("worker_id", workerId)
-
-        var rootIntent = Intent()
-        rootIntent.action = "restartservice";
-        rootIntent.setClass(this, FirebaseReceiver::class.java)
-        rootIntent.putExtra("firebaseWorkerId", bundle)
-        sendBroadcast(rootIntent)
+//        Log.d("FirebaseService", "onTaskRemoved: ")
+//        val bundle = Bundle()
+//        bundle.putString("worker_id", workerId)
+//
+//        var rootIntent = Intent()
+//        rootIntent.action = "restartservice";
+//        rootIntent.setClass(this, FirebaseReceiver::class.java)
+//        rootIntent.putExtra("firebaseWorkerId", bundle)
+//        sendBroadcast(rootIntent)
         super.onTaskRemoved(rootIntent)
     }
 }
