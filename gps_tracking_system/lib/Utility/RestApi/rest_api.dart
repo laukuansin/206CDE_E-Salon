@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gps_tracking_system/Model/open_close_time.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
@@ -41,7 +40,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.8.103/";
+const tempDomainName = "http://192.168.68.107/";
 
 
 class RestApi
@@ -276,7 +275,7 @@ class _Admin {
     });
     return changePasswordResponseFromJson(response.body);
   }
-  Future<SettingResponse> getSetting() async{
+  Future<ServiceSettingResponse> getSetting() async{
     String url = DOMAIN_NAME;
     if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/setting/getSetting&api_key=" +
@@ -287,10 +286,10 @@ class _Admin {
     }
 
     var response = await http.get(url);
-    return settingResponseFromJson(response.body);
+    return serviceSettingResponseFromJson(response.body);
   }
 
-  Future<EditSettingResponse> editSetting(OpenCloseTime mon,OpenCloseTime tues,OpenCloseTime wed,OpenCloseTime thurs,OpenCloseTime fri,OpenCloseTime sat, OpenCloseTime sun,int travelTime,int cancelTime,int appointmentInterval) async{
+  Future<EditSettingResponse> editSetting(Setting setting) async{
     String url = DOMAIN_NAME;
     if(LoggedUser.getRole() == Role.OWNER) {
       url += "index.php?route=api/setting/editSetting&api_key=" +
@@ -300,32 +299,8 @@ class _Admin {
       log("No permission. Only owner can call this api.");
     }
 
-    var response = await http.post(url, body: {
-      "cancellation_time":cancelTime.toString(),
-      "travel_time":travelTime.toString(),
-      "appointment_interval":appointmentInterval.toString(),
-      "monOpenTime":mon.openTime,
-      "monCloseTime":mon.closeTime,
-      "monIsOpen":mon.closed.toString(),
-      "tuesOpenTime":tues.openTime,
-      "tuesCloseTime":tues.closeTime,
-      "tuesIsOpen":tues.closed.toString(),
-      "wedOpenTime":wed.openTime,
-      "wedCloseTime":wed.closeTime,
-      "wedIsOpen":wed.closed.toString(),
-      "thursOpenTime":thurs.openTime,
-      "thursCloseTime":thurs.closeTime,
-      "thursIsOpen":thurs.closed.toString(),
-      "friOpenTime":fri.openTime,
-      "friCloseTime":fri.closeTime,
-      "friIsOpen":fri.closed.toString(),
-      "satOpenTime":sat.openTime,
-      "satCloseTime":sat.closeTime,
-      "satIsOpen":sat.closed.toString(),
-      "sunOpenTime":sun.openTime,
-      "sunCloseTime":sun.closeTime,
-      "sunIsOpen":sun.closed.toString(),
-    });
+    var body = jsonEncode(setting.toJson());
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
     return editSettingResponseFromJson(response.body);
   }
 
