@@ -5,6 +5,7 @@ import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 
 import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/payment_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
@@ -23,6 +24,8 @@ import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as
 import 'package:gps_tracking_system/Utility/RestApi/user_sign_up_response.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
+import 'package:gps_tracking_system/Model/service.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
@@ -32,11 +35,12 @@ import 'package:path/path.dart' as p;
 
 // Jeffrey
 // 192.168.68.107
-
+// KS
+// 192.168.8.103
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.68.107/";
+const tempDomainName = "http://192.168.8.103/";
 
 
 class RestApi
@@ -282,6 +286,34 @@ class _Admin {
     return getUsersResponseFromJson(response.body);
   }
 
+  Future<PaymentDetailResponse> getPaymentDetail(String appointmentID) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/payment/getPaymentDetail&api_key=" +
+        LoggedUser.getToken();
+    log("Calling getPaymentDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "appointment_id":appointmentID
+    });
+    log(response.body);
+
+    return paymentDetailResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> scanQRCode(String token) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/payment/scanCustomerQRCode&api_key=" +
+        LoggedUser.getToken();
+    log("Calling getPaymentDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "token":token
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
+  }
+
 }
 
 class _Customer{
@@ -336,8 +368,8 @@ class _Customer{
     return commonResponseFromJson(response.body);
   }
 
-  Future<CustomerCreditResponse> getCustomerCredit() async{
-    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCredit&api_key="+LoggedUser.getToken();
+  Future<CustomerCreditResponse> getCustomerCreditToken() async{
+    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCreditToken&api_key="+LoggedUser.getToken();
     log("Calling get customer credit API : " + url);
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);

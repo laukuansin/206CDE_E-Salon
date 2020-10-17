@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if(result.response.status == 1) {
       await LoggedUser.createInstance(result.userToken,result.username, result.email, userImage: result.userImage ,userGroupId: result.userGroupId, );
-      Navigator.of(context).pushReplacementNamed("/home_page");
+      Navigator.of(context).pushReplacementNamed("/payment");
     } else {
       _apiKey = "";
     }

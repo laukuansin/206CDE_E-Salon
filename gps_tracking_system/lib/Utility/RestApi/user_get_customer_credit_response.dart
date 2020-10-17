@@ -8,18 +8,22 @@ class CustomerCreditResponse {
   CustomerCreditResponse({
     this.credit,
     this.response,
+    this.token
   });
 
   double credit;
+  String token;
   Response response;
 
   factory CustomerCreditResponse.fromJson(Map<String, dynamic> json) => CustomerCreditResponse(
     credit: json["credit"] == null? 0.0 : json["credit"].toDouble(),
+    token:json["token"],
     response: Response.fromJson(json["response"]),
   );
 
   Map<String, dynamic> toJson() => {
     "credit": credit,
+    "token": token,
     "response": response.toJson(),
   };
 }

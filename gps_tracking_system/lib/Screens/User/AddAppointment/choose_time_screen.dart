@@ -7,6 +7,8 @@ import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/color.dart';
+import 'package:gps_tracking_system/Model/service.dart';
+
 
 class ChooseTimeScreen extends StatefulWidget {
   final Appointment appointment;

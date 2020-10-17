@@ -288,7 +288,7 @@ class HomePageScreenState extends State<HomePageScreen> {
   }
 
   void requestCurrentCustomerCredit() async {
-    CustomerCreditResponse result = await RestApi.customer.getCustomerCredit();
+    CustomerCreditResponse result = await RestApi.customer.getCustomerCreditToken();
 
     if (result.response.status == 1) {
       setState(() {

@@ -3,6 +3,8 @@ import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
+import 'package:gps_tracking_system/Model/service.dart';
+
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart'
@@ -16,7 +18,9 @@ import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart'
 import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/edit_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/manage_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/add_service_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/payment_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
@@ -38,6 +42,7 @@ import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/payment_detail_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -160,7 +165,7 @@ class RouteGenerator {
         case "/add_worker":
           return _buildRoute(AddWorker());
         case "/payment":
-          return _buildRoute(PaymentScreen());
+          return _buildRoute(PaymentWorkerScreen());
         case "/manage_appointment":
           return _buildRoute(ManageAppointmentScreen());
         case "/home_page":
@@ -173,6 +178,10 @@ class RouteGenerator {
           return _buildRoute(ChangePasswordPageScreen());
         case "/manage_worker":
           return _buildRoute(ManageWorkerScreen());
+        case "/add_service" :
+          if(args is List<Service>)
+            return _buildRoute(AddServiceScreen(args));
+          break;
         case "/edit_worker":
           if(args is Admin)
             return _buildRoute(EditWorkerScreen(args));

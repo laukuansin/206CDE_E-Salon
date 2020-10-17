@@ -8,3 +8,17 @@
 2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
 2020-10-15 13:21:50 - PHP Notice:  Undefined variable: url in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 357
 2020-10-15 13:23:30 - PHP Notice:  Undefined variable: data in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/user.php on line 367
+2020-10-17 3:50:40 - PHP Warning:  Use of undefined constant HTTPS_SERVER - assumed 'HTTPS_SERVER' (this will throw an Error in a future version of PHP) in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\catalog\controller\startup\startup.php on line 22
+2020-10-17 6:43:27 - PHP Notice:  Undefined property: Response::$post in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 18
+2020-10-17 6:43:58 - PHP Unknown:  Object of class ControllerApiPayment could not be converted to string in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:43:58 - PHP Notice:  Trying to get property 'modal_appointment_appointment' of non-object in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:44:26 - PHP Unknown:  Object of class ControllerApiPayment could not be converted to string in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:44:26 - PHP Notice:  Trying to get property 'modal_appointment_appointment' of non-object in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:44:43 - PHP Unknown:  Object of class ControllerApiPayment could not be converted to string in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:44:43 - PHP Notice:  Trying to get property 'model_appointment_appointment' of non-object in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 22
+2020-10-17 6:55:59 - PHP Notice:  Undefined index: customer_nnamme in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\payment.php on line 28
+2020-10-17 7:37:56 - PHP Notice:  Undefined index: telephone in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\user.php on line 394
+2020-10-17 7:37:56 - PHP Notice:  Undefined index: telephone in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\user.php on line 394
+2020-10-17 7:37:56 - PHP Notice:  Undefined index: telephone in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\user.php on line 394
+2020-10-17 13:34:28 - PHP Notice:  Undefined index: customer_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\model\customer\customer.php on line 491
+2020-10-17 13:48:25 - PHP Notice:  Undefined index: customer_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\model\customer\customer.php on line 491

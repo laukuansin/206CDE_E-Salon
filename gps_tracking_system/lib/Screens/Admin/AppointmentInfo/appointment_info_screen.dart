@@ -18,6 +18,7 @@ import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:gps_tracking_system/Model/service.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AppointmentInfo extends StatefulWidget {

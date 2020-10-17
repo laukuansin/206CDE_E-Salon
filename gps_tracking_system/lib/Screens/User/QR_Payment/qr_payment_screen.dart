@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -17,6 +18,7 @@ class QRCodePaymentScreen extends StatefulWidget {
 class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
   double _creditAmount;
   FToast fToast;
+  String userToken="";
 
   @override
   void initState() {
@@ -24,7 +26,7 @@ class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
     _creditAmount = 0.0;
     fToast = FToast();
     fToast.init(context);
-    requestCustomerCredit();
+    requestCustomerCreditToken();
   }
 
   @override
@@ -45,7 +47,7 @@ class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
               Padding(
                 child: QrImage(
                   data:
-                      'KCBbdXNlcl9pZF0gPT4gMyBbZW1haWxdID0+IGxhdWt1YW5zaW5AZ21haWwuY29tIFtwYXNzd29yZF0gPT4gbGF1a3VhbnNpbiAp',
+                      userToken,
                   version: QrVersions.auto,
                   size: 250,
                   gapless: false,
@@ -84,15 +86,17 @@ class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
     );
   }
 
-  void requestCustomerCredit()async
+  void requestCustomerCreditToken()async
   {
     final ProgressDialog progressDialog = ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    CustomerCreditResponse result=await RestApi.customer.getCustomerCredit();
+    CustomerCreditResponse result=await RestApi.customer.getCustomerCreditToken();
     progressDialog.hide();
     if(result.response.status == 1)
     {
       setState(() {
+        String token=result.token;
+        userToken='{"token":"$token"}';
         _creditAmount= result.credit;
       });
     }
