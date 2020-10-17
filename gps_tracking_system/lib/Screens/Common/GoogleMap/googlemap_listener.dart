@@ -20,14 +20,13 @@ class GoogleMapListener{
       :_workerLocation = WorkerLocation(workerId: workerId),
        _workerLocationUpdated = workerLocationUpdated;
 
-  void startServices(){
+  Future<void> startServices()async{
     switch(LoggedUser.getRole()){
       case Role.CUSTOMER:
         RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
         break;
 
       case Role.WORKER:
-        log("Calling method channel code");
         platForm.invokeMethod('firebaseAutoLocationUpdateService',{"worker_id": _workerLocation.workerId, "appointment_id": appointmentId});
         RealTimeDb.startListenWorkerLocationChanges(_workerLocation.workerId, _locationReceived);
         break;
@@ -38,13 +37,14 @@ class GoogleMapListener{
     }
   }
 
-  void stopServices(){
+  Future<void> stopServices()async{
     switch(LoggedUser.getRole()){
       case Role.CUSTOMER:
         RealTimeDb.stopListenWorkerLocationChanges();
         break;
 
       case Role.WORKER:
+        platForm.invokeMethod('stopFirebaseAutoLocationUpdateService');
         RealTimeDb.stopListenWorkerLocationChanges();
         break;
 

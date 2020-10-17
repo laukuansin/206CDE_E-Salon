@@ -12,6 +12,8 @@ enum Status{
   SERVICING,
 }
 
+const List<String> _StatusName = ["", "Accepted", "Rejected", "Pending", "Cancelled", "Completed", "Ongoing", "Servicing"];
+
 
 class Appointment {
   static final DateFormat dateParser     = DateFormat("yyyy-MM-dd hh:mmaa");
@@ -34,7 +36,6 @@ class Appointment {
     this.telephone,
     this.address,
     this.status,
-    this.statusName,
     this.appointmentDate,
     this.appointmentTime,
     this.services,
@@ -51,7 +52,6 @@ class Appointment {
   String workerTelephone;
   String telephone;
   String address;
-  String statusName;
   Status status;
   DateTime appointmentDate;
   String appointmentTime;
@@ -83,7 +83,6 @@ class Appointment {
       telephone: json["telephone"],
       address: json["address"],
       status: Status.values[json["status_id"].toInt()],
-      statusName: json['status'],
       appointmentDate: appointmentDateTime,
       appointmentTime: timeFormatter.format(appointmentDateTime),
       services: json["services"],
@@ -112,6 +111,7 @@ class Appointment {
   String getAppointmentDateStringYYYYMMDD() => dateMonthYearFormatter.format(appointmentDate);
   String getAppointmentDateStringMMMYYYY() => monthYearFormatter.format(appointmentDate);
   String getAppointmentDateStringMMM() => monthFormatter.format(appointmentDate);
+  String getStatusName() => _StatusName[status.index];
   static String convertAppointmentDateStringEMMMDD(DateTime appointmentDate) => dayDateMonthFormatter.format(appointmentDate);
   static String convertAppointmentDateStringJM(DateTime appointmentDate) => timeFormatter.format(appointmentDate);
   static String convertAppointmentDateStringDay(DateTime appointmentDate) => dayFormatter.format(appointmentDate);

@@ -147,7 +147,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             trailing: _getStatusIcon(appointment.status),
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/appointment_info", arguments: appointment);
+                  .pushNamed("/appointment_info", arguments: appointment).then((_){setState(() {
+
+                  });} );
             },
           )
         ]));

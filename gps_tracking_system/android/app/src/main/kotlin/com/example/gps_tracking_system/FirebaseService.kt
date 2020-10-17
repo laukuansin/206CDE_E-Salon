@@ -73,7 +73,6 @@ class FirebaseService: Service() {
         super.onStart(intent, startId)
         val bundle = intent?.getBundleExtra("firebaseWorkerId")
         workerId = bundle?.get("worker_id") as String
-        appointmentId = bundle?.get("appointment_id") as String
         Log.d("FirebaseService", workerId)
 
         FirebaseApp.initializeApp(this)

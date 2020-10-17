@@ -30,7 +30,6 @@ class MainActivity: FlutterActivity() {
         bundle.putString("worker_id", workerId)
         bundle.putString("appointment_id", appointmentId)
         intent.putExtra("firebaseWorkerId", bundle)
-        Log.d("FirebaseService", "Start Service")
         startService(intent)
     }
 
