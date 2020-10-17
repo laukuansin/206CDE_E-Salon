@@ -17,6 +17,7 @@ import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appoi
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/edit_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/manage_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
@@ -126,7 +127,14 @@ class RouteGenerator {
                   "/account_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(leading: Icon(Icons.settings), title: Text("Setting")),
+          ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("Setting"),
+            onTap: (){
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/setting_page", (Route<dynamic> route) => false);
+            },
+          ),
           ListTile(
             leading: Icon(MdiIcons.logout),
             title: Text("Logout"),
@@ -171,6 +179,8 @@ class RouteGenerator {
           return _buildRoute(EditInfoPageScreen());
         case "/change_password":
           return _buildRoute(ChangePasswordPageScreen());
+        case "/setting_page":
+          return _buildRoute(SettingPageScreen());
         case "/manage_worker":
           return _buildRoute(ManageWorkerScreen());
         case "/edit_worker":

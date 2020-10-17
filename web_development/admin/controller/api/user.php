@@ -212,6 +212,7 @@ class ControllerApiUser extends Controller {
 
         return !$error;
     }
+    
 
     public function getUserDetail()
     {

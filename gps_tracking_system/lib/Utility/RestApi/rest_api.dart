@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
-
 import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
@@ -32,6 +33,9 @@ import 'package:path/path.dart' as p;
 
 // Jeffrey
 // 192.168.68.107
+
+//kunasin
+//192.168.8.103
 
 // Emulator
 // 10.0.2.2
@@ -270,6 +274,34 @@ class _Admin {
       "confirmPassword":confirmPassword
     });
     return changePasswordResponseFromJson(response.body);
+  }
+  Future<ServiceSettingResponse> getSetting() async{
+    String url = DOMAIN_NAME;
+    if(LoggedUser.getRole() == Role.OWNER) {
+      url += "index.php?route=api/setting/getSetting&api_key=" +
+          LoggedUser.getToken();
+      log("Calling get setting request (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
+
+    var response = await http.get(url);
+    return serviceSettingResponseFromJson(response.body);
+  }
+
+  Future<EditSettingResponse> editSetting(Setting setting) async{
+    String url = DOMAIN_NAME;
+    if(LoggedUser.getRole() == Role.OWNER) {
+      url += "index.php?route=api/setting/editSetting&api_key=" +
+          LoggedUser.getToken();
+      log("Calling edit setting (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
+
+    var body = jsonEncode(setting.toJson());
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    return editSettingResponseFromJson(response.body);
   }
 
   Future<GetUsersResponse>getWorkers()async{
