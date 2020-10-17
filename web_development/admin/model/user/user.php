@@ -30,7 +30,7 @@ class ModelUserUser extends Model {
 	public function editUser($user_id, $data) {
 		$this->db->query("UPDATE `" . DB_PREFIX . "user` SET username = '" . $this->db->escape($data['username']) . "', user_group_id = '" . (int)$data['user_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', image = '" . $this->db->escape($data['image']) . "', status = '" . (int)$data['status'] . "' WHERE user_id = '" . (int)$user_id . "'");
 
-		if ($data['password']) {
+		if (isset($data['password'])) {
 			$this->db->query("UPDATE `" . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = token(9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
 		}
 	}
@@ -89,13 +89,17 @@ class ModelUserUser extends Model {
 	}
 
 	public function getUsers($data = array()) {
-		$sql = "SELECT * FROM `" . DB_PREFIX . "user`";
+		$sql = "SELECT * FROM `" . DB_PREFIX . "user` ";
 
 		$sort_data = array(
 			'username',
 			'status',
 			'date_added'
 		);
+
+		if(isset($data['user_group_id'])){
+			$sql .= " WHERE user_group_id IN(".$this->db->escape($data['user_group_id']).") ";
+		}
 
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 			$sql .= " ORDER BY " . $data['sort'];

@@ -166,6 +166,7 @@ class EditInfoScreenState extends State<EditInfoScreen> {
     return TextFormField(
       key: Key(lastName),
       initialValue: lastName.isEmpty?"":lastName,
+      style: TextStyleFactory.p(color: primaryTextColor),
       validator: (_) => _errLastname.isEmpty ? null : _errLastname,
       decoration: standardInputDecoration("Last Name", Icons.font_download),
       onSaved: (value) {lastName = value;},
@@ -175,6 +176,7 @@ class EditInfoScreenState extends State<EditInfoScreen> {
   TextFormField _buildEmail() {
     return TextFormField(
       key: Key(email),
+      style: TextStyleFactory.p(color: primaryTextColor),
       initialValue: email.isEmpty?"":email,
       validator: (_) => _errEmail.isEmpty ? null : _errEmail,
       decoration: standardInputDecoration("Email", Icons.email),
@@ -185,6 +187,7 @@ class EditInfoScreenState extends State<EditInfoScreen> {
     return TextFormField(
       key: Key(contactNo),
       initialValue: contactNo.isEmpty?"":contactNo,
+      style: TextStyleFactory.p(color: primaryTextColor),
       validator: (_) => _errContact.isEmpty ? null : _errEmail,
       decoration: standardInputDecoration("Contact No", Icons.phone),
       onSaved: (value) {contactNo = value;},

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-AddWorkerResponse addWorkerResponseFromJson(String str) => AddWorkerResponse.fromJson(json.decode(str));
+ModifiedUserResponse modifiedUserResponseFromJson(String str) => ModifiedUserResponse.fromJson(json.decode(str));
 
-String addWorkerResponseToJson(AddWorkerResponse data) => json.encode(data.toJson());
+String modifiedUserResponseToJson(ModifiedUserResponse data) => json.encode(data.toJson());
 
-class AddWorkerResponse {
-  AddWorkerResponse({
+class ModifiedUserResponse {
+  ModifiedUserResponse({
     this.response,
     this.error,
   });
@@ -13,7 +13,7 @@ class AddWorkerResponse {
   Response response;
   Error error;
 
-  factory AddWorkerResponse.fromJson(Map<String, dynamic> json) => AddWorkerResponse(
+  factory ModifiedUserResponse.fromJson(Map<String, dynamic> json) => ModifiedUserResponse(
     response: Response.fromJson(json["response"]),
     error: json["error"]== null? null : Error.fromJson(json["error"]),
   );

@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -86,7 +86,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
     LatLng origin = MapHelper.positionToLatLng(await getCurrentPosition());
     appointmentList.forEach((date, list) async {
       for (Appointment appointment in list) {
-        if(User.getRole() == Role.OWNER && appointment.status != Status.ONGOING) continue;
+        if(LoggedUser.getRole() == Role.OWNER && appointment.status != Status.ONGOING) continue;
         LatLng destination =
             await MapHelper.addressToLatLng(appointment.address);
         Map<String, int> timeDistanceMap =
@@ -131,7 +131,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   ),
                   () {
                     return timeTaken.isEmpty
-                        ? (appointment.status == Status.ONGOING || User.getRole() == Role.WORKER) ? SkeletonAnimation(
+                        ? (appointment.status == Status.ONGOING || LoggedUser.getRole() == Role.WORKER) ? SkeletonAnimation(
                             child: Container(
                               height: 15,
                               width: MediaQuery.of(context).size.width * 0.6,

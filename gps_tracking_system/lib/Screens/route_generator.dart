@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Model/location.dart';
-import 'package:gps_tracking_system/Model/user.dart';
+import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/AddWorker/add_worker.dart';
+import 'package:gps_tracking_system/Screens/Admin/ManageWorker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart'
     as AdminAppointmentInfo;
 import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_screen.dart';
@@ -15,6 +14,8 @@ import 'package:gps_tracking_system/Screens/Admin/Home/home_page_screen.dart'
 import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart'
     as AdminLogin;
 import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/ManageWorker/edit_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/ManageWorker/manage_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
@@ -36,6 +37,7 @@ import 'package:gps_tracking_system/Screens/User/NotificationAppointments/notifi
 import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.dart';
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -70,23 +72,23 @@ class RouteGenerator {
           UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: primaryColor),
               accountName: Text(
-                User.getUsername(),
+                LoggedUser.getUsername(),
                 style: TextStyleFactory.p(color: Colors.white),
               ),
               accountEmail: Text(
-                User.getEmail(),
+                LoggedUser.getEmail(),
                 style: TextStyleFactory.p(color: Colors.white),
               ),
               currentAccountPicture: () {
-                return User.getUserImage() != null &&
-                        User.getUserImage().isNotEmpty
+                return LoggedUser.getUserImage() != null &&
+                        LoggedUser.getUserImage().isNotEmpty
                     ? CircleAvatar(
-                        backgroundImage: NetworkImage(User.getUserImage()),
+                        backgroundImage: NetworkImage(LoggedUser.getUserImage()),
                       )
                     : CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Text(
-                          User.getUsername()[0].toUpperCase(),
+                          LoggedUser.getUsername()[0].toUpperCase(),
                           style: TextStyleFactory.heading1(
                               fontWeight: FontWeight.bold, color: primaryColor),
                         ),
@@ -100,7 +102,14 @@ class RouteGenerator {
                   "/home_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(leading: Icon(Icons.people), title: Text("Staff")),
+          ListTile(
+            leading: Icon(Icons.people),
+            title: Text("Worker"),
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/manage_worker", (route) => false);
+            },
+          ),
           ListTile(
             leading: Icon(Icons.calendar_today),
             title: Text("Appointment"),
@@ -130,7 +139,7 @@ class RouteGenerator {
             leading: Icon(MdiIcons.logout),
             title: Text("Logout"),
             onTap: () {
-              User.logout();
+              LoggedUser.logout();
               Navigator.of(context).pushNamedAndRemoveUntil(
                   "/login", (Route<dynamic> route) => false);
             },
@@ -172,6 +181,12 @@ class RouteGenerator {
           return _buildRoute(ChangePasswordPageScreen());
         case "/setting_page":
           return _buildRoute(SettingPageScreen());
+        case "/manage_worker":
+          return _buildRoute(ManageWorkerScreen());
+        case "/edit_worker":
+          if(args is Admin)
+            return _buildRoute(EditWorkerScreen(args));
+          break;
         case "/appointment_info":
           if (args is Appointment)
             return _buildRoute(AdminAppointmentInfo.AppointmentInfo(args));
