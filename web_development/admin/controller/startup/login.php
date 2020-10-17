@@ -11,7 +11,9 @@ class ControllerStartupLogin extends Controller {
 
 		$api = array(
 			'api/login',
+			'api/setting',
 			'api/appointment'
+			
 		);
 
 
