@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void autoLogin()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _apiKey =  prefs.getString("apiKey") ?? "";
+    _apiKey =  prefs.getString("api_key") ?? "";
     if(_apiKey.isNotEmpty) _login();
   }
 }
