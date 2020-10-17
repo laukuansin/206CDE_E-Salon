@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/add_worker_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart'
+import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_info_screen.dart'
     as AdminAppointmentInfo;
-import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ChangePassword/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_list_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Account/change_password_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Home/home_page_screen.dart'
     as AdminHome;
 import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart'
     as AdminLogin;
-import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/edit_worker_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/manage_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/edit_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/manage_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
@@ -37,12 +38,10 @@ import 'package:gps_tracking_system/Screens/User/NotificationAppointments/notifi
 import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.dart';
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import 'Admin/EditInfo/edit_info_screen.dart';
+import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
   static const bool _ADMIN_MODE = true;

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -51,6 +51,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     _isWorkerReady = false;
     _workerLocation = WorkerLocation(workerId: appointment.workerId);
     _googleMapListener = GoogleMapListener(
+        appointmentId: appointment.appointmentId,
         workerId: appointment.workerId,
         workerLocationUpdated: onLocationReceived);
 
