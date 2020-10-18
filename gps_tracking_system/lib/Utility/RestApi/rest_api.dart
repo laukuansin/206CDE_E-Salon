@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
@@ -340,6 +341,15 @@ class _Admin {
     return commonResponseFromJson(response.body);
   }
 
+  Future<AppointmentLogResponse> getUserAppointmentLog(String date)async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/user/getUserAppointmentLog&api_key=" + LoggedUser.getToken();
+    log("Calling get user appointment log API : " + url);
+    var response = await http.post(url,body: {
+      'date': date
+    });
+    return appointmentLogResponseFromJson(response.body);
+  }
 }
 
 class _Customer{

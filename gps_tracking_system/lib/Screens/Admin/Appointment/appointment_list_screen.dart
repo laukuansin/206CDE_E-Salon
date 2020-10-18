@@ -270,7 +270,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                           icon: Icon(Icons.chrome_reader_mode, color: Colors.green),
                           onPressed: () {
                             Navigator.of(context).pushNamed(
-                              "/today_appointment",
+                              "/today_appointment", arguments: appointmentSelected
                         );
                       },
                     ))

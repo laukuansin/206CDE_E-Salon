@@ -56,6 +56,9 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         workerId: appointment.workerId,
         workerLocationUpdated: onLocationReceived);
 
+    if(appointment.status == Status.ONGOING)
+      _googleMapListener.startServices();
+
     requestAppointmentServices();
     requestAppointmentTimeDistance();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -116,10 +119,12 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     LatLng destination = await MapHelper.addressToLatLng(appointment.address);
     Map<String, int> timeDestinationMap =
     await MapHelper.getRouteTimeDistance([origin, destination]);
-    setState(() {
-      _distanceDurationToDest = MapHelper.getTotalDistanceDurationString(
-          timeDestinationMap["duration"], timeDestinationMap["distance"]);
-    });
+    if(mounted) {
+      setState(() {
+        _distanceDurationToDest = MapHelper.getTotalDistanceDurationString(
+            timeDestinationMap["duration"], timeDestinationMap["distance"]);
+      });
+    }
   }
 
   Container _buildSlidingUpPanelIndicator() {

@@ -50,6 +50,10 @@
 				$whereClause .=" AND oc_customer.customer_id=".$data['filter_customer'];
 			}
 
+			if(isset($data['filter_date'])){
+				$whereClause .= " AND Date(oc_appointment.appointment_date) = '".$data['filter_date']."' ";
+			}
+
 			$sql = sprintf($sql, $whereClause);
 
 			$sort_data = array(
@@ -148,6 +152,11 @@
 			);
 
 			$this->db->query($sql);
+		}
+
+		public function getAppointmentLog($appointmentIdList){
+			$sql = "SELECT * FROM oc_appointment_log WHERE appointment_id IN($appointmentIdList) ORDER BY date_time DESC";
+			return $this->db->query($sql)->rows;
 		}
 
 		public function insertAppointmentLog($appointmentId, $activity){

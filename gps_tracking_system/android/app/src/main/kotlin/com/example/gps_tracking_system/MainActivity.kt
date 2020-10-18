@@ -1,5 +1,7 @@
 package com.example.gps_tracking_system
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +27,10 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun startFirebaseAutoLocationUpdateService(workerId:String, appointmentId: String){
+        if(isMyServiceRunning(FirebaseService::class.java)){
+            Log.d("FirebaseService", "Already running")
+            return
+        }
         val intent = Intent(context, FirebaseService::class.java)
         val bundle = Bundle()
         bundle.putString("worker_id", workerId)
@@ -34,7 +40,18 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun stopFirebaseAutoLocationUpdateService(){
+        Log.d("FirebaseService", "Stop running")
         val intent = Intent(context, FirebaseService::class.java)
         stopService(intent);
+    }
+
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager: ActivityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.getClassName()) {
+                return true
+            }
+        }
+        return false
     }
 }

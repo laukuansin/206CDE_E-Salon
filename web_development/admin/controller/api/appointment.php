@@ -170,11 +170,6 @@
             $this->response->setOutput(json_encode($json));
         }
 
-        private function updateAppointmentLog($appointmentId, $activity){
-    	 	$json = array();
-            $this->model_appointment_appointment->insertAppointmentLog($appointmentId, $activity);
-        }
-
         public function updateAppointmentStatus()
         {
             $json = array();
@@ -193,7 +188,7 @@
             	}
 
             	if(isset($this->request->post['activity']))
-            		$this->updateAppointmentLog($this->request->post['appointment_id'], $this->request->post['activity']);
+            		 $this->model_appointment_appointment->insertAppointmentLog($this->request->post['appointment_id'], $this->request->post['activity']);
 
                 $json['response'] = [
                     'status' => 1,

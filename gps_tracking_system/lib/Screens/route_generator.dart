@@ -163,7 +163,9 @@ class RouteGenerator {
         case "/appointment_list":
           return _buildRoute(AppointmentListScreen());
         case "/today_appointment":
-          return _buildRoute(TodayAppointmentScreen());
+          if(args is Map<DateTime, List<Appointment>>)
+            return _buildRoute(TodayAppointmentScreen(args));
+          break;
         case "/add_worker":
           return _buildRoute(AddWorker());
         case "/payment":

@@ -31,6 +31,7 @@ class FirebaseService: Service() {
     private lateinit var workerId: String
     private  lateinit var  appointmentId:String
     lateinit var  dbHelper: DBHelper
+    lateinit var  locationCallback: LocationCallback
 
 
     override fun onCreate() {
@@ -83,7 +84,7 @@ class FirebaseService: Service() {
         val locationRequest = LocationRequest.create()
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(1).fastestInterval = 1
 
-        val locationCallback = object : LocationCallback() {
+        locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 updateLocation(locationResult.lastLocation)
@@ -106,30 +107,9 @@ class FirebaseService: Service() {
     }
 
     override fun onDestroy() {
-//        Log.d("FirebaseService", "destory: ")
-//        val bundle = Bundle()
-//        bundle.putString("worker_id", workerId)
-//
-//        var rootIntent = Intent()
-//        rootIntent.action = "restartservice";
-//        rootIntent.setClass(this, FirebaseReceiver::class.java)
-//        rootIntent.putExtra("firebaseWorkerId", bundle)
-//        sendBroadcast(rootIntent)
+        LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(locationCallback)
+        stopForeground(true);
         super.onDestroy()
     }
-
-
-
-    override fun onTaskRemoved(rootIntent: Intent?) {
-//        Log.d("FirebaseService", "onTaskRemoved: ")
-//        val bundle = Bundle()
-//        bundle.putString("worker_id", workerId)
-//
-//        var rootIntent = Intent()
-//        rootIntent.action = "restartservice";
-//        rootIntent.setClass(this, FirebaseReceiver::class.java)
-//        rootIntent.putExtra("firebaseWorkerId", bundle)
-//        sendBroadcast(rootIntent)
-        super.onTaskRemoved(rootIntent)
-    }
+    
 }
