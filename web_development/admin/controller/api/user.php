@@ -67,6 +67,53 @@ class ControllerApiUser extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getUserAppointmentLog(){
+
+        if(isset($this->request->post['date'])){
+            $this->load->model("appointment/appointment");
+
+            $filtered_data = array(
+                'filter_date' => $this->request->post['date'],
+                'filter_worker' => $this->user->getId()
+            );
+
+            $appointmentIdList = array();
+            $appointmentListResults = $this->model_appointment_appointment->getAppointmentList($filtered_data);
+
+            foreach($appointmentListResults as $appointmentListResult){
+                array_push($appointmentIdList, $appointmentListResult['appointment_id']);
+            }
+
+
+            if(empty($appointmentIdList)){
+                $json['log'] = array();
+            } else {
+
+                $appointmentIdList = implode(",", $appointmentIdList);
+                $appointmentLogResults = $this->model_appointment_appointment->getAppointmentLog($appointmentIdList);
+
+                foreach ($appointmentLogResults as $appointmentLogResult) {
+                    $json['log'][] = array(
+                        'date_time' => $appointmentLogResult['date_time'],
+                        'activity' => $appointmentLogResult['activity']
+                    );
+                }
+            }
+
+            $json['response'] = array(
+                "status" => 1,
+                "msg"    => "Get appointment log successfully"
+            );
+         } else {
+            $json['response'] = array(
+                "status" => 0,
+                "msg"    => "Parameter missing"
+            );
+         }
+
+         $this->response->setOutput(json_encode($json));
+    }
+
 
     protected function upload(&$error){
         $this->load->language('common/filemanager');

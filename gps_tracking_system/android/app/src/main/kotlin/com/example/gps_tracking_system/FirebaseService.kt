@@ -29,10 +29,14 @@ class FirebaseService: Service() {
     private lateinit var database:DatabaseReference
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var workerId: String
+    private  lateinit var  appointmentId:String
+    lateinit var  dbHelper: DBHelper
+    lateinit var  locationCallback: LocationCallback
 
 
     override fun onCreate() {
         super.onCreate()
+        dbHelper = DBHelper(this)
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
             startMyOwnForeground();
         else
@@ -70,6 +74,7 @@ class FirebaseService: Service() {
         super.onStart(intent, startId)
         val bundle = intent?.getBundleExtra("firebaseWorkerId")
         workerId = bundle?.get("worker_id") as String
+        appointmentId = bundle.get("appointment_id") as String
         Log.d("FirebaseService", workerId)
 
         FirebaseApp.initializeApp(this)
@@ -77,12 +82,13 @@ class FirebaseService: Service() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val locationRequest = LocationRequest.create()
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(1).fastestInterval = 0
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(1).fastestInterval = 1
 
-        val locationCallback = object : LocationCallback() {
+        locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
                 updateLocation(locationResult.lastLocation)
+                dbHelper.insertRoute(appointmentId, locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
             }
         }
 
@@ -101,30 +107,9 @@ class FirebaseService: Service() {
     }
 
     override fun onDestroy() {
-        Log.d("FirebaseService", "destory: ")
-        val bundle = Bundle()
-        bundle.putString("worker_id", workerId)
-
-        var rootIntent = Intent()
-        rootIntent.action = "restartservice";
-        rootIntent.setClass(this, FirebaseReceiver::class.java)
-        rootIntent.putExtra("firebaseWorkerId", bundle)
-        sendBroadcast(rootIntent)
+        LocationServices.getFusedLocationProviderClient(this).removeLocationUpdates(locationCallback)
+        stopForeground(true);
         super.onDestroy()
     }
-
-
-
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.d("FirebaseService", "onTaskRemoved: ")
-        val bundle = Bundle()
-        bundle.putString("worker_id", workerId)
-
-        var rootIntent = Intent()
-        rootIntent.action = "restartservice";
-        rootIntent.setClass(this, FirebaseReceiver::class.java)
-        rootIntent.putExtra("firebaseWorkerId", bundle)
-        sendBroadcast(rootIntent)
-        super.onTaskRemoved(rootIntent)
-    }
+    
 }

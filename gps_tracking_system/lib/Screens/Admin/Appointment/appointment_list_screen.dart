@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
@@ -146,7 +147,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             trailing: _getStatusIcon(appointment.status),
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/appointment_info", arguments: appointment);
+                  .pushNamed("/appointment_info", arguments: appointment).then((_){setState(() {
+
+                  });} );
             },
           )
         ]));
@@ -267,7 +270,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                           icon: Icon(Icons.chrome_reader_mode, color: Colors.green),
                           onPressed: () {
                             Navigator.of(context).pushNamed(
-                              "/today_appointment",
+                              "/today_appointment", arguments: appointmentSelected
                         );
                       },
                     ))

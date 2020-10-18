@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
@@ -190,6 +192,20 @@ class _Admin {
       "appointment_id": appointmentID,
       "status_id":  status.index.toString()
     });
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> updateAppointmentStatusNLog(String appointmentID, Status status, String activity) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/appointment/updateAppointmentStatus&api_key=" +
+        LoggedUser.getToken();
+    log("Calling updateAppointment API : " + url);
+
+    var response = await http.post(url, body: {
+      "appointment_id": appointmentID,
+      "status_id":  status.index.toString(),
+      "activity": activity
+    });
     log(response.body);
     return commonResponseFromJson(response.body);
   }
@@ -314,6 +330,26 @@ class _Admin {
     return getUsersResponseFromJson(response.body);
   }
 
+  Future<CommonResponse> sendRoute(String appointmentId, List<Map> routeCoord) async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/appointment/insertAppointmentRoute&api_key=" + LoggedUser.getToken();
+
+    log("Calling send route  API : " + url);
+    var body = jsonEncode({"appointment_id": appointmentId,"route_taken": jsonEncode(routeCoord)});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    log(response.body);
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<AppointmentLogResponse> getUserAppointmentLog(String date)async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/user/getUserAppointmentLog&api_key=" + LoggedUser.getToken();
+    log("Calling get user appointment log API : " + url);
+    var response = await http.post(url,body: {
+      'date': date
+    });
+    return appointmentLogResponseFromJson(response.body);
+  }
 }
 
 class _Customer{
