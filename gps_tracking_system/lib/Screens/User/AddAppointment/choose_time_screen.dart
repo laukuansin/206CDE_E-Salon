@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/color.dart';
