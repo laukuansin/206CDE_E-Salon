@@ -15,11 +15,11 @@ class ControllerApiHoliday extends Controller{
         } 
         $this->load->model('setting/holiday');   
         $result=$this->model_setting_holiday->getHoliday();
+
         foreach($result as $holiday)
         {
-            $dateFormat=("Y-n-j");
             $holidays[]=array(
-                "date"=>date($dateFormat,strtotime($holiday['holiday_date']))
+                "date"=>date("Y-n-j",strtotime($holiday['holiday_date']))
             );
         }
         $json['holiday']=$holidays;
@@ -42,14 +42,12 @@ class ControllerApiHoliday extends Controller{
             $this->response->setOutput(json_encode($json));
             return;
         }       
-        $this->load->model('setting/holiday');   
 
-        $date=(isset($this->request->post['date'])) ? $this->request->post['date'] : false; 
+        $this->load->model('setting/holiday');   
         
-        if($date)
+        if($this->request->post['date'])
         {
-            $dateFormat=("Y-n-j");
-            $date=date($dateFormat,strtotime($date));
+            $date=date("Y-n-j",strtotime($this->request->post['date']));
             $this->model_setting_holiday->addHoliday($date);
             $json['response'] = array(
                     'msg'       => 'Add Holiday Success',
@@ -81,12 +79,9 @@ class ControllerApiHoliday extends Controller{
         }       
         $this->load->model('setting/holiday');   
 
-        $date=(isset($this->request->post['date'])) ? $this->request->post['date'] : false; 
-
-        if($date)
+        if(isset($this->request->post['date']))
         {
-            $dateFormat=("Y-n-j");
-            $date=date($dateFormat,strtotime($date));
+            $date=date("Y-n-j",strtotime($this->request->post['date']));
             $this->model_setting_holiday->removeHoliday($date);
 
             $json['response'] = array(
@@ -101,10 +96,8 @@ class ControllerApiHoliday extends Controller{
             );
         }
 
-       
         $this->response->setOutput(json_encode($json));
     }
-
-
 }
+
 ?>

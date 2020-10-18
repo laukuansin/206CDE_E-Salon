@@ -338,6 +338,7 @@ class _Admin {
     var response = await http.get(url);
     return getHolidayResponseFromJson(response.body);
   }
+
   Future<CommonResponse>addHoliday(DateTime date)async{
     String url = DOMAIN_NAME;
     url += "index.php?route=api/holiday/addHoliday&api_key=" +

@@ -94,7 +94,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             await MapHelper.getRouteTimeDistance([origin, destination]);
         appointmentRouteTimeDistance[appointment.appointmentId] =
             timeDistanceMap;
-        setState(() {});
+
+        if(mounted)
+          setState(() {});
       }
     });
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
@@ -18,14 +20,14 @@ class HolidayPageScreen extends StatefulWidget {
 class HolidayPageScreenState extends State<HolidayPageScreen> {
   CalendarController _calendarController;
   FToast fToast;
-  List<Holiday>_holidaysDate=new List<Holiday>();
-  final Map<DateTime, List> _holidays=Map<DateTime,List>();
+  DateTime selectedDate;
+  final Set<DateTime> _holidays = Set<DateTime>();
 
   @override
   Widget build(BuildContext context) {
     return RouteGenerator.buildScaffold(
         Container(
-            child:  _buildTableCalendar()
+            child: _buildTableCalendar()
         ),
         appbar: AppBar(
           backgroundColor: Color(0xFF65CBF2),
@@ -36,43 +38,43 @@ class HolidayPageScreenState extends State<HolidayPageScreen> {
               color: primaryLightColor
           ),
         ),
-        drawer: RouteGenerator.buildDrawer(context)
     );
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _calendarController = CalendarController();
     fToast = FToast();
     fToast.init(context);
     requestHoliday();
   }
+
   void onDaySelectedCallBack(DateTime day, List events) {
     setState(() {
-      DateTime date=DateTime(day.year,day.month,day.day);
-
-      if(_holidays.containsKey(date))
-      {
+      selectedDate = DateTime(day.year,day.month,day.day);
+      if(_holidays.contains(selectedDate))
         removeHoliday(day);
-      }
       else
-      {
         addHoliday(day);
-      }
     });
   }
+
   Widget _buildTableCalendar() {
     return TableCalendar(
       onDaySelected:onDaySelectedCallBack ,
       initialCalendarFormat: CalendarFormat.month,
-      holidays: _holidays,
+      holidays: (){
+        Map<DateTime, List>map = {};
+        _holidays.forEach((element) {map[element] = [];});
+        return map;}(),
       calendarController: _calendarController,
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarStyle: CalendarStyle(
-        selectedColor: primaryColor,
-        todayColor: Colors.white,
-        todayStyle: TextStyle(color: primaryColor),
+        renderSelectedFirst: false,
+        selectedColor: Colors.transparent,
+        selectedStyle: TextStyle(color: _holidays.contains(selectedDate)? Colors.red : primaryTextColor ),
+        todayColor: Colors.transparent,
+        todayStyle: TextStyle( color: _holidays.contains(today())? Colors.red : primaryColor),
         markersColor: Colors.brown[700],
         outsideDaysVisible: false,
         weekendStyle: TextStyle(color: Colors.black),
@@ -91,65 +93,63 @@ class HolidayPageScreenState extends State<HolidayPageScreen> {
     );
   }
 
+  DateTime today(){
+    DateTime today = DateTime.now();
+    return DateTime(today.year,today.month, today.day);
+  }
+
   void requestHoliday()async{
     GetHolidayResponse result=await RestApi.admin.getHoliday();
     if (result.response.status == 1) {
       setState(() {
-        _holidaysDate=result.holiday;
-        _holidaysDate.forEach((element) {
-          List<String> dateStr=element.date.split("-");
-          DateTime tempDate=DateTime(int.parse(dateStr[0]),int.parse(dateStr[1]),int.parse(dateStr[2]));
-          _holidays[tempDate]=[""];
-        });
+          List<Holiday> _holidaysDate = result.holiday;
+          _holidaysDate.forEach((element) {
+            List<String> dateStr = element.date.split("-");
+            _holidays.add(DateTime(int.parse(dateStr[0]),int.parse(dateStr[1]),int.parse(dateStr[2])));
+          });
       });
     } else {
       fToast.showToast(
+        toastDuration: Duration(milliseconds: 500),
           child: ToastWidget(
             status: result.response.status,
             msg: result.response.msg,
           ));
     }
   }
+
   void addHoliday(DateTime day)async{
     DateTime date=DateTime(day.year,day.month,day.day);
 
+    setState(() {
+      _holidays.add(date);
+    });
+
     CommonResponse result = await RestApi.admin.addHoliday(date);
-    if (result.response.status == 1) {
-      setState(() {
-        _holidays[date]=[""];
-        fToast.showToast(
-            child: ToastWidget(
-              status: result.response.status,
-              msg: result.response.msg,
-            ));
-      });
-    } else {
-      fToast.showToast(
-          child: ToastWidget(
-            status: result.response.status,
-            msg: result.response.msg,
-          ));
-    }
+    fToast.showToast(
+        toastDuration: Duration(milliseconds: 500),
+        child: ToastWidget(
+          status: result.response.status,
+          msg: result.response.msg,
+        ));
   }
+
   void removeHoliday(DateTime day)async{
-    DateTime date=DateTime(day.year,day.month,day.day);
+    DateTime date = DateTime(day.year,day.month,day.day);
+
+    setState(() {
+      _holidays.remove(date);
+    });
+
     CommonResponse result = await RestApi.admin.removeHoliday(date);
-    if (result.response.status == 1) {
-      setState(() {
-        _holidays.remove(date);
-        fToast.showToast(
-            child: ToastWidget(
-              status: result.response.status,
-              msg: result.response.msg,
-            ));
-      });
-    } else {
-      fToast.showToast(
-          child: ToastWidget(
-            status: result.response.status,
-            msg: result.response.msg,
-          ));
-    }
+
+    fToast.showToast(
+        toastDuration: Duration(milliseconds: 500),
+        child: ToastWidget(
+          status: result.response.status,
+          msg: result.response.msg,
+        ));
 
   }
+
 }
