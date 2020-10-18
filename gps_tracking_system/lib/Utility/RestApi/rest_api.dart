@@ -8,6 +8,7 @@ import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_holiday_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
@@ -328,6 +329,40 @@ class _Admin {
     log("Calling get user detail request (Owner)  API : " + url);
     var response = await http.get(url);
     return getUsersResponseFromJson(response.body);
+  }
+  Future<GetHolidayResponse>getHoliday()async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/getHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling get holiday request (Owner)  API : " + url);
+    var response = await http.get(url);
+    return getHolidayResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse>addHoliday(DateTime date)async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/addHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling add holidat detail request (Owner)  API : " + url);
+    var response = await http.post(url,body: {
+      "date":date.toIso8601String()
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse>removeHoliday(DateTime date)async {
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/removeHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling remove holidat detail request (Owner)  API : " + url);
+    var response = await http.post(url, body: {
+      "date": date.toIso8601String()
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
   }
 
   Future<CommonResponse> sendRoute(String appointmentId, List<Map> routeCoord) async{

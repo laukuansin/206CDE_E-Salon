@@ -79,7 +79,22 @@ class SettingPageScreenState extends State<SettingPageScreen> {
                   Divider(thickness: 0.5, color: primaryDeepLightColor),
                   _buildInputRow(_buildCancelTime()),
                   _buildInputRow(_buildTravelTime()),
-                  _buildInputRow(_buildAppointmentInterval(), isLast: true)
+                  _buildInputRow(_buildAppointmentInterval()),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: ListTile(
+                      onTap: (){Navigator.of(context).pushNamed("/holiday_page");},
+                      leading: Icon(
+                                Icons.airplanemode_active,
+                                color: primaryColor,
+                              ),
+                              title: Text(
+                                "Holiday",
+                                style: TextStyleFactory.p(),
+                              ),
+                              trailing: Icon(Icons.chevron_right),
+                            )
+                  )
                 ],
               ),
             ),

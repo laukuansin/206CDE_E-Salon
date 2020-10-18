@@ -94,7 +94,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             await MapHelper.getRouteTimeDistance([origin, destination]);
         appointmentRouteTimeDistance[appointment.appointmentId] =
             timeDistanceMap;
-        setState(() {});
+
+        if(mounted)
+          setState(() {});
       }
     });
   }
@@ -251,7 +253,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   child: Row(children: [
                     Expanded(
                         child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                             child: LinearPercentIndicator(
                               animation: true,
                               lineHeight: 20.0,
@@ -265,15 +267,20 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                               linearStrokeCap: LinearStrokeCap.roundAll,
                               progressColor: Colors.greenAccent,
                             ))),
-                    Container(
-                        child: IconButton(
-                          icon: Icon(Icons.chrome_reader_mode, color: Colors.green),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              "/today_appointment", arguments: appointmentSelected
-                        );
-                      },
-                    ))
+                    () {
+                      if(LoggedUser.getRole() == Role.OWNER) return Container();
+                      return Container(
+                          child: IconButton(
+                            icon: Icon(
+                                Icons.chrome_reader_mode, color: Colors.green),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                  "/today_appointment",
+                                  arguments: appointmentSelected
+                              );
+                            },
+                          ));
+                    }()
                   ]))
             ]));
   }

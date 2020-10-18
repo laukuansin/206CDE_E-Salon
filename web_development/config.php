@@ -1,11 +1,15 @@
 <?php
 
 // define('HTTP_SERVER', 'http://35.240.241.182/');
-define('HTTP_SERVER', 'http://192.168.68.107/');
+define('HTTP_SERVER', 'http://localhost/');
+//define('HTTP_SERVER', 'http://192.168.68.107/');
+
 
 // HTTPS
 // define('HTTPS_SERVER', 'http://35.240.241.182/');
-define('HTTPS_SERVER', 'http://192.168.68.107/');
+//define('HTTPS_SERVER', 'http://192.168.68.107/');
+define('HTTPS_SERVER', 'http://localhost/');
+
 // DIR
 define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/');
 define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
