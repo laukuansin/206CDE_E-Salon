@@ -42,7 +42,7 @@ import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/payment_detail_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
