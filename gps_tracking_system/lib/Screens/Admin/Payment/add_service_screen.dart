@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -21,7 +23,8 @@ class AddServiceScreen extends StatefulWidget{
 
 class AddServiceScreenState extends State<AddServiceScreen>{
 
-  List<Service>_serviceList;
+  final List<Service>_serviceList;
+  List<Service> _serviceSelection = [];
 
   final GlobalKey<ScaffoldState>_scaffoldStateKey = GlobalKey<ScaffoldState>();
 
@@ -31,15 +34,20 @@ class AddServiceScreenState extends State<AddServiceScreen>{
   void initState() {
     super.initState();
     requestServices();
-
   }
 
   void requestServices() async{
-    GetServicesResponse getServicesResponse = await RestApi.customer.getAllServices();
+    GetServicesResponse getServicesResponse = await RestApi.admin.getAllServices();
 
     if(getServicesResponse.response.status == 1){
       setState(() {
-        _serviceList = getServicesResponse.services;
+        _serviceSelection = getServicesResponse.services;
+        _serviceList.forEach((service) {
+            for(Service s in _serviceSelection){
+              if(s.serviceId == service.serviceId)
+                s.quantity = service.quantity;
+            }
+        });
       });
     }
   }
@@ -54,22 +62,23 @@ class AddServiceScreenState extends State<AddServiceScreen>{
     Scaffold scaffold = RouteGenerator.buildScaffold(
         Container(
           child: ListView.builder(
-            itemCount: _serviceList.length,
+            itemCount: _serviceSelection.length,
             itemBuilder: (context, index){
-              var serviceId =  _serviceList[index].serviceId;
-              var serviceQty = _serviceList[index].quantity;
+              var serviceQty = _serviceSelection[index].quantity;
               return Container(
                   color: primaryLightColor,
                   margin: EdgeInsets.only(bottom: 2),
                   child:ListTile(
-                    trailing: Text("RM ${_serviceList[index].servicePrice}"),
-                    title: Text(_serviceList[index].serviceName),
+                    trailing: Text("RM ${_serviceSelection[index].servicePrice}"),
+                    title: Text(_serviceSelection[index].serviceName),
                     leading: serviceQty > 0
                         ? Text(serviceQty.toString(), style: TextStyleFactory.heading4(color: primaryColor),)
                         : null,
                     onTap: (){
                       setState(() {
-                        _serviceList[index].quantity++;});
+                        _serviceSelection[index].quantity++;
+                        _updateData();
+                      });
                     },
                   )
               );
@@ -101,14 +110,19 @@ class AddServiceScreenState extends State<AddServiceScreen>{
 
   int _calcSumOfServices(){
     int sum = 0;
-    _serviceList.forEach((element) {sum += element.quantity;});
+    _serviceSelection.forEach((element) {sum += element.quantity;});
     return sum;
   }
 
   double _calcSumOfPrice(){
     double price = 0;
-    _serviceList.forEach((element) {price += (element.quantity * element.servicePrice);});
+    _serviceSelection.forEach((element) {price += (element.quantity * element.servicePrice);});
     return price;
   }
 
+  // Bad practice but i sipek lazy
+  void _updateData(){
+    _serviceList.clear();
+    _serviceList.addAll(_serviceSelection.where((element) => element.quantity > 0));
+  }
 }

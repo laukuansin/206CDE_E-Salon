@@ -468,7 +468,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         });
       case Status.SERVICING:
         return createContainer(Icons.attach_money, "Payment", Colors.greenAccent, ()async{
-          await requestUpdateAppointmentStatusNLog(Status.CLOSE);
+          Navigator.of(context).pushNamed("/payment", arguments: {"appointment": appointment, "services": services});
+          // await requestUpdateAppointmentStatusNLog(Status.CLOSE);
         });
       default:
         return Container();

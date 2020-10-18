@@ -5,27 +5,24 @@ import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Model/service.dart';
-
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Setting/holiday_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Account/change_password_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_info_screen.dart'
     as AdminAppointmentInfo;
 import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_list_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Account/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Home/home_page_screen.dart'
     as AdminHome;
 import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart'
     as AdminLogin;
-
-import 'package:gps_tracking_system/Screens/Admin/Appointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/add_service_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Setting/holiday_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/edit_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/manage_worker_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Payment/add_service_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Appointment/manage_appointment_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/Appointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
@@ -88,7 +85,8 @@ class RouteGenerator {
                 return LoggedUser.getUserImage() != null &&
                         LoggedUser.getUserImage().isNotEmpty
                     ? CircleAvatar(
-                        backgroundImage: NetworkImage(LoggedUser.getUserImage()),
+                        backgroundImage:
+                            NetworkImage(LoggedUser.getUserImage()),
                       )
                     : CircleAvatar(
                         backgroundColor: Colors.white,
@@ -107,13 +105,16 @@ class RouteGenerator {
                   "/home_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text("Worker"),
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("/manage_worker", (route) => false);
-            },
+          Visibility(
+            child: ListTile(
+              leading: Icon(Icons.people),
+              title: Text("Worker"),
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/manage_worker", (route) => false);
+              },
+            ),
+            visible: LoggedUser.getRole() == Role.OWNER,
           ),
           ListTile(
             leading: Icon(Icons.calendar_today),
@@ -123,7 +124,7 @@ class RouteGenerator {
                   "/appointment_list", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(leading: Icon(Icons.attach_money), title: Text("Sales")),
+          Visibility(child:ListTile(leading: Icon(Icons.attach_money), title: Text("Sales")), visible: LoggedUser.getRole() == Role.OWNER,),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text("Account"),
@@ -132,13 +133,16 @@ class RouteGenerator {
                   "/account_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(
+          Visibility(
+            child: ListTile(
               leading: Icon(Icons.settings),
               title: Text("Setting"),
-            onTap: (){
+              onTap: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     "/setting_page", (Route<dynamic> route) => false);
-            },
+              },
+            ),
+            visible: LoggedUser.getRole() == Role.OWNER,
           ),
           ListTile(
             leading: Icon(MdiIcons.logout),
@@ -169,13 +173,15 @@ class RouteGenerator {
         case "/appointment_list":
           return _buildRoute(AppointmentListScreen());
         case "/today_appointment":
-          if(args is Map<DateTime, List<Appointment>>)
+          if (args is Map<DateTime, List<Appointment>>)
             return _buildRoute(TodayAppointmentScreen(args));
           break;
         case "/add_worker":
           return _buildRoute(AddWorker());
         case "/payment":
-          return _buildRoute(PaymentWorkerScreen());
+          if (args is Map<String, dynamic>)
+            return _buildRoute(PaymentScreen(args));
+          break;
         case "/manage_appointment":
           return _buildRoute(ManageAppointmentScreen());
         case "/home_page":
@@ -192,13 +198,11 @@ class RouteGenerator {
           return _buildRoute(SettingPageScreen());
         case "/manage_worker":
           return _buildRoute(ManageWorkerScreen());
-        case "/add_service" :
-          if(args is List<Service>)
-            return _buildRoute(AddServiceScreen(args));
+        case "/add_service":
+          if (args is List<Service>) return _buildRoute(AddServiceScreen(args));
           break;
         case "/edit_worker":
-          if(args is Admin)
-            return _buildRoute(EditWorkerScreen(args));
+          if (args is Admin) return _buildRoute(EditWorkerScreen(args));
           break;
         case "/appointment_info":
           if (args is Appointment)

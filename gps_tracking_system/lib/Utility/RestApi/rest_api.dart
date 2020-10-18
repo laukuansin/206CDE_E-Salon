@@ -417,6 +417,12 @@ class _Admin {
     return appointmentLogResponseFromJson(response.body);
   }
 
+  Future<GetServicesResponse> getAllServices() async{
+    String url = DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + LoggedUser.getToken();
+    log("Calling get services API : " + url);
+    var response = await http.get(url);
+    return getServicesResponseFromJson(response.body);
+  }
 }
 
 class _Customer{

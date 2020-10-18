@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_holiday_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:table_calendar/table_calendar.dart';

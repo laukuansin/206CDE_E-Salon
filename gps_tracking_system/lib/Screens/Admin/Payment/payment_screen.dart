@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import "package:flutter/material.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/service.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
@@ -13,15 +16,22 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:skeleton_text/skeleton_text.dart';
 
-class PaymentWorkerScreen extends StatefulWidget {
-  PaymentWorkerScreenState createState() => PaymentWorkerScreenState();
+class PaymentScreen extends StatefulWidget {
+  final Appointment _appointment;
+  final List<Service> _serviceList;
+
+  PaymentScreen(Map<String,dynamic> argument):_appointment=argument["appointment"], _serviceList = argument["services"];
+  PaymentScreenState createState() => PaymentScreenState(this._appointment, this._serviceList);
 }
 
-class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
+class PaymentScreenState extends State<PaymentScreen> {
   FToast _fToast;
-  List<Service> _serviceList = new List<Service>();
+  final Appointment appointment;
+  final List<Service> _serviceList;
   Customer _customerDetail;
-  double _total = 0.0;
+
+
+  PaymentScreenState(this.appointment, this._serviceList);
 
   @override
   void initState() {
@@ -65,7 +75,7 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
                               style: TextStyleFactory.p(
                                   fontWeight: FontWeight.bold)),
                         ),
-                        Text("RM  $_total",
+                        Text("RM  ${_calcTotalPrice()}",
                             style: TextStyleFactory.p(
                                 fontWeight: FontWeight.bold,
                                 color: primaryColor))
@@ -171,12 +181,9 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
                   style: TextStyleFactory.p(
                       fontWeight: FontWeight.bold, color: primaryColor)),
               onPressed: () {
-                Navigator.of(context).pushNamed("/add_service", arguments: _serviceList).then((value) {
-                  setState(() {
-                    _serviceList = value??_serviceList;
-                    _total = _calcTotalPrice();
-                  });
-                });
+                Navigator.of(context).pushNamed("/add_service", arguments: _serviceList).then((_) {setState(() {
+
+                });});
               },
             ),
           ),
@@ -220,17 +227,14 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
   void requestGetAppointmentDetail() async {
     final ProgressDialog progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: false, showLogs: true);
     await progressDialog.show();
-    PaymentDetailResponse result = await RestApi.admin.getPaymentDetail("33");
+    PaymentDetailResponse result = await RestApi.admin.getPaymentDetail(appointment.appointmentId);
     progressDialog.hide();
 
     if (result.response.status == 1) {
       setState(() {
-        _serviceList = result.service;
         _customerDetail = result.customer;
-        _total = _calcTotalPrice();
       });
     } else {
-      _serviceList = null;
       _fToast.showToast(
           child: ToastWidget(
         status: result.response.status,
@@ -266,7 +270,6 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
                           onPressed: () {
                             setState(() {
                               if (element.quantity > 0) element.quantity--;
-                              _total = _calcTotalPrice();
                             });
                           },
                         ),
@@ -276,7 +279,6 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
                           onPressed: () {
                             setState(() {
                               element.quantity++;
-                              _total = _calcTotalPrice();
                             });
                           },
                         ),
@@ -306,7 +308,7 @@ class PaymentWorkerScreenState extends State<PaymentWorkerScreen> {
       DataCell(Container(
           width: (size.width - MARGIN * 2) * 0.2,
           child: Align(
-              alignment: Alignment.centerRight, child: Text(_total.toString()))))
+              alignment: Alignment.centerRight, child: Text(_calcTotalPrice().toString()))))
     ]));
 
     return DataTable(

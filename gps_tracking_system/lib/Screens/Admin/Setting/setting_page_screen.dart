@@ -5,7 +5,7 @@ import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
