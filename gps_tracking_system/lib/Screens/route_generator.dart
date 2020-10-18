@@ -4,6 +4,7 @@ import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Holiday/holiday_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/ManageWorker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart'
     as AdminAppointmentInfo;
@@ -128,6 +129,14 @@ class RouteGenerator {
             },
           ),
           ListTile(
+            leading: Icon(MdiIcons.airplane),
+            title: Text("Holiday"),
+            onTap: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  "/holiday_page", (Route<dynamic> route) => false);
+            },
+          ),
+          ListTile(
               leading: Icon(Icons.settings),
               title: Text("Setting"),
             onTap: (){
@@ -175,6 +184,8 @@ class RouteGenerator {
           return _buildRoute(AdminHome.HomePageScreen());
         case "/account_page":
           return _buildRoute(AccountPageScreen());
+        case "/holiday_page":
+          return _buildRoute(HolidayPageScreen());
         case "/edit_info":
           return _buildRoute(EditInfoPageScreen());
         case "/change_password":
