@@ -25,12 +25,12 @@
 
 
 // HTTP
-define('HTTP_SERVER', 'http://localhost/admin/');
-define('HTTP_CATALOG', 'http://localhost/');
+define('HTTP_SERVER', 'http://192.168.68.107/admin/');
+define('HTTP_CATALOG', 'http://192.168.68.107/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost/admin/');
-define('HTTPS_CATALOG', 'http://localhost/');
+define('HTTPS_SERVER', 'http://192.168.68.107/admin/');
+define('HTTPS_CATALOG', 'http://192.168.68.107/');
 
 // DIR
 define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/');

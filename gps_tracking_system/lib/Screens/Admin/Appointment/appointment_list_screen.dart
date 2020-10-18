@@ -52,6 +52,13 @@ class _AppointmentListState extends State<AppointmentListScreen> {
           iconTheme: IconThemeData(
               color: primaryLightColor
           ),
+          actions: [
+            Visibility(
+              child: IconButton(icon: Icon(Icons.notifications), color: primaryLightColor, onPressed: (){Navigator.of(context).pushNamed("/manage_appointment").then((value) {setState(() {
+              });});},),
+              visible: LoggedUser.getRole() == Role.OWNER,
+            )
+          ],
         ), drawer:RouteGenerator.buildDrawer(context)
     );
   }

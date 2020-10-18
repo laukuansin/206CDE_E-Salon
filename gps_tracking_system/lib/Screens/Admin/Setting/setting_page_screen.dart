@@ -187,6 +187,7 @@ class SettingPageScreenState extends State<SettingPageScreen> {
     progressDialog.hide();
 
     this.setting = result.setting;
+
     if (result.response.status == 1) {
       setState(() {});
     } else {

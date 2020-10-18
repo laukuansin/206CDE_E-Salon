@@ -306,6 +306,7 @@ class _Admin {
     }
 
     var response = await http.get(url);
+    log(response.body);
     return serviceSettingResponseFromJson(response.body);
   }
 

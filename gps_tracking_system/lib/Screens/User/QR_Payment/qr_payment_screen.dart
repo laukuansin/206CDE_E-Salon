@@ -95,7 +95,7 @@ class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
     if(result.response.status == 1)
     {
       setState(() {
-        String token=result.token;
+        String token=result.token.customerToken;
         userToken='{"token":"$token"}';
         _creditAmount= result.credit;
       });

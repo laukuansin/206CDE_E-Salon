@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
@@ -47,7 +49,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
-  static const bool _ADMIN_MODE = true;
+  static bool ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget,
           {Key key,
@@ -164,7 +166,7 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
-    if (_ADMIN_MODE) {
+    if (ADMIN_MODE) {
       switch (settings.name) {
         case "/":
           return _buildRoute(SplashScreen());
