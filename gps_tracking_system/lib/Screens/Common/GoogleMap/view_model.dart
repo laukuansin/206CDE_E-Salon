@@ -74,7 +74,7 @@ class ViewModel
   }
 
   void updateWorkerLocation(bool isWorkerReady, LatLng newWorkerLatLng){
-    _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
+    _carMarkerIconRotation = bearingBetween((this.workerLatLng??newWorkerLatLng).latitude, (this.workerLatLng??newWorkerLatLng).longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
     this.workerLatLng = newWorkerLatLng;
     initRoute(isWorkerReady: isWorkerReady);
   }

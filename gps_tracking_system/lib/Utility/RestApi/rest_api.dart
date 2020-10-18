@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
-
 import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_customer_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_logout_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
@@ -35,8 +39,10 @@ import 'package:path/path.dart' as p;
 
 // Jeffrey
 // 192.168.68.107
-// KS
-// 192.168.8.103
+
+//kunasin
+//192.168.8.103
+
 // Emulator
 // 10.0.2.2
 
@@ -190,6 +196,20 @@ class _Admin {
       "appointment_id": appointmentID,
       "status_id":  status.index.toString()
     });
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> updateAppointmentStatusNLog(String appointmentID, Status status, String activity) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/appointment/updateAppointmentStatus&api_key=" +
+        LoggedUser.getToken();
+    log("Calling updateAppointment API : " + url);
+
+    var response = await http.post(url, body: {
+      "appointment_id": appointmentID,
+      "status_id":  status.index.toString(),
+      "activity": activity
+    });
     log(response.body);
     return commonResponseFromJson(response.body);
   }
@@ -275,6 +295,34 @@ class _Admin {
     });
     return changePasswordResponseFromJson(response.body);
   }
+  Future<ServiceSettingResponse> getSetting() async{
+    String url = DOMAIN_NAME;
+    if(LoggedUser.getRole() == Role.OWNER) {
+      url += "index.php?route=api/setting/getSetting&api_key=" +
+          LoggedUser.getToken();
+      log("Calling get setting request (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
+
+    var response = await http.get(url);
+    return serviceSettingResponseFromJson(response.body);
+  }
+
+  Future<EditSettingResponse> editSetting(Setting setting) async{
+    String url = DOMAIN_NAME;
+    if(LoggedUser.getRole() == Role.OWNER) {
+      url += "index.php?route=api/setting/editSetting&api_key=" +
+          LoggedUser.getToken();
+      log("Calling edit setting (Owner)  API : " + url);
+    } else {
+      log("No permission. Only owner can call this api.");
+    }
+
+    var body = jsonEncode(setting.toJson());
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    return editSettingResponseFromJson(response.body);
+  }
 
   Future<GetUsersResponse>getWorkers()async{
     String url = DOMAIN_NAME;
@@ -285,6 +333,52 @@ class _Admin {
     var response = await http.get(url);
     return getUsersResponseFromJson(response.body);
   }
+  Future<GetHolidayResponse>getHoliday()async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/getHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling get holiday request (Owner)  API : " + url);
+    var response = await http.get(url);
+    return getHolidayResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse>addHoliday(DateTime date)async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/addHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling add holidat detail request (Owner)  API : " + url);
+    var response = await http.post(url,body: {
+      "date":date.toIso8601String()
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse>removeHoliday(DateTime date)async {
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/holiday/removeHoliday&api_key=" +
+        LoggedUser.getToken();
+    log("Calling remove holidat detail request (Owner)  API : " + url);
+    var response = await http.post(url, body: {
+      "date": date.toIso8601String()
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> sendRoute(String appointmentId, List<Map> routeCoord) async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/appointment/insertAppointmentRoute&api_key=" + LoggedUser.getToken();
+
+    log("Calling send route  API : " + url);
+    var body = jsonEncode({"appointment_id": appointmentId,"route_taken": jsonEncode(routeCoord)});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
+    log(response.body);
+    return commonResponseFromJson(response.body);
+  }
+
 
   Future<PaymentDetailResponse> getPaymentDetail(String appointmentID) async {
     String url = DOMAIN_NAME +
@@ -310,6 +404,17 @@ class _Admin {
     log(response.body);
 
     return commonResponseFromJson(response.body);
+  }
+
+
+  Future<AppointmentLogResponse> getUserAppointmentLog(String date)async{
+    String url = DOMAIN_NAME;
+    url += "index.php?route=api/user/getUserAppointmentLog&api_key=" + LoggedUser.getToken();
+    log("Calling get user appointment log API : " + url);
+    var response = await http.post(url,body: {
+      'date': date
+    });
+    return appointmentLogResponseFromJson(response.body);
   }
 
 }

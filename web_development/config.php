@@ -1,4 +1,5 @@
 <?php
+
 //define('HTTP_SERVER', 'http://35.240.241.182/');
 // define('HTTP_SERVER', 'http://192.168.68.107/');
  define('HTTP_SERVER', 'http://localhost/');
@@ -9,11 +10,13 @@
 // define('HTTPS_SERVER', 'http://192.168.68.107/');
  define('HTTPS_SERVER', 'http://localhost/');
 
+
 // DIR
 define('DIR_APPLICATION', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/');
 define('DIR_SYSTEM', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/system/');
 define('DIR_IMAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/image/');
 define('DIR_STORAGE', '/home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/public_html/');
+
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
