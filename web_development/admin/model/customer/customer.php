@@ -483,4 +483,11 @@ class ModelCustomerCustomer extends Model {
 	public function deleteLoginAttempts($email) {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE `email` = '" . $this->db->escape($email) . "'");
 	}
+
+	public  function getCustomerIDByToken($token)
+	{
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_api` WHERE `customer_token` = '" . $this->db->escape($token) . "'");
+
+		return $query->row;
+	}
 }

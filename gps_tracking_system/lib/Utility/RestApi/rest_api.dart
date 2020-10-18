@@ -3,19 +3,20 @@ import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_holiday_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/change_password_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/customer_detail_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_info_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/logout_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_change_password_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_customer_detail_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_logout_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_appointment_available_time_slot.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
@@ -27,6 +28,8 @@ import 'package:gps_tracking_system/Utility/RestApi/user_login_response.dart' as
 import 'package:gps_tracking_system/Utility/RestApi/user_sign_up_response.dart';
 import 'package:gps_tracking_system/Utility/url_encoder.dart';
 import 'package:gps_tracking_system/Response/user_group.dart';
+import 'package:gps_tracking_system/Model/service.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
@@ -376,6 +379,34 @@ class _Admin {
     return commonResponseFromJson(response.body);
   }
 
+
+  Future<PaymentDetailResponse> getPaymentDetail(String appointmentID) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/payment/getPaymentDetail&api_key=" +
+        LoggedUser.getToken();
+    log("Calling getPaymentDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "appointment_id":appointmentID
+    });
+    return paymentDetailResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> scanQRCode(String token) async {
+    String url = DOMAIN_NAME +
+        "index.php?route=api/payment/scanCustomerQRCode&api_key=" +
+        LoggedUser.getToken();
+    log("Calling getPaymentDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "token":token
+    });
+    log(response.body);
+
+    return commonResponseFromJson(response.body);
+  }
+
+
   Future<AppointmentLogResponse> getUserAppointmentLog(String date)async{
     String url = DOMAIN_NAME;
     url += "index.php?route=api/user/getUserAppointmentLog&api_key=" + LoggedUser.getToken();
@@ -384,6 +415,13 @@ class _Admin {
       'date': date
     });
     return appointmentLogResponseFromJson(response.body);
+  }
+
+  Future<GetServicesResponse> getAllServices() async{
+    String url = DOMAIN_NAME + "index.php?route=api/service/getAllServices&api_key=" + LoggedUser.getToken();
+    log("Calling get services API : " + url);
+    var response = await http.get(url);
+    return getServicesResponseFromJson(response.body);
   }
 }
 
@@ -439,8 +477,8 @@ class _Customer{
     return commonResponseFromJson(response.body);
   }
 
-  Future<CustomerCreditResponse> getCustomerCredit() async{
-    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCredit&api_key="+LoggedUser.getToken();
+  Future<CustomerCreditResponse> getCustomerCreditToken() async{
+    String url= DOMAIN_NAME + "index.php?route=api/credit/getCustomerCreditToken&api_key="+LoggedUser.getToken();
     log("Calling get customer credit API : " + url);
     var response = await http.get(url);
     return customerCreditResponseFromJson(response.body);

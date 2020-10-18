@@ -8,7 +8,7 @@ import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -289,7 +289,7 @@ class HomePageScreenState extends State<HomePageScreen> {
   }
 
   void requestCurrentCustomerCredit() async {
-    CustomerCreditResponse result = await RestApi.customer.getCustomerCredit();
+    CustomerCreditResponse result = await RestApi.customer.getCustomerCreditToken();
 
     if (result.response.status == 1) {
       setState(() {

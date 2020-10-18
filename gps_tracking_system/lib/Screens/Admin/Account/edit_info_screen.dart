@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gps_tracking_system/Components/image_picker.dart';
 import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/color.dart';

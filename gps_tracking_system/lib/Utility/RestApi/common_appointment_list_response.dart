@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:gps_tracking_system/Model/appointment.dart';
-import 'package:intl/intl.dart';
+
 
 AppointmentListResponse appointmentListResponseFromJson(String str) => AppointmentListResponse.fromJson(json.decode(str));
 

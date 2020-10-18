@@ -12,12 +12,13 @@ import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:gps_tracking_system/Model/service.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -467,7 +468,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         });
       case Status.SERVICING:
         return createContainer(Icons.attach_money, "Payment", Colors.greenAccent, ()async{
-          await requestUpdateAppointmentStatusNLog(Status.CLOSE);
+          Navigator.of(context).pushNamed("/payment", arguments: {"appointment": appointment, "services": services});
+          // await requestUpdateAppointmentStatusNLog(Status.CLOSE);
         });
       default:
         return Container();

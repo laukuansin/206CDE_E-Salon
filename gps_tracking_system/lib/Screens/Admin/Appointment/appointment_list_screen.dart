@@ -7,7 +7,7 @@ import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
