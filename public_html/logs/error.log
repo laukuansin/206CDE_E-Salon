@@ -22,3 +22,9 @@
 2020-10-17 7:37:56 - PHP Notice:  Undefined index: telephone in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\user.php on line 394
 2020-10-17 13:34:28 - PHP Notice:  Undefined index: customer_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\model\customer\customer.php on line 491
 2020-10-17 13:48:25 - PHP Notice:  Undefined index: customer_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\model\customer\customer.php on line 491
+2020-10-18 13:37:52 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 144
+2020-10-18 13:37:52 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 151
+2020-10-18 13:37:52 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 158
+2020-10-18 13:37:52 - PHP Notice:  Undefined index: email in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 161
+2020-10-18 13:40:03 - PHP Notice:  Undefined index: customer_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 87
+2020-10-18 13:40:26 - PHP Notice:  Undefined index: customer_token in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/catalog/controller/api/login.php on line 87
