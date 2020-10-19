@@ -529,7 +529,7 @@ class _Customer{
 
   Future<AppointmentListResponse> getAcceptedAppointmentList() async{
     String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
-    url += "&status_id=1,6";
+    url += "&status_id=1,6,7";
     log("Calling get accepted appointment list API : " + url);
     var response = await http.get(url);
     return appointmentListResponseFromJson(response.body);
