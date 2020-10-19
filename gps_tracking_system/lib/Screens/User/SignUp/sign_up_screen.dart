@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   EndUser _customer;
   String _errFirstname, _errLastname, _errEmail, _errTelephone, _errPassword, _errConfirm;
   FToast _fToast;
+  bool _hiddenPassword, _hiddenConfirmPassword;
 
 
   @override
@@ -101,9 +102,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 15,),
             TextFormField(decoration: getStandardInputDecoration("Telephone"), onSaved: (value){_customer.contactNo = value;}, validator: (_)=>_errTelephone.isEmpty? null: _errTelephone,),
             SizedBox(height: 15,),
-            TextFormField(decoration: getStandardInputDecoration("Password"), onSaved: (value){_customer.password = value;}, validator: (_)=>_errPassword.isEmpty? null : _errPassword,),
+            TextFormField(onSaved: (value){_customer.password = value;}, validator: (_)=>_errPassword.isEmpty? null : _errPassword,obscureText: _hiddenPassword,decoration: new InputDecoration(
+              errorMaxLines: 2,
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color:Colors.grey[300])),
+              labelText: "Password",
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _hiddenPassword = !_hiddenPassword;
+                  });
+                },
+                icon: _hiddenPassword
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility),
+              ),
+              labelStyle: TextStyleFactory.p(),
+            )),
             SizedBox(height: 15,),
-            TextFormField(decoration:getStandardInputDecoration("Password confirm"), onSaved: (value){_customer.confirm = value;}, validator: (_)=>_errConfirm.isEmpty ? null: _errConfirm ),
+            TextFormField(onSaved: (value){_customer.confirm = value;}, validator: (_)=>_errConfirm.isEmpty ? null: _errConfirm,obscureText: _hiddenConfirmPassword,  decoration: new InputDecoration(
+                errorMaxLines: 2,
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color:Colors.grey[300])),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _hiddenConfirmPassword = !_hiddenConfirmPassword;
+                    });
+                  },
+                  icon: _hiddenConfirmPassword
+                      ? Icon(Icons.visibility_off)
+                      : Icon(Icons.visibility),
+                ),
+                labelText: "Confirm Password",
+                labelStyle: TextStyleFactory.p()) ),
             SizedBox(height: 25,)
           ],
         ),
@@ -129,6 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _clearErrorMessage(){
     _errFirstname =  _errLastname = _errEmail =  _errTelephone =  _errPassword = _errConfirm = "";
+    _hiddenPassword = _hiddenConfirmPassword = true;
   }
 
   void _register() async {

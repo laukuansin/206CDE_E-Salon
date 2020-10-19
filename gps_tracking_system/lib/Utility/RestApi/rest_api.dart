@@ -47,7 +47,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://35.240.241.182/";
+const tempDomainName = "http://192.168.8.103/";
 
 
 class RestApi
