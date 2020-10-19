@@ -14,6 +14,7 @@ import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_worker_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_get_customer_credit_response.dart';
+import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -81,7 +82,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                             color: primaryColor,
                           ),
                           padding: EdgeInsets.all(10.0),
-                          shape: CircleBorder())
+                          shape: CircleBorder()),
                     ],
                   ),
                 ),
