@@ -58,6 +58,9 @@
     {
         $json = array();
         $this->load->model('customer/customer');
+        $this->load->model('sale/sale');
+        $this->load->model('appointment/appointment');
+
 
         if(!$this->user->isLogged()){
             $json['response'] = array(
@@ -69,8 +72,11 @@
         }
 
         $customer_token=isset($this->request->post['token'])?$this->request->post['token']:false;
+        $appointment_id=isset($this->request->post['appointment_id'])?$this->request->post['appointment_id']:false;
+        $total=isset($this->request->post['total'])?$this->request->post['total']:false;
+        $description=isset($this->request->post['description'])?$this->request->post['description']:false;
 
-        if($customer_token)
+        if($customer_token&&$appointment_id)
         {
             $customer=$this->model_customer_customer->getCustomerIDByToken($customer_token);
 
@@ -82,9 +88,36 @@
                 );
             }
             else{
+                $data=array(
+                    'appointment_id'=>$appointment_id,
+                    'worker_id'=>$this->user->getId(),
+                    'customer_id'=>$customer['customer_id']
+                );
+                $appointment_sale_id=$this->model_sale_sale->addSale($data);
+
+                $appointment_services=$this->model_appointment_appointment->getServiceByAppointmentId($appointment_id);
+
+                foreach($appointment_services as $service)
+                {
+                    $service_data=array(
+                        'service_id'=>$service['service_id'],
+                        'qty'=>$service['qty'],
+                        'appointment_sales_id'=>$appointment_sale_id
+                    );
+                    $this->model_sale_sale->addSaleItem($service_data);
+                }
+                $payment_detail=array(
+                    'credit'=>-$total,
+                    'description'=>$description,
+                    'customer_id'=>$customer['customer_id'],
+                    'reference'=>$this->getReference()
+                    
+                );
+                $this->model_customer_customer->payService($payment_detail);
+
                 $json['response'] = array(
                     "status" => 1,
-                    "msg"	 => $customer['customer_id']
+                    "msg"	 => "Payment success"
                 );
             }
         }
@@ -96,6 +129,13 @@
         }
         
         $this->response->setOutput(json_encode($json));
+    }
+    private function getReference(){
+        mt_srand((double)microtime()*10000);
+        $charid = md5(uniqid(rand(), true));
+        $c = unpack("C*",$charid);
+        $c = implode("",$c);
+        return substr($c,0,20);
     }
 }
 ?>

@@ -490,4 +490,10 @@ class ModelCustomerCustomer extends Model {
 
 		return $query->row;
 	}
+
+	public function payService($data)
+	{
+		$this->db->query("INSERT INTO " . DB_PREFIX . "customer_credit SET credit = '" . (float)$data['credit'] . "', description = '" . $data['description'] . "', customer_id = '" . (int)$data['customer_id'] . "', reference = '" . $this->db->escape($data['reference']) . "', date_added = NOW()");
+
+	}
 }

@@ -47,7 +47,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://35.240.241.182/";
+const tempDomainName = "http://192.168.8.103/";
 
 
 class RestApi
@@ -404,14 +404,17 @@ class _Admin {
     return paymentDetailResponseFromJson(response.body);
   }
 
-  Future<CommonResponse> scanQRCode(String token) async {
+  Future<CommonResponse> scanQRCode(String token,Appointment appointment,double total) async {
     String url = DOMAIN_NAME +
         "index.php?route=api/payment/scanCustomerQRCode&api_key=" +
         LoggedUser.getToken();
     log("Calling getPaymentDetail API : " + url);
 
     var response = await http.post(url, body: {
-      "token":token
+      "token":token,
+      "appointment_id":appointment.appointmentId.toString(),
+      "total":total.toString(),
+      "description":"Pay for service"
     });
     log(response.body);
 

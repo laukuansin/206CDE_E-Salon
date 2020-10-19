@@ -1,0 +1,17 @@
+2020-10-19 12:51:18 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 12:51:18 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 12:58:57 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 12:58:57 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 12:59:44 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 12:59:44 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 13:46:58 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 13:46:58 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 13:47:08 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 13:47:08 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 13:47:21 - PHP Notice:  Undefined index: description in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\model\customer\customer.php on line 496
+2020-10-19 13:53:42 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 13:53:42 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 13:55:34 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 13:55:34 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 14:03:54 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
+2020-10-19 14:03:54 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97

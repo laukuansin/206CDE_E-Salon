@@ -49,7 +49,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
-  static bool ADMIN_MODE = false;
+  static bool ADMIN_MODE = true;
 
   static Scaffold buildScaffold(Widget widget,
           {Key key,
