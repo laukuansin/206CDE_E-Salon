@@ -1,5 +1,44 @@
 import 'package:flutter/material.dart';
 
+class Rating{
+  String feedback;
+  int ratingStar;
+
+  Rating(this.feedback, this.ratingStar);
+
+}
+
+
+class RatingDialog extends StatefulWidget {
+  final String title;
+  final String description;
+  final String submitButton;
+  final String alternativeButton;
+  final String positiveComment;
+  final String negativeComment;
+  final Widget icon;
+  final Color accentColor;
+  final ValueSetter<Rating> onSubmitPressed;
+  final VoidCallback onAlternativePressed;
+
+  RatingDialog(
+      {@required this.icon,
+        @required this.title,
+        @required this.description,
+        @required this.onSubmitPressed,
+        @required this.submitButton,
+        this.accentColor = Colors.blue,
+        this.alternativeButton = "",
+        this.positiveComment = "",
+        this.negativeComment = "",
+        this.onAlternativePressed});
+
+  @override
+  _RatingDialogState createState() => new _RatingDialogState();
+}
+
+
+
 class _RatingDialogState extends State<RatingDialog> {
   int _rating = 0;
   String _feedback="";
@@ -113,40 +152,4 @@ class _RatingDialogState extends State<RatingDialog> {
       ),
     );
   }
-}
-
-class RatingDialog extends StatefulWidget {
-  final String title;
-  final String description;
-  final String submitButton;
-  final String alternativeButton;
-  final String positiveComment;
-  final String negativeComment;
-  final Widget icon;
-  final Color accentColor;
-  final ValueSetter<Rating> onSubmitPressed;
-  final VoidCallback onAlternativePressed;
-
-  RatingDialog(
-      {@required this.icon,
-        @required this.title,
-        @required this.description,
-        @required this.onSubmitPressed,
-        @required this.submitButton,
-        this.accentColor = Colors.blue,
-        this.alternativeButton = "",
-        this.positiveComment = "",
-        this.negativeComment = "",
-        this.onAlternativePressed});
-
-  @override
-  _RatingDialogState createState() => new _RatingDialogState();
-}
-
-class Rating{
-  String feedback;
-  int ratingStar;
-
-  Rating(this.feedback, this.ratingStar);
-
 }

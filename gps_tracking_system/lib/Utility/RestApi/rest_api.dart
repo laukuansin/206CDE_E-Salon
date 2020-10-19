@@ -42,7 +42,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.8.103/";
+const tempDomainName = "http://192.168.68.107/";
 
 
 class RestApi
@@ -494,7 +494,7 @@ class _Customer{
     var response = await http.post(url, body: {
       "worker_id": workerID,
     });
-
+    log(response.body);
     return getWorkerDetailResponseFromJson(response.body);
   }
   Future<CommonResponse> submitRating(String workerID,Rating rating) async{

@@ -23,16 +23,15 @@ class RatingPageScreenState extends State<RatingPageScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     fToast = FToast();
     fToast.init(context);
     requestWorkerDetail();
+    super.initState();
   }
 
   void requestWorkerDetail()async
   {
-    GetWorkerDetailResponse result = await RestApi.customer.getWorkerDetail("2");
+    GetWorkerDetailResponse result = await RestApi.customer.getWorkerDetail("36");
 
     if (result.response.status == 1) {
       setState(() {
@@ -47,6 +46,7 @@ class RatingPageScreenState extends State<RatingPageScreen> {
           ));
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return RouteGenerator.buildScaffold(
@@ -92,11 +92,11 @@ class RatingPageScreenState extends State<RatingPageScreen> {
             accentColor: primaryColor, // optional
             onSubmitPressed: (Rating rating) {
                 submitRating(rating);
-              // TODO: open the app's page on Google Play / Apple App Store
             },
           );
         });
   }
+
   void submitRating(Rating rating)async
   {
     CommonResponse result=await RestApi.customer.submitRating("2",rating);
