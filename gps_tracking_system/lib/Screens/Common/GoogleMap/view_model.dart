@@ -138,7 +138,7 @@ class ViewModel
     GoogleMapController controller = await _mapControllerCompleter.future;
 
     double maxLat, minLat, maxLon, minLon;
-    if(latLngPolylineList??[].isNotEmpty) {
+    if((latLngPolylineList??[]).isNotEmpty) {
       maxLat = (latLngPolylineList.reduce((value, element) => value.latitude > element.latitude? value : element)).latitude;
       maxLon = (latLngPolylineList.reduce((value, element) => value.longitude > element.longitude? value : element)).longitude;
       minLat = (latLngPolylineList.reduce((value, element) => value.latitude < element.latitude? value : element)).latitude;
@@ -179,7 +179,7 @@ class ViewModel
   }
 
   GoogleMap buildMap() {
-    if(latLngPolylineList??[].isNotEmpty){
+    if((latLngPolylineList??[]).isNotEmpty){
       markerSet.clear();
       markerSet.add(
           Marker(
