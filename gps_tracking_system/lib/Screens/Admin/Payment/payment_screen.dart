@@ -216,7 +216,11 @@ class PaymentScreenState extends State<PaymentScreen> {
   }
 
   void requestPayment(String token) async {
-    CommonResponse result = await RestApi.admin.scanQRCode(token);
+    CommonResponse result = await RestApi.admin.scanQRCode(token, appointment.appointmentId, _serviceList);
+    if(result.response.status==1)
+    {
+      Navigator.of(context).pop(1);
+    }
     _fToast.showToast(
         child: ToastWidget(
           status: result.response.status,

@@ -13,7 +13,6 @@
                 "msg"	 => "Invalid token"
             );
             return $this->response->setOutput(json_encode($json));
-
         } 
 
 
@@ -57,7 +56,6 @@
     public function scanCustomerQRCode()
     {
         $json = array();
-        $this->load->model('customer/customer');
 
         if(!$this->user->isLogged()){
             $json['response'] = array(
@@ -68,34 +66,92 @@
             return $this->response->setOutput(json_encode($json));
         }
 
-        $customer_token=isset($this->request->post['token'])?$this->request->post['token']:false;
+        $postData = json_decode(file_get_contents('php://input'),true);
 
-        if($customer_token)
+        if(!(isset($postData['token']) && isset($postData['appointment_id']) && isset($postData['services']) && isset($postData['description']))){
+            $json['response'] = array(
+                "status" => 0,
+                "msg"    => "Missing Parameter"
+            );
+            return $this->response->setOutput(json_encode($json));
+        }
+
+
+        $this->load->model('customer/customer');
+        $this->load->model('sale/sale');
+        $this->load->model('appointment/appointment');
+        
+        $customerResult = $this->model_customer_customer->getCustomerIDByToken($postData['token']);
+
+        if(empty($customerResult))
         {
-            $customer=$this->model_customer_customer->getCustomerIDByToken($customer_token);
-
-            if(empty($customer))
-            {
-                $json['response'] = array(
-                    "status" => -1,
-                    "msg"	 => "The customer id did not exist"
-                );
-            }
-            else{
-                $json['response'] = array(
-                    "status" => 1,
-                    "msg"	 => $customer['customer_id']
-                );
-            }
+            $json['response'] = array(
+                "status" => 0,
+                "msg"	 => "The customer id did not exist"
+            );
         }
         else{
+            $customerCredit = $this->model_customer_customer->getCustomerCredit($customerResult['customer_id']);
+
+            // Should validate using server but time constraint
+            $total = 0.0;
+            foreach($postData['services'] as $service)
+                $total += $service['qty'] * $service['service_price'];
+
+            if($total > $customerCredit['total_credit']){
+                $json['response'] = array(
+                    "status" => 0,
+                    "msg"    => "Customer does not have enough credit"
+                );
+                return $this->response->setOutput(json_encode($json));
+            }
+
+
+            $data = array(
+                'appointment_id'=> $postData['appointment_id'],
+                'worker_id'     => $this->user->getId(),
+                'customer_id'   => $customerResult['customer_id']
+            );
+
+            $appointment_sale_id = $this->model_sale_sale->addSale($data);
+            
+  
+
+            foreach($postData['services'] as $service)
+            {
+                $service_data = array(
+                    'service_id'            => $service['service_id'],
+                    'qty'                   => $service['qty'],
+                    'appointment_sales_id'  => $appointment_sale_id
+                );
+                $this->model_sale_sale->addSaleItem($service_data);
+            }
+
+            $payment_detail=array(
+                'credit'        => -$total,
+                'description'   => $postData['description'],
+                'customer_id'   => $customerResult['customer_id'],
+                'reference'     => $this->getReference()
+                
+            );
+
+            $this->model_customer_customer->payService($payment_detail);
+
             $json['response'] = array(
-            "status" => -1,
-            "msg"	 => "Missing Parameter"
-        );
+                "status" => 1,
+                "msg"	 => "Payment success"
+            );
         }
         
         $this->response->setOutput(json_encode($json));
+    }
+    
+    private function getReference(){
+        mt_srand((double)microtime()*10000);
+        $charid = md5(uniqid(rand(), true));
+        $c = unpack("C*",$charid);
+        $c = implode("",$c);
+        return substr($c,0,20);
     }
 }
 ?>

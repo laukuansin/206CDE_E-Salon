@@ -46,6 +46,7 @@ class ModelAccountCustomer extends Model {
 		return $this->db->query("SELECT * FROM oc_customer_api")->rows;
 	}
 
+
 	public function getCustomerTokenById($customerId){
 		$customerId = $this->db->escape($customerId);
 		return $this->db->query("SELECT * FROM oc_customer_api WHERE customer_id=$customerId")->row;
