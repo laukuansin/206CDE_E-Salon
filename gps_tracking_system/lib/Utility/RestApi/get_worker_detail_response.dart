@@ -46,10 +46,12 @@ class Response {
 
 class Worker {
   Worker({
+    this.workerId,
     this.profileImage,
     this.name,
   });
 
+  String workerId;
   String profileImage;
   String name;
 

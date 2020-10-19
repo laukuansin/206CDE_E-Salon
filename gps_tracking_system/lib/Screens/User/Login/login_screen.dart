@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (result.response.status == 1) {
       await LoggedUser.createInstance(result.token,result.username, result.email);
-      Navigator.of(context).pushReplacementNamed("/rating");
+      Navigator.of(context).pushReplacementNamed("/home_page");
     } else {
       _apiKey = "";
     }
