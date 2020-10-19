@@ -72,6 +72,34 @@
 			$this->response->setOutput(json_encode($json));
 		}
 
+		public function getAppointmentRoute(){
+			
+			$json = array();
+
+	       	if(!$this->user->isLogged()){
+				$json['response'] = array(
+					"status" => -1,
+					"msg"	 => "Invalid token"
+				);
+				$this->response->setOutput(json_encode($json));
+	            return;
+			} 
+
+			$this->load->model('appointment/appointment');
+			$result = $this->model_appointment_appointment->getAppointmentRoute($this->request->post['appointment_id']);
+
+		 	$json['response'] = [
+		            'status' => 1,
+		            'msg'   => 'Get services successfully.'
+	        ];
+
+	        $json['appointment_id'] = $result['appointment_id'];
+	        $json['route'] = json_decode($result['route_taken']);
+
+	        $this->response->setOutput(json_encode($json));
+
+		}
+
 		public function getAppointmentServices(){
 	       
 	       if(!$this->user->isLogged()){
