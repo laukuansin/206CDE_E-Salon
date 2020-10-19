@@ -50,6 +50,10 @@
 				$whereClause .=" AND oc_customer.customer_id=".$data['filter_customer'];
 			}
 
+			if(isset($data['filter_date'])){
+				$whereClause .= " AND Date(oc_appointment.appointment_date) = '".$data['filter_date']."' ";
+			}
+
 			$sql = sprintf($sql, $whereClause);
 
 			$sort_data = array(
@@ -70,6 +74,11 @@
 			}
 
 			return $this->db->query($sql)->rows;
+		}
+
+		public function getAppointmentRoute($appointmentId){
+			$sql = "SELECT * FROM  oc_appointment_route WHERE appointment_id = ".$this->db->escape($appointmentId);
+			return $this->db->query($sql)->row;
 		}
 
 		public function getAppointmentById($appointment_id){
@@ -123,8 +132,16 @@
 			$this->udpateAppointmentStatus($appointmentId, 4);
 		}
 
-		public function closeAppointment($appointmentId){
+		public function completeAppointment($appointmentId){
 			$this->udpateAppointmentStatus($appointmentId, 5);
+		}
+
+		public function ongoingAppointment($appointmentId){
+			$this->udpateAppointmentStatus($appointmentId, 6);
+		}
+
+		public function servicingAppointment($appointmentId){
+			$this->udpateAppointmentStatus($appointmentId, 6);
 		}
 
 
@@ -139,6 +156,16 @@
 				, $this->db->escape($appointmentId)
 			);
 
+			$this->db->query($sql);
+		}
+
+		public function getAppointmentLog($appointmentIdList){
+			$sql = "SELECT * FROM oc_appointment_log WHERE appointment_id IN($appointmentIdList) ORDER BY date_time DESC";
+			return $this->db->query($sql)->rows;
+		}
+
+		public function insertAppointmentLog($appointmentId, $activity){
+			$sql = "INSERT INTO oc_appointment_log(appointment_id, activity) VALUES($appointmentId, '$activity');";
 			$this->db->query($sql);
 		}
 
@@ -214,7 +241,12 @@
 		return $this->db->query($sql)->rows;
 	}
 
+
+	public function insertAppointmentRoute($appointmentId, $route){
+		$sql = "INSERT INTO oc_appointment_route(appointment_id, route_taken) VALUES($appointmentId, '".$this->db->escape($route)."')";
+		$this->db->query($sql);
 	}
+}
 
 
 

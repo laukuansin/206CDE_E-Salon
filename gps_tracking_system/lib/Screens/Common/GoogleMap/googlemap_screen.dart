@@ -9,10 +9,11 @@ class GoogleMapScreen extends StatefulWidget{
   final String customerAddress;
   final LatLng workerLatLng;
   final Size size;
+  List<LatLng> latLngPolylineList = [];
 
   @override
   State<StatefulWidget> createState() => GoogleMapScreenState();
-  GoogleMapScreen({Key key, this.size, @required this.customerAddress, @required this.workerLatLng, }): super(key:key);
+  GoogleMapScreen({Key key, this.size, @required this.customerAddress, @required this.workerLatLng, this.latLngPolylineList}): super(key:key);
 }
 
 class GoogleMapScreenState extends State<GoogleMapScreen>{
@@ -24,10 +25,10 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
     super.initState();
     size = widget.size;
     viewModel = ViewModel(
+      latLngPolylineList: widget.latLngPolylineList,
       customerAddress:widget.customerAddress,
       workerLatLng: widget.workerLatLng,
       notifyChanges: (){setState(() {});},
-      showAlertDialog: showAlertDialog,
     );
   }
 
@@ -51,23 +52,6 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
     );
   }
 
-  void showAlertDialog(String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            FlatButton(
-              child: Text("Ok"),
-              onPressed: (){Navigator.pop(context);},
-            )
-          ]
-        );
-      }
-    );
-  }
 
   // Call this function using key to update worker location
   void updateWorkerLocation(bool isWorkerReady, LatLng workerLocation){
@@ -88,6 +72,13 @@ class GoogleMapScreenState extends State<GoogleMapScreen>{
   void setMapSize(Size size){
     setState(() {
       this.size = size;
+    });
+  }
+
+  void setPolylineList(List<LatLng> list){
+    setState(() {
+      viewModel.latLngPolylineList = list;
+      viewModel.animateCameraToRouteBound();
     });
   }
 }

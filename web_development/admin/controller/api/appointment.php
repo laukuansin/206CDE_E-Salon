@@ -72,6 +72,34 @@
 			$this->response->setOutput(json_encode($json));
 		}
 
+		public function getAppointmentRoute(){
+			
+			$json = array();
+
+	       	if(!$this->user->isLogged()){
+				$json['response'] = array(
+					"status" => -1,
+					"msg"	 => "Invalid token"
+				);
+				$this->response->setOutput(json_encode($json));
+	            return;
+			} 
+
+			$this->load->model('appointment/appointment');
+			$result = $this->model_appointment_appointment->getAppointmentRoute($this->request->post['appointment_id']);
+
+		 	$json['response'] = [
+		            'status' => 1,
+		            'msg'   => 'Get services successfully.'
+	        ];
+
+	        $json['appointment_id'] = $result['appointment_id'];
+	        $json['route'] = json_decode($result['route_taken']);
+
+	        $this->response->setOutput(json_encode($json));
+
+		}
+
 		public function getAppointmentServices(){
 	       
 	       if(!$this->user->isLogged()){
@@ -170,7 +198,6 @@
             $this->response->setOutput(json_encode($json));
         }
 
-
         public function updateAppointmentStatus()
         {
             $json = array();
@@ -178,13 +205,18 @@
 
             
             if(isset($this->request->post['appointment_id']) && isset($this->request->post['status_id'])){
-                if($this->request->post['status_id']=="1"){
-                     $this->model_appointment_appointment->acceptAppointment($this->request->post['appointment_id']);
-                }else if($this->request->post['status_id']=="2"){
-                    $this->model_appointment_appointment->rejectAppointment($this->request->post['appointment_id']);
-                }else if($this->request->post['status_id'] == "4"){
-                	$this->model_appointment_appointment->cancelAppointment($this->request->post['appointment_id']);
-                }
+
+            	switch ($this->request->post['status_id']) {
+            		case "1": $this->model_appointment_appointment->acceptAppointment($this->request->post['appointment_id']); break;
+            		case "2": $this->model_appointment_appointment->rejectAppointment($this->request->post['appointment_id']); break;
+            		case "4": $this->model_appointment_appointment->cancelAppointment($this->request->post['appointment_id']); break;
+            		case "5": $this->model_appointment_appointment->completeAppointment($this->request->post['appointment_id']); break;
+					case "6": $this->model_appointment_appointment->ongoingAppointment($this->request->post['appointment_id']); break;
+					case "7": $this->model_appointment_appointment->servicingAppointment($this->request->post['appointment_id']); break;
+            	}
+
+            	if(isset($this->request->post['activity']))
+            		 $this->model_appointment_appointment->insertAppointmentLog($this->request->post['appointment_id'], $this->request->post['activity']);
 
                 $json['response'] = [
                     'status' => 1,
@@ -197,6 +229,27 @@
                 ];
             }
             $this->response->setOutput(json_encode($json));
+        }
+
+        public function insertAppointmentRoute(){
+        	$json = array();
+
+			if(!$this->user->isLogged()){
+				$json['response'] = array(
+					"status" => -1,
+					"msg"	 => "Invalid token"
+				);
+			} else {
+				$this->load->model('appointment/appointment');
+	        	$postData = json_decode(file_get_contents('php://input'),true);
+
+	        	$this->model_appointment_appointment->insertAppointmentRoute($postData['appointment_id'], $postData['route_taken']);
+				$json['response'] = array(
+					"status" => 1,
+					"msg"	 => "Route insert successfully"
+				);
+	        }
+	        $this->response->setOutput(json_encode($json));
         }
 
 		public function getWorkerAppointments(){

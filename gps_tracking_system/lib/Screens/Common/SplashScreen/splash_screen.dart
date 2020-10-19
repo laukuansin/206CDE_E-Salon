@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Redirect to login after 1 second
-    Timer(Duration(seconds: 1), (){
+    Timer(Duration(seconds: 2), (){
       Navigator.of(context).pushReplacementNamed("/login");
     });
   }
@@ -33,12 +33,16 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
+            GestureDetector(
+            child: Image.asset(
               "assets/images/ebox_logo.png",
               height: size.width * 0.2,
               width:  size.width * 0.2,
             ),
-
+              onTap: (){
+                RouteGenerator.ADMIN_MODE = !RouteGenerator.ADMIN_MODE;
+              },
+            ),
             Text(
               "eBox",
               style: GoogleFonts.roboto(

@@ -5,7 +5,7 @@ import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/edit_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:intl/intl.dart';
@@ -79,7 +79,22 @@ class SettingPageScreenState extends State<SettingPageScreen> {
                   Divider(thickness: 0.5, color: primaryDeepLightColor),
                   _buildInputRow(_buildCancelTime()),
                   _buildInputRow(_buildTravelTime()),
-                  _buildInputRow(_buildAppointmentInterval(), isLast: true)
+                  _buildInputRow(_buildAppointmentInterval()),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: ListTile(
+                      onTap: (){Navigator.of(context).pushNamed("/holiday_page");},
+                      leading: Icon(
+                                Icons.airplanemode_active,
+                                color: primaryColor,
+                              ),
+                              title: Text(
+                                "Holiday",
+                                style: TextStyleFactory.p(),
+                              ),
+                              trailing: Icon(Icons.chevron_right),
+                            )
+                  )
                 ],
               ),
             ),
@@ -172,6 +187,7 @@ class SettingPageScreenState extends State<SettingPageScreen> {
     progressDialog.hide();
 
     this.setting = result.setting;
+
     if (result.response.status == 1) {
       setState(() {});
     } else {

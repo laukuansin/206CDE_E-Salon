@@ -28,20 +28,21 @@ class ViewModel
     Marker(markerId: MarkerId(_MARKER_ORIGIN_ID))
   };
 
+  final Set<Polyline> _polyLine = {};
+
 
   final Function _callBackNotifyChanges;
-  final Function(String, String) _callBackShowAlertDialog;
   final Completer<GoogleMapController> _mapControllerCompleter = Completer();
 
   Uint8List _carMarkerIcon; double _carMarkerIconRotation;
   String customerAddress;
   LatLng _customerLatLng, workerLatLng;
+  List<LatLng> latLngPolylineList;
 
-  ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, Function showAlertDialog}):
+  ViewModel({@required this.customerAddress, @required this.workerLatLng, @required Function notifyChanges, @required this.latLngPolylineList}):
         _customerLatLng = LatLng(0,0),
         _carMarkerIconRotation = 0,
-        _callBackNotifyChanges = notifyChanges,
-        _callBackShowAlertDialog = showAlertDialog{
+        _callBackNotifyChanges = notifyChanges{
     this.initRoute();
   }
 
@@ -65,7 +66,7 @@ class ViewModel
       _calcDurationDistance(); // Async but i don't care if you slow, so no need await
     updateMarkerLocation();
 
-    // // Animate camera if worker lat lng not ready
+    // Animate camera if worker lat lng not ready
     if(workerLatLng == null ||  !isWorkerReady) {
       animateCameraToRouteBound();
     }
@@ -74,7 +75,7 @@ class ViewModel
   }
 
   void updateWorkerLocation(bool isWorkerReady, LatLng newWorkerLatLng){
-    _carMarkerIconRotation = bearingBetween(this.workerLatLng.latitude, this.workerLatLng.longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
+    _carMarkerIconRotation = bearingBetween((this.workerLatLng??newWorkerLatLng).latitude, (this.workerLatLng??newWorkerLatLng).longitude, newWorkerLatLng.latitude, newWorkerLatLng.longitude);
     this.workerLatLng = newWorkerLatLng;
     initRoute(isWorkerReady: isWorkerReady);
   }
@@ -136,79 +137,102 @@ class ViewModel
   {
     GoogleMapController controller = await _mapControllerCompleter.future;
 
-    if(workerLatLng != null) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        double maxLat, minLat, maxLon, minLon;
-        maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
-        maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);
-        minLat = min(workerLatLng.latitude, _customerLatLng.latitude);
-        minLon = min(workerLatLng.longitude, _customerLatLng.longitude);
-
-        controller.animateCamera(
-            CameraUpdate.newLatLngBounds(
-                LatLngBounds(
-                    southwest: LatLng(
-                        minLat,
-                        minLon
-                    ),
-                    northeast: LatLng(
-                        maxLat,
-                        maxLon
-                    )
-                ),
-                _MAP_BOUNDS_PADDING // Padding
-            )
-        );
-      });
-
-    } else {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        controller.animateCamera(
-            CameraUpdate.newLatLngBounds(
-                LatLngBounds(
-                    southwest: LatLng(
-                      _customerLatLng.latitude - 0.001,
-                      _customerLatLng.longitude - 0.001,
-                    ),
-                    northeast: LatLng(
-                        _customerLatLng.latitude + 0.001,
-                        _customerLatLng.longitude + 0.001
-                    )
-                ),
-                _MAP_BOUNDS_PADDING// Padding
-            )
-        );
-      });
-
+    double maxLat, minLat, maxLon, minLon;
+    if(latLngPolylineList.isNotEmpty) {
+      maxLat = (latLngPolylineList.reduce((value, element) => value.latitude > element.latitude? value : element)).latitude;
+      maxLon = (latLngPolylineList.reduce((value, element) => value.longitude > element.longitude? value : element)).longitude;
+      minLat = (latLngPolylineList.reduce((value, element) => value.latitude < element.latitude? value : element)).latitude;
+      minLon = (latLngPolylineList.reduce((value, element) => value.longitude < element.longitude? value : element)).longitude;
     }
+
+    else if(workerLatLng != null) {
+      maxLat = max(workerLatLng.latitude, _customerLatLng.latitude);
+      maxLon = max(workerLatLng.longitude, _customerLatLng.longitude);
+      minLat = min(workerLatLng.latitude, _customerLatLng.latitude);
+      minLon = min(workerLatLng.longitude, _customerLatLng.longitude);
+    }
+
+    else{
+      maxLat = _customerLatLng.latitude + 0.001;
+      minLat = _customerLatLng.latitude - 0.001;
+      maxLon = _customerLatLng.longitude + 0.001;
+      minLon = _customerLatLng.longitude - 0.001;
+    }
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.animateCamera(
+          CameraUpdate.newLatLngBounds(
+              LatLngBounds(
+                  southwest: LatLng(
+                      minLat,
+                      minLon
+                  ),
+                  northeast: LatLng(
+                      maxLat,
+                      maxLon
+                  )
+              ),
+              _MAP_BOUNDS_PADDING // Padding
+          )
+      );
+    });
   }
 
-  GoogleMap buildMap() => GoogleMap(
+  GoogleMap buildMap() {
+    if(latLngPolylineList.isNotEmpty){
+      markerSet.clear();
+      markerSet.add(
+          Marker(
+            markerId: MarkerId(_MARKER_DESTINATION_ID),
+            position: latLngPolylineList.last,
+          )
+      );
+
+      markerSet.add(
+          Marker(
+              markerId: MarkerId(_MARKER_ORIGIN_ID),
+              rotation: _carMarkerIconRotation,
+              position: latLngPolylineList.first,
+              draggable: false,
+              zIndex: 2,
+              flat: true,
+              icon: BitmapDescriptor.fromBytes(_carMarkerIcon)
+          )
+      );
+
+      _polyLine.add(
+          Polyline(
+            polylineId: PolylineId(latLngPolylineList.last.toString()),
+            visible: true,
+            points: latLngPolylineList,
+            color: Colors.blue,
+            width: 3
+          )
+      );
+
+      return GoogleMap(
+          polylines: _polyLine,
+          mapType: MapType.normal,
+          markers: markerSet,
+          onMapCreated: setGoogleMapController,
+          zoomControlsEnabled: false,
+          initialCameraPosition: CameraPosition(
+            target: workerLatLng == null ? _customerLatLng : workerLatLng,
+            zoom: _INITIAL_CAMERA_ZOOM_RATIO,
+          )
+      );
+    }
+
+    return GoogleMap(
         mapType: MapType.normal,
         markers: markerSet,
         onMapCreated: setGoogleMapController,
         zoomControlsEnabled: false,
         initialCameraPosition: CameraPosition(
-          target: workerLatLng == null? _customerLatLng : workerLatLng,
+          target: workerLatLng == null ? _customerLatLng : workerLatLng,
           zoom: _INITIAL_CAMERA_ZOOM_RATIO,
         )
     );
-
-
-  // RoundedButton buildNavigationButton()=>
-  //   RoundedButton(
-  //       text: "Navigation",
-  //       press: (){
-  //         try {
-  //           AppLauncher.openMap(
-  //               srcLatLng: [workerLatLng.latitude, workerLatLng.longitude],
-  //               destAddress: customerAddress
-  //           );
-  //         }
-  //         catch(e){
-  //           _callBackShowAlertDialog("Error", e);
-  //         }
-  //       }
-  //   );
+  }
 
 }

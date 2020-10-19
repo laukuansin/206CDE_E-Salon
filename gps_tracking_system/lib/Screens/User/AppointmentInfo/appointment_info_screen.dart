@@ -6,18 +6,20 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:gps_tracking_system/Model/service.dart';
 
 class AppointmentInfo extends StatefulWidget {
   final Appointment appointment;

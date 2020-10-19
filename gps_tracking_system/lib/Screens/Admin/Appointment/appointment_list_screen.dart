@@ -5,8 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Components/custom_table_calendar.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_response.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
@@ -51,6 +52,13 @@ class _AppointmentListState extends State<AppointmentListScreen> {
           iconTheme: IconThemeData(
               color: primaryLightColor
           ),
+          actions: [
+            Visibility(
+              child: IconButton(icon: Icon(Icons.notifications), color: primaryLightColor, onPressed: (){Navigator.of(context).pushNamed("/manage_appointment").then((value) {setState(() {
+              });});},),
+              visible: LoggedUser.getRole() == Role.OWNER,
+            )
+          ],
         ), drawer:RouteGenerator.buildDrawer(context)
     );
   }
@@ -93,7 +101,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             await MapHelper.getRouteTimeDistance([origin, destination]);
         appointmentRouteTimeDistance[appointment.appointmentId] =
             timeDistanceMap;
-        setState(() {});
+
+        if(mounted)
+          setState(() {});
       }
     });
   }
@@ -146,7 +156,9 @@ class _AppointmentListState extends State<AppointmentListScreen> {
             trailing: _getStatusIcon(appointment.status),
             onTap: () {
               Navigator.of(context)
-                  .pushNamed("/appointment_info", arguments: appointment);
+                  .pushNamed("/appointment_info", arguments: appointment).then((_){setState(() {
+
+                  });} );
             },
           )
         ]));
@@ -248,7 +260,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   child: Row(children: [
                     Expanded(
                         child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                             child: LinearPercentIndicator(
                               animation: true,
                               lineHeight: 20.0,
@@ -262,15 +274,20 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                               linearStrokeCap: LinearStrokeCap.roundAll,
                               progressColor: Colors.greenAccent,
                             ))),
-                    Container(
-                        child: IconButton(
-                          icon: Icon(Icons.chrome_reader_mode, color: Colors.green),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              "/today_appointment",
-                        );
-                      },
-                    ))
+                    () {
+                      if(LoggedUser.getRole() == Role.OWNER) return Container();
+                      return Container(
+                          child: IconButton(
+                            icon: Icon(
+                                Icons.chrome_reader_mode, color: Colors.green),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                  "/today_appointment",
+                                  arguments: appointmentSelected
+                              );
+                            },
+                          ));
+                    }()
                   ]))
             ]));
   }

@@ -5,20 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
 import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_appointment_route_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/get_services_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:gps_tracking_system/Model/service.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AppointmentInfo extends StatefulWidget {
   final Appointment appointment;
@@ -40,6 +43,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   String _distanceDurationToDest;
   GoogleMapListener _googleMapListener;
   List<Service> services = [];
+  List<LatLng> latLngPolyLineList = [];
 
   _AppointmentInfoState(this.appointment);
 
@@ -51,15 +55,20 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     _isWorkerReady = false;
     _workerLocation = WorkerLocation(workerId: appointment.workerId);
     _googleMapListener = GoogleMapListener(
+        appointmentId: appointment.appointmentId,
         workerId: appointment.workerId,
         workerLocationUpdated: onLocationReceived);
 
-    if (appointment.status == Status.ONGOING) {
+    if(appointment.status == Status.ONGOING)
       _googleMapListener.startServices();
-    }
 
     requestAppointmentServices();
     requestAppointmentTimeDistance();
+
+    if(appointment.status == Status.CLOSE || appointment.status == Status.SERVICING){
+      requestAppointmentRoute();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _minHeightOfSlidingUpPanel =
@@ -68,6 +77,16 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     });
   }
 
+  void requestAppointmentRoute() async{
+    AppointmentRouteResponse result = await RestApi.admin.getAppointmentRoute(appointment.appointmentId);
+
+    if(result.response.status == 1){
+      setState(() {
+        latLngPolyLineList = result.route;
+        onRouteReceived();
+      });
+    }
+  }
 
   void requestAppointmentServices() async {
     GetServicesResponse result = await RestApi.admin
@@ -78,12 +97,30 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
       });
     }
   }
-
-  void requestCancelAppointment() async {
-    CommonResponse result =
-    await RestApi.admin.updateAppointment(appointment.appointmentId, Status.CANCELLED);
+  
+  
+  Future<void> requestUpdateAppointmentStatus(Status status) async {
+    CommonResponse result = await RestApi.admin.updateAppointment(appointment.appointmentId, status);
     if (result.response.status == 1) {
-      Navigator.of(context).pop();
+      setState((){appointment.status = status;});
+      if(status == Status.CANCELLED)
+        Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> requestUpdateAppointmentStatusNLog(Status status) async {
+    String activity = "";
+    switch(status){
+      case Status.ONGOING: activity = "Heading to ${appointment.customerName} site"; break;
+      case Status.SERVICING: activity = "Arrived at ${appointment.customerName} site"; break;
+      case Status.CLOSE: activity = "Service completed"; break;
+      default: return;
+    }
+    CommonResponse result = await RestApi.admin.updateAppointmentStatusNLog(appointment.appointmentId, status, activity);
+    if (result.response.status == 1) {
+      setState((){appointment.status = status;});
+      if(status == Status.CANCELLED)
+        Navigator.of(context).pop();
     }
   }
 
@@ -100,10 +137,12 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     LatLng destination = await MapHelper.addressToLatLng(appointment.address);
     Map<String, int> timeDestinationMap =
     await MapHelper.getRouteTimeDistance([origin, destination]);
-    setState(() {
-      _distanceDurationToDest = MapHelper.getTotalDistanceDurationString(
-          timeDestinationMap["duration"], timeDestinationMap["distance"]);
-    });
+    if(mounted) {
+      setState(() {
+        _distanceDurationToDest = MapHelper.getTotalDistanceDurationString(
+            timeDestinationMap["duration"], timeDestinationMap["distance"]);
+      });
+    }
   }
 
   Container _buildSlidingUpPanelIndicator() {
@@ -198,7 +237,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         mainAxisAlignment: MainAxisAlignment.center,
         children:[
           _getStatusIcon(appointment.status),
-          Text(appointment.statusName, style: TextStyleFactory.p(color: _getStatusColor(appointment.status)),)
+          Text(appointment.getStatusName(), style: TextStyleFactory.p(color: _getStatusColor(appointment.status)),)
         ]
     );
   }
@@ -295,6 +334,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                       ? LatLng(_workerLocation.latitude, _workerLocation.longitude)
                       : null,
                   customerAddress: appointment.address,
+                  latLngPolylineList: latLngPolyLineList,
                 )),
           ])),
       panel: Container(
@@ -311,6 +351,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                     child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          _buildStatusActionButton(screenSize),
+                          SizedBox(
+                            height: screenSize.height * 0.01,
+                          ),
                           _buildPanelBasicInformation(screenSize),
                           SizedBox(
                             height: screenSize.height * 0.01,
@@ -324,7 +368,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                             height: screenSize.height * 0.01,
                           ),
                           _buildServiceInformation(screenSize),
-                          _buildStartNavigationButton(screenSize),
+
                           _buildCancelAppointmentButton(screenSize),
                           SizedBox(height: _minHeightOfSlidingUpPanel,)
                         ])))
@@ -342,8 +386,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   }
 
   Container _buildCancelAppointmentButton(Size screenSize) {
-    return appointment.status != Status.ONGOING
-        ? Container(
+    if(LoggedUser.getRole() == Role.WORKER || appointment.status != Status.ACCEPTED) return Container();
+    return Container(
       color: primaryLightColor,
       width: screenSize.width,
       child: Align(
@@ -356,11 +400,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             "Cancel appointment",
             style: TextStyleFactory.p(color: Colors.redAccent),
           ),
-          onPressed: requestCancelAppointment,
+          onPressed: (){requestUpdateAppointmentStatus(Status.CANCELLED);},
         ),
       ),
-    )
-        : Container();
+    );
   }
 
   Icon _getStatusIcon(Status status){
@@ -374,6 +417,8 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         return Icon(Icons.done, color: _getStatusColor(status));
       case Status.ONGOING:
         return Icon(Icons.directions_car, color: _getStatusColor(status),);
+      case Status.SERVICING:
+        return Icon(Icons.build, color: _getStatusColor(status),);
     }
     return null;
   }
@@ -382,46 +427,71 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     // ignore: missing_enum_constant_in_switch
     switch(status) {
       case Status.ACCEPTED:
-        return Colors.amber;
+        return Colors.greenAccent;
       case Status.CANCELLED:
         return  Colors.redAccent;
       case Status.CLOSE:
         return Colors.greenAccent;
       case Status.ONGOING:
         return primaryColor;
+      case Status.SERVICING:
+        return Colors.amber;
     }
     return null;
   }
 
-  Container _buildStartNavigationButton(Size screenSize) {
-    return appointment.status != Status.ONGOING && LoggedUser.getRole() != Role.OWNER
-        ? Container(
+  Container _buildStatusActionButton(Size screenSize) {
+    if(LoggedUser.getRole() == Role.OWNER){
+      return Container();
+    }
+
+    var createContainer = (IconData iconData, String text, Color color, Function() callback)=>Container(
       color: primaryLightColor,
       width: screenSize.width,
       child: Align(
         child: FlatButton.icon(
           icon: Icon(
-            Icons.directions,
-            color: primaryColor,
+            iconData,
+            color: color,
           ),
           label: Text(
-            "Start Navigation",
-            style: TextStyleFactory.p(color: primaryColor),
+            text,
+            style: TextStyleFactory.p(color: color),
           ),
-          onPressed: (){
-            try {
-              AppLauncher.openMap(
-                  destAddress: appointment.address
-              );
-            }
-            catch(e){
-
-            }
-          },
+          onPressed: callback
         ),
       ),
-    )
-        : Container();
+    );
+
+    switch(appointment.status ){
+      case Status.ACCEPTED:
+        return createContainer(Icons.directions,"Start Navigation", primaryColor, ()async{
+          await requestUpdateAppointmentStatusNLog(Status.ONGOING);
+          try{
+            _googleMapListener.startServices();
+            AppLauncher.openMap(destAddress: appointment.address);
+          }catch(e){}
+        });
+      case Status.ONGOING:
+        return createContainer(Icons.build, "Start servicing", Colors.amber, ()async{
+          _googleMapListener.stopServices();
+          await requestUpdateAppointmentStatusNLog(Status.SERVICING);
+
+          var db = await openDatabase("route.db");
+          List<Map> routeCoord = await db.rawQuery("SELECT lat,lng FROM Route WHERE appointment_id = ${appointment.appointmentId} ORDER BY route_id");
+          CommonResponse result = await RestApi.admin.sendRoute(appointment.appointmentId, routeCoord);
+          db.rawDelete("DELETE FROM Route WHERE appointment_id = ?",[appointment.appointmentId]);
+          await db.close();
+
+        });
+      case Status.SERVICING:
+        return createContainer(Icons.attach_money, "Payment", Colors.greenAccent, ()async{
+          Navigator.of(context).pushNamed("/payment", arguments: {"appointment": appointment, "services": services});
+          // await requestUpdateAppointmentStatusNLog(Status.CLOSE);
+        });
+      default:
+        return Container();
+    }
   }
 
   Container _buildServiceInformation(Size screenSize) {
@@ -520,13 +590,16 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude) {
-    log("Called");
     if(_googleMapKey.currentState != null) {
       _googleMapKey.currentState.updateWorkerLocation(
           _isWorkerReady, LatLng(latitude, longitude));
       requestAppointmentTimeDistance();
       _isWorkerReady = true;
     }
+  }
+
+  void onRouteReceived(){
+    _googleMapKey.currentState.setPolylineList(latLngPolyLineList);
   }
 
 

@@ -134,7 +134,7 @@ class Day {
   String getEndTime()=> endTime + " " + endMeridiem;
 
   factory Day.fromJson(Map<String, dynamic> json) => Day(
-    isOpen: json["is_open"] == "1" ? true : false,
+    isOpen: json["is_open"],
     startTime: json["start_time"],
     startMeridiem: json["start_meridiem"],
     endTime: json["end_time"],

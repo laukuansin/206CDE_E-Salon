@@ -1,24 +1,30 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
+import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Model/location.dart';
 import 'package:gps_tracking_system/Model/logged_user.dart';
+import 'package:gps_tracking_system/Model/service.dart';
 import 'package:gps_tracking_system/Screens/Admin/Account/account_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/add_worker_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/AppointmentInfo/appointment_info_screen.dart'
+import 'package:gps_tracking_system/Screens/Admin/Account/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_info_screen.dart'
     as AdminAppointmentInfo;
-import 'package:gps_tracking_system/Screens/Admin/AppointmentList/appointment_list_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ChangePassword/change_password_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/appointment_list_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/manage_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Appointment/today_appointment_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Home/home_page_screen.dart'
     as AdminHome;
 import 'package:gps_tracking_system/Screens/Admin/Login/login_screen.dart'
     as AdminLogin;
-import 'package:gps_tracking_system/Screens/Admin/ManageAppointment/manage_appointment_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/edit_worker_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/ManageWorker/manage_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Payment/add_service_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Payment/payment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Setting/holiday_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.dart';
-import 'package:gps_tracking_system/Screens/Admin/TodayAppointment/today_appointment_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/edit_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/manage_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
@@ -38,15 +44,14 @@ import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.da
 import 'package:gps_tracking_system/Screens/User/Rating/rating_screen.dart';
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
-import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
-import 'package:gps_tracking_system/Utility/RestApi/appointment_list_response.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import 'Admin/EditInfo/edit_info_screen.dart';
+import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
-  static const bool _ADMIN_MODE = false;
+
+  static bool ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget,
           {Key key,
@@ -84,7 +89,8 @@ class RouteGenerator {
                 return LoggedUser.getUserImage() != null &&
                         LoggedUser.getUserImage().isNotEmpty
                     ? CircleAvatar(
-                        backgroundImage: NetworkImage(LoggedUser.getUserImage()),
+                        backgroundImage:
+                            NetworkImage(LoggedUser.getUserImage()),
                       )
                     : CircleAvatar(
                         backgroundColor: Colors.white,
@@ -103,13 +109,16 @@ class RouteGenerator {
                   "/home_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.people),
-            title: Text("Worker"),
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil("/manage_worker", (route) => false);
-            },
+          Visibility(
+            child: ListTile(
+              leading: Icon(Icons.people),
+              title: Text("Worker"),
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/manage_worker", (route) => false);
+              },
+            ),
+            visible: LoggedUser.getRole() == Role.OWNER,
           ),
           ListTile(
             leading: Icon(Icons.calendar_today),
@@ -119,7 +128,7 @@ class RouteGenerator {
                   "/appointment_list", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(leading: Icon(Icons.attach_money), title: Text("Sales")),
+          Visibility(child:ListTile(leading: Icon(Icons.attach_money), title: Text("Sales")), visible: LoggedUser.getRole() == Role.OWNER,),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text("Account"),
@@ -128,13 +137,16 @@ class RouteGenerator {
                   "/account_page", (Route<dynamic> route) => false);
             },
           ),
-          ListTile(
+          Visibility(
+            child: ListTile(
               leading: Icon(Icons.settings),
               title: Text("Setting"),
-            onTap: (){
+              onTap: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     "/setting_page", (Route<dynamic> route) => false);
-            },
+              },
+            ),
+            visible: LoggedUser.getRole() == Role.OWNER,
           ),
           ListTile(
             leading: Icon(MdiIcons.logout),
@@ -156,7 +168,7 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
-    if (_ADMIN_MODE) {
+    if (ADMIN_MODE) {
       switch (settings.name) {
         case "/":
           return _buildRoute(SplashScreen());
@@ -165,17 +177,23 @@ class RouteGenerator {
         case "/appointment_list":
           return _buildRoute(AppointmentListScreen());
         case "/today_appointment":
-          return _buildRoute(TodayAppointmentScreen());
+          if (args is Map<DateTime, List<Appointment>>)
+            return _buildRoute(TodayAppointmentScreen(args));
+          break;
         case "/add_worker":
           return _buildRoute(AddWorker());
         case "/payment":
-          return _buildRoute(PaymentScreen());
+          if (args is Map<String, dynamic>)
+            return _buildRoute(PaymentScreen(args));
+          break;
         case "/manage_appointment":
           return _buildRoute(ManageAppointmentScreen());
         case "/home_page":
           return _buildRoute(AdminHome.HomePageScreen());
         case "/account_page":
           return _buildRoute(AccountPageScreen());
+        case "/holiday_page":
+          return _buildRoute(HolidayPageScreen());
         case "/edit_info":
           return _buildRoute(EditInfoPageScreen());
         case "/change_password":
@@ -184,9 +202,11 @@ class RouteGenerator {
           return _buildRoute(SettingPageScreen());
         case "/manage_worker":
           return _buildRoute(ManageWorkerScreen());
+        case "/add_service":
+          if (args is List<Service>) return _buildRoute(AddServiceScreen(args));
+          break;
         case "/edit_worker":
-          if(args is Admin)
-            return _buildRoute(EditWorkerScreen(args));
+          if (args is Admin) return _buildRoute(EditWorkerScreen(args));
           break;
         case "/appointment_info":
           if (args is Appointment)
