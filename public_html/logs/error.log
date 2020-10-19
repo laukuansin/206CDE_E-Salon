@@ -15,3 +15,13 @@
 2020-10-19 13:55:34 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
 2020-10-19 14:03:54 - PHP Notice:  Undefined index: appointment_id in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 96
 2020-10-19 14:03:54 - PHP Notice:  Undefined index: route_taken in C:\Users\Acer\Documents\GitHub\RealWorldProject\web_development\admin\controller\api\appointment.php on line 97
+2020-10-19 15:27:07 - PHP Notice:  Undefined variable: appointment_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 96
+2020-10-19 15:27:07 - PHP Notice:  Undefined index: price in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 108
+2020-10-19 15:27:07 - PHP Notice:  Undefined index: price in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 108
+2020-10-19 15:27:07 - PHP Notice:  Undefined variable: description in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 119
+2020-10-19 15:27:07 - PHP Notice:  Undefined variable: customer in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 120
+2020-10-19 15:27:07 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 120
+2020-10-19 15:28:31 - PHP Notice:  Undefined variable: appointment_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 96
+2020-10-19 15:28:31 - PHP Notice:  Undefined variable: customer in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 120
+2020-10-19 15:28:31 - PHP Notice:  Trying to access array offset on value of type null in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 120
+2020-10-19 15:29:03 - PHP Notice:  Undefined variable: appointment_id in /home/jeffreytht/Desktop/RealWorldProject/RealWorldProject/web_development/admin/controller/api/payment.php on line 96
