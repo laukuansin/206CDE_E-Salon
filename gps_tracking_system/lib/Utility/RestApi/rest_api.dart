@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_appointment_route_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
@@ -243,6 +244,16 @@ class _Admin {
     var response = await http.post(url, body: {});
     return appointmentListResponseFromJson(response.body);
   }
+  Future<AppointmentRouteResponse> getAppointmentRoute(String appointmentId) async{
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentRoute&api_key=" +
+          LoggedUser.getToken();
+
+    log("Calling get appointment route  API : " + url);
+    var response = await http.post(url, body: {"appointment_id":appointmentId});
+
+    return appointmentRouteResponseFromJson(response.body);
+  }
+
   
   Future<GetServicesResponse> getAppointmentServices(String appointmentId) async{
     String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentServices&appointment_id=$appointmentId&api_key=" + LoggedUser.getToken();

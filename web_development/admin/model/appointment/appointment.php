@@ -76,6 +76,11 @@
 			return $this->db->query($sql)->rows;
 		}
 
+		public function getAppointmentRoute($appointmentId){
+			$sql = "SELECT * FROM  oc_appointment_route WHERE appointment_id = ".$this->db->escape($appointmentId);
+			return $this->db->query($sql)->row;
+		}
+
 		public function getAppointmentById($appointment_id){
 			$sql = "
 					SELECT 

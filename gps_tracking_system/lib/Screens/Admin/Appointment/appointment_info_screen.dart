@@ -11,6 +11,7 @@ import 'package:gps_tracking_system/Model/worker_location.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_listener.dart';
 import 'package:gps_tracking_system/Screens/Common/GoogleMap/googlemap_screen.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_appointment_route_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
@@ -42,6 +43,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   String _distanceDurationToDest;
   GoogleMapListener _googleMapListener;
   List<Service> services = [];
+  List<LatLng> latLngPolyLineList = [];
 
   _AppointmentInfoState(this.appointment);
 
@@ -62,6 +64,11 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
 
     requestAppointmentServices();
     requestAppointmentTimeDistance();
+
+    if(appointment.status == Status.CLOSE || appointment.status == Status.SERVICING){
+      requestAppointmentRoute();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _minHeightOfSlidingUpPanel =
@@ -70,6 +77,16 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
     });
   }
 
+  void requestAppointmentRoute() async{
+    AppointmentRouteResponse result = await RestApi.admin.getAppointmentRoute(appointment.appointmentId);
+
+    if(result.response.status == 1){
+      setState(() {
+        latLngPolyLineList = result.route;
+        onRouteReceived();
+      });
+    }
+  }
 
   void requestAppointmentServices() async {
     GetServicesResponse result = await RestApi.admin
@@ -317,6 +334,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                       ? LatLng(_workerLocation.latitude, _workerLocation.longitude)
                       : null,
                   customerAddress: appointment.address,
+                  latLngPolylineList: latLngPolyLineList,
                 )),
           ])),
       panel: Container(
@@ -578,6 +596,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
       requestAppointmentTimeDistance();
       _isWorkerReady = true;
     }
+  }
+
+  void onRouteReceived(){
+    _googleMapKey.currentState.setPolylineList(latLngPolyLineList);
   }
 
 
