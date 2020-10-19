@@ -41,6 +41,7 @@ import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart'
     as UserLogin;
 import 'package:gps_tracking_system/Screens/User/NotificationAppointments/notification_appointments.dart';
 import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.dart';
+import 'package:gps_tracking_system/Screens/User/Rating/rating_screen.dart';
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -49,6 +50,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
+
   static bool ADMIN_MODE = false;
 
   static Scaffold buildScaffold(Widget widget,
@@ -237,6 +239,8 @@ class RouteGenerator {
           return _buildRoute(EditInfoScreen());
         case "/home_page":
           return _buildRoute(UserHome.HomePageScreen());
+        case  "/rating":
+          return _buildRoute(RatingPageScreen());
         case "/login":
           return _buildRoute(UserLogin.LoginScreen());
         case "/location_picker":

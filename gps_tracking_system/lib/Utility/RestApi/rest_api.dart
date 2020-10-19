@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:gps_tracking_system/Components/rating_dialog.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_appointment_route_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
@@ -10,6 +12,7 @@ import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dar
 import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_worker_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_change_password_response.dart';
@@ -47,7 +50,8 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.8.103/";
+const tempDomainName = "http://35.240.241.182/";
+
 
 
 class RestApi
@@ -602,6 +606,30 @@ class _Customer{
     var response = await http.post(url, body: {
       "appointment_id": appointmentId,
     });
+
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<GetWorkerDetailResponse> getWorkerDetail(String workerID) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/getWorkerDetail&api_key=" + LoggedUser.getToken();
+    log("Calling getWorkerDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "worker_id": workerID,
+    });
+    log(response.body);
+    return getWorkerDetailResponseFromJson(response.body);
+  }
+  Future<CommonResponse> submitRating(String workerID,Rating rating) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/submitRating&api_key=" + LoggedUser.getToken();
+    log("Calling submitRating API : " + url);
+
+    var response = await http.post(url, body: {
+      "worker_id": workerID,
+      "rating": rating.ratingStar.toString(),
+      "feedback": rating.feedback,
+    });
+    log(response.body);
 
     return commonResponseFromJson(response.body);
   }
