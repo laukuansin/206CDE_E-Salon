@@ -46,7 +46,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.68.107/";
+const tempDomainName = "http://35.240.241.182/";
 
 
 class RestApi
@@ -217,11 +217,11 @@ class _Admin {
   Future<AppointmentListResponse> getAcceptedAppointmentList() async{
     String url = DOMAIN_NAME;
     if(LoggedUser.getRole() == Role.OWNER) {
-      url += "index.php?route=api/appointment/getAllAppointments&status_id=1,6,5&api_key=" +
+      url += "index.php?route=api/appointment/getAllAppointments&status_id=1,6,5,7&api_key=" +
           LoggedUser.getToken();
       log("Calling get appointment list (Owner)  API : " + url);
     } else {
-      url += "index.php?route=api/appointment/getWorkerAppointments&status_id=1,6,5&api_key=" +
+      url += "index.php?route=api/appointment/getWorkerAppointments&status_id=1,6,5,7&api_key=" +
           LoggedUser.getToken();
       log("Calling get appointment list (Worker)  API : " + url);
     }
