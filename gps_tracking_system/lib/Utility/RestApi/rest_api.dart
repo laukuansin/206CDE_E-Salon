@@ -14,6 +14,7 @@ import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_respons
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_worker_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_appointment_sales_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_customer_detail_response.dart';
@@ -545,6 +546,14 @@ class _Customer{
     return appointmentListResponseFromJson(response.body);
   }
 
+  Future<AppointmentListResponse> getPaymentAppointmentList() async{
+    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
+    url += "&status_id=1,6,7,5";
+    log("Calling get accepted appointment list API : " + url);
+    var response = await http.get(url);
+    return appointmentListResponseFromJson(response.body);
+  }
+
   Future<AppointmentListResponse> getAppointmentList() async{
     String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
     log("Calling get all appointment list API : " + url);
@@ -612,9 +621,9 @@ class _Customer{
     var response = await http.post(url, body: {
       "worker_id": workerID,
     });
-    log(response.body);
     return getWorkerDetailResponseFromJson(response.body);
   }
+
   Future<CommonResponse> submitRating(String workerID,Rating rating) async{
     String url = DOMAIN_NAME + "index.php?route=api/rating/submitRating&api_key=" + LoggedUser.getToken();
     log("Calling submitRating API : " + url);
@@ -624,9 +633,15 @@ class _Customer{
       "rating": rating.ratingStar.toString(),
       "feedback": rating.feedback,
     });
-    log(response.body);
-
     return commonResponseFromJson(response.body);
+  }
+
+  Future<AppointmentSalesResponse> getAppointmentSales() async{
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentSales&api_key=" + LoggedUser.getToken();
+    log("Calling get appointment sales API : " + url);
+
+    var response = await http.get(url);
+    return appointmentSalesResponseFromJson(response.body);
   }
 
 }

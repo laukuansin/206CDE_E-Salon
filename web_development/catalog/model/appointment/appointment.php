@@ -118,6 +118,10 @@ class ModelAppointmentAppointment extends Model{
 		return $this->db->query($sql)->rows;
 	}
 
+	public function getCustomerAppointmentSales($customerId){
+		return $this->db->query("SELECT * FROM oc_appointment_sales WHERE customer_id = $customerId")->rows;
+	}
+
 	public function acceptAppointment($appointmentId){
 		$this->udpateAppointmentStatus($appointmentId, 1);
 	}
