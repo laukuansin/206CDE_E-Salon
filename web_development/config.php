@@ -2,7 +2,7 @@
 
 //define('HTTP_SERVER', 'http://35.240.241.182/');
 // define('HTTP_SERVER', 'http://192.168.68.107/');
- define('HTTP_SERVER', 'http://35.240.241.182');
+ define('HTTP_SERVER', 'http://35.240.241.182/');
 
 
 // HTTPS
