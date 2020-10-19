@@ -11,10 +11,10 @@
 
 
 // DIR
-define('DIR_APPLICATION', 'C:/Users/Acer/Documents/GitHub/RealWorldProject/web_development/catalog/');
-define('DIR_SYSTEM', 'C:/Users/Acer/Documents/GitHub/RealWorldProject/web_development/system/');
-define('DIR_IMAGE', 'C:/Users/Acer/Documents/GitHub/RealWorldProject/web_development/image/');
-define('DIR_STORAGE', 'C:/Users/Acer/Documents/GitHub/RealWorldProject/public_html/');
+define('DIR_APPLICATION', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/web_development/catalog/');
+define('DIR_SYSTEM', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/web_development/system/');
+define('DIR_IMAGE', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/web_development/image/');
+define('DIR_STORAGE', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/public_html/');
 
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
