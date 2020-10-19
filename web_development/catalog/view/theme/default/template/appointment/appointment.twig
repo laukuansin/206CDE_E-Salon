@@ -1,0 +1,225 @@
+{{ header }}
+    <style type="text/css">
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <div class="container my-5" style="min-height:78vh">
+        <h3 class='text-center'>{{text_make_appointment}}</h3>
+        <div class='row'>
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form class="form-horizontal mt-3" action="#" ng-app='serviceList' ng-controller='serviceCtrl'>
+                  <h4 class='text-center'>{{text_choose_service}}</h4>
+                  <div class='form-group mb-0 pb-0'>
+                        <table class='table mb-0 pb-0' id="table-service">
+                            <thead>
+                                <tr>
+                                    <th style="width:50%">Service name</th>
+                                    <th class='text-right' style="width:10%">Pax</th>
+                                    <th class='text-right' style="width:30%">Service price</th>
+                                    <th class='text-center' style="width:10%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id='table-service-content'>
+                                <tr ng-repeat='service in selectedServiceList'>
+                                    <td style="width:50%">{[{service.service_name}]}</td>
+                                    <td class='text-right' style='width:10%'><input type='number' class='form-control text-right' ng-model='service.qty' ng-change='requestAvailableTimeSlot()'/></td>
+                                    <td class='text-right' style='width:30%'>{[{service.service_price}]}</td>
+                                    <td style="width:10%" class='text-center' ng-click='removeItem(service)'>
+                                        <i class="fas fa-trash-alt text-danger"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:50%">
+                                        <div class="d-inline dropdown show mr-3">
+                                          <button class="btn dropdown-toggle pl-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {[{selectedItemName}]}
+                                          </button>
+
+                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <li><a class="dropdown-item" href="#" ng-repeat='service in getDropdownItem()' ng-click='clickItem(service)'>{[{service.service_name}]}</a></li>
+                                          </div>
+                                        </div>
+                                    </td>
+                                    </td>
+                                    <td style="width:50%" colspan="4" class='text-right'>
+                                        <button type='button' ng-click="addItem()" class='btn' id='btn-add-service'><i class="fas fa-plus"></i>  Add service</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                  </div>
+                  <hr class='mt-0 mb-5'/>
+
+                  <h4 class='text-center'>{{text_fill_info}}</h4>
+                  <hr/>
+                  <div class="row">
+                    <div class='col-md-6'>
+                        <div class="form-group">
+                            <label class="control-label col-sm-12" for="address">{{text_address}}</label>
+                            <div class="col-sm-12">
+                              <textarea class="form-control" rows='3' id="address" ng-model='address' placeholder="Enter address"></textarea>
+                            </div>
+                          </div>
+
+                          <div class='form-group'>
+                            <label class='control-label col-sm-12' >{{text_choose_date}}</label>
+                            <div class="col-sm-12">
+                                <input id="datepicker" ng-model='appointmentDate' ng-change='requestAvailableTimeSlot()' />
+                                <script>
+                                    $('#datepicker').datepicker({
+                                        uiLibrary: 'bootstrap4'
+                                    });
+                                    $('#datepicker').change(function(){
+                                        angular.element(document.getElementById('datepicker')).triggerHandler('change');
+                                    });
+                                </script>
+                            </div>
+                      </div>
+
+                    </div>
+                    <div class='col-md-6'>
+                      <div class='form-group'>
+                        <label class='control-label col-sm-12'>{{text_choose_time}}</label>
+                        <div class='col-sm-12'>
+                            <div class ='p-3 rounded' style="background-color:#E9ECEF; min-height:170px; max-height:170px; overflow:auto;">
+                            <div class="form-check" ng-repeat='time in availableTimeSlots'>
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="optradio" value='{[{time}]}' ng-model='model.selectedTime'>{[{time}]}
+                              </label>
+                            </div>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group mt-5">
+                    <div class="col-sm-offset-2 col-sm-12">
+                      <button type="button" class="btn btn-primary" ng-click='postMakeAppointment()'>Make appointment</button>
+                    </div>
+                  </div>
+                </form>
+       
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+    <script>
+    var app = angular.module("serviceList", []);
+    app.config(function($interpolateProvider){
+        $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+    });
+
+    app.controller("serviceCtrl", function($scope, $http){
+        $scope.serviceList = [
+            {% for service in services %}
+                {service_id: '{{service.service_id}}', service_name:'{{service.service_name}}', service_price:'{{service.service_price}}' , qty:0},
+            {% endfor %}
+        ];
+
+        $scope.model                = {};
+        $scope.model.selectedTime   = '';
+        $scope.address              = '';
+        $scope.appointmentDate      = null;
+        $scope.availableTimeSlots   = [];
+        $scope.selectedServiceList  = [];
+        $scope.selectedItemName     = '{{text_select_service}}';
+
+        $scope.addItem = function(){
+            if($scope.selectedItem == null)
+                return;
+
+            $scope.selectedItem.qty = 1;
+            $scope.selectedServiceList.push($scope.selectedItem);
+            $scope.selectedItem = null;
+            $scope.selectedItemName = '{{text_select_service}}';
+            $scope.requestAvailableTimeSlot();
+        }
+        $scope.clickItem = function(selectedItem){
+            $scope.selectedItem = selectedItem;
+            $scope.selectedItemName = selectedItem.service_name ;
+        }
+        $scope.getDropdownItem = function(){
+            return $scope.serviceList.filter(x => !$scope.selectedServiceList.includes(x));
+        }
+        $scope.removeItem = function(item){
+            for(i = 0 ; i < $scope.selectedServiceList.length; i++){
+                if($scope.selectedServiceList[i].service_id === item.service_id){
+                    $scope.selectedServiceList[i].qty = 0;
+                    $scope.selectedServiceList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        $scope.requestAvailableTimeSlot = function(){
+            if($scope.selectedServiceList.length > 0 && $scope.appointmentDate !== null){
+                var data = {
+                    appointment_date: $scope.appointmentDate,
+                    services        : $scope.selectedServiceList
+                };
+
+                var url = window.location.href;
+                if(url[url.length - 1] === '#')
+                    url = url.slice(0, url.length - 1) 
+
+
+                $http.post(url + '/getAvailableTimeSlot',data).then(
+                    function(response){
+                        console.log(response.data);
+                        $scope.availableTimeSlots = response.data;
+                    },function(response){
+                        alert('Hailat' + response.data);
+                    }
+                );
+            }
+        }
+
+        $scope.postMakeAppointment = function(){
+            if($scope.selectedServiceList.length > 0 
+                && $scope.appointmentDate !== null
+                && $scope.address.length > 0
+                && $scope.model.selectedTime.length > 0){
+
+                var data = {
+                    appointment_date: $scope.appointmentDate,
+                    services        : $scope.selectedServiceList,
+                    address         : $scope.address,
+                    appointment_time: $scope.model.selectedTime
+                };
+
+                var url = window.location.href;
+                if(url[url.length - 1] === '#')
+                    url = url.slice(0, url.length - 1) 
+
+                $http.post(url + '/makeAppointment',data).then(
+                    function(response){
+                        if(response.data == 'Success')
+                            window.location.href = "/index.php?route=common/home";
+                    },function(response){
+                        alert('Hailat' + response.data);
+                    }
+                );
+            }
+            else
+                alert('No ' + $scope.model.selectedTime);
+        } 
+
+    });
+    </script>
+{{ footer }}

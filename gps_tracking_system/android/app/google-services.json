@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1007834937534",
+    "firebase_url": "https://gpstracker-814d4.firebaseio.com",
+    "project_id": "gpstracker-814d4",
+    "storage_bucket": "gpstracker-814d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007834937534:android:0503217d627877994ec6ef",
+        "android_client_info": {
+          "package_name": "com.example.gps_tracking_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007834937534-rbipsqobd004d6jnsla07idtda7r33bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfpSNJISYV4Afgr1sxnsImxU6gFYO7Olc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007834937534-rbipsqobd004d6jnsla07idtda7r33bv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1007834937534-8d5gajo6ucu60ehl0ukv3qc3rg8i43si.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "GPS-Tracking-System"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

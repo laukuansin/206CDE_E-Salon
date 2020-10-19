@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{{ title }}</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+<!--   <link href="catalog/view/theme/default/assets/img/favicon.png" rel="icon">
+  <link href="catalog/view/theme/default/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+ -->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Muli:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="catalog/view/theme/default/assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="catalog/view/theme/default/assets/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+</head>
+<body style="min-height:100%">
+<header id="header">
+	<div class="container d-flex">
+
+	  <div class="logo mr-auto">
+	    <h1 class="text-light"><a href="{{ home }}">{{name}}</a></h1>
+	    <!-- Uncomment below if you prefer to use an image logo -->
+	    <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+	  </div>
+
+	  <nav class="nav-menu d-none d-lg-block">
+	    <ul>
+	      {% if logged %}
+		      <li><a href="{{appointment}}">{{text_appointment}}</a></li>
+		      <li class="drop-down"><a href="">{{text_account}}</a>
+		        <ul>
+		          <li><a href="{{ account }}">{{text_my_account}}</a></li>
+		          <li><a href="{{ logout }}">{{text_logout}}</a></li>
+		        </ul>
+		      </li>
+	      {% else %}
+		      <li><a href="{{ register }}">{{text_register}}</a></li>
+		      <li><a href="{{ login }}">{{text_login}}</a></li>
+	      {% endif %}
+	    </ul>
+	  </nav><!-- .nav-menu -->
+	</div>
+</header><!-- End Header -->
