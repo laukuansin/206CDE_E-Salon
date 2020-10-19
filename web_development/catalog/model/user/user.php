@@ -111,4 +111,8 @@ class ModelUserUser extends Model {
 
 		return $query->row['total'];
 	}
+	public function submitRating($data)
+	{
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "user_rating` SET user_id='".(int)$data['worker_id']."',customer_id='".(int)$data['customer_id']."',customer_rating='".(int)$data['rating']."',customer_review='".$data['feedback']."' ");
+	}
 }
