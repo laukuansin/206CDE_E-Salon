@@ -8,6 +8,18 @@ class TextStyleFactory{
 
   static final primaryFontBuilder = GoogleFonts.openSans;
 
+  static TextStyle a({
+    Color color = Colors.blue
+    ,FontWeight fontWeight = FontWeight.normal
+    ,FontStyle fontStyle = FontStyle.normal
+    ,double fontSize = 14
+    ,})=>primaryFontBuilder(
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      fontSize: fontSize,
+      color: color,
+  );
+
   static TextStyle p({
     Color color = secondaryTextColor
     ,FontWeight fontWeight = FontWeight.normal
@@ -17,7 +29,7 @@ class TextStyleFactory{
     fontWeight: fontWeight,
     fontStyle: fontStyle,
     fontSize: fontSize,
-    color: color
+    color: color,
   );
 
   static TextStyle heading6({

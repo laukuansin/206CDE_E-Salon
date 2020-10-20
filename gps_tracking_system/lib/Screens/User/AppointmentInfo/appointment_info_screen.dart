@@ -184,15 +184,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         ]));
   }
 
-  Widget buildPanelInfo(Size screenSize, IconData icon, String text,{bool call=false}) {
+  Widget buildPanelInfo(Size screenSize, IconData icon, String text, {Function()func}) {
     return Container(
         child: ListTile(
-          onTap: (){
-            if(call)
-            {
-              AppLauncher.contactWorker(text);
-            }
-          },
+          onTap: func,
       leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -213,7 +208,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             )
           : Text(
               text,
-              style: call?TextStyle(color: Colors.blue,decoration: TextDecoration.underline,decorationColor: Colors.blue):TextStyleFactory.p(),
+              style: func != null?TextStyleFactory.a():TextStyleFactory.p(),
             ),
     ));
   }
@@ -236,7 +231,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(screenSize, Icons.access_time,
               appointment.getAppointmentDateStringJM()),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.workerTelephone,call: true),
+              screenSize, Icons.contacts, appointment.workerTelephone, func:(){AppLauncher.openPhonePad(appointment.workerTelephone);}),
           SizedBox(
             height: screenSize.height * 0.015,
           )

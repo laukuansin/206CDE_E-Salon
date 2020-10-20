@@ -44,7 +44,7 @@ class AppLauncher
       }
     }
   }
-  static void contactWorker(String workerPhoneNo)
+  static void openPhonePad(String workerPhoneNo)
   {
     launch("tel://$workerPhoneNo");
   }

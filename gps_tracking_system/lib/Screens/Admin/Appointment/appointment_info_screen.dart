@@ -204,9 +204,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         ]));
   }
 
-  Widget buildPanelInfo(Size screenSize, IconData icon, String text) {
+  Widget buildPanelInfo(Size screenSize, IconData icon, String text,  {Function()func}) {
     return Container(
         child: ListTile(
+          onTap: func,
           leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -227,7 +228,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           )
               : Text(
             text,
-            style: TextStyleFactory.p(),
+            style: func != null?TextStyleFactory.a():TextStyleFactory.p(),
           ),
         ));
   }
@@ -260,7 +261,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(screenSize, Icons.access_time,
               appointment.getAppointmentDateStringJM()),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.telephone),
+              screenSize, Icons.contacts, appointment.telephone, func:(){AppLauncher.openPhonePad(appointment.telephone);}),
           buildPanelInfo(
               screenSize, Icons.location_on, appointment.address),
           SizedBox(
@@ -277,7 +278,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(
               screenSize, Icons.person, appointment.workerName),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.workerTelephone),
+              screenSize, Icons.contacts, appointment.workerTelephone, func:(){AppLauncher.openPhonePad(appointment.workerTelephone);}),
           SizedBox(
             height: screenSize.height * 0.015,
           )
