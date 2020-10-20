@@ -54,6 +54,7 @@ class RouteGenerator {
 
   static bool ADMIN_MODE = true;
 
+
   static Scaffold buildScaffold(Widget widget,
           {Key key,
           AppBar appbar,

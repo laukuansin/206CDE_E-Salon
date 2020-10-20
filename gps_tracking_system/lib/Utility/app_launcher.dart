@@ -44,4 +44,10 @@ class AppLauncher
       }
     }
   }
+  static void contactWorker(String workerPhoneNo)
+  {
+    launch("tel://$workerPhoneNo");
+  }
+
+
 }

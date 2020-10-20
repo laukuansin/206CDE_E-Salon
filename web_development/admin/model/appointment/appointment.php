@@ -246,7 +246,7 @@
 		$sql = "INSERT INTO oc_appointment_route(appointment_id, route_taken) VALUES($appointmentId, '".$this->db->escape($route)."')";
 		$this->db->query($sql);
 	}
-}
+}	
 
 
 
