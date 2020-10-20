@@ -1,14 +1,11 @@
 <?php
 
-
  define('HTTP_SERVER', 'http://35.240.241.182/');
  define('HTTPS_SERVER', 'http://35.240.241.182/');
 
 
 // define('HTTP_SERVER', 'http://192.168.68.107/');
 // define('HTTPS_SERVER', 'http://192.168.68.107/');
-
-
 
 // DIR
 define('DIR_APPLICATION', '/home/tanhoetheng/Desktop/git_repository/RealWorldProject/web_development/catalog/');

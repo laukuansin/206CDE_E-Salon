@@ -1,5 +1,11 @@
 <?php
+// // HTTP
+// define('HTTP_SERVER', 'http://192.168.68.107/admin/');
+// define('HTTP_CATALOG', 'http://192.168.68.107/');
 
+// // HTTPS
+// define('HTTPS_SERVER', 'http://192.168.68.107/admin/');
+// define('HTTPS_CATALOG', 'http://192.168.68.107/');
 
 // HTTP
 define('HTTP_SERVER', 'http://35.240.241.182/admin/');

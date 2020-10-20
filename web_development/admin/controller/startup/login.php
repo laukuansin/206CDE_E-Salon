@@ -15,7 +15,8 @@ class ControllerStartupLogin extends Controller {
 			'api/setting',
 			'api/holiday',
 			'api/appointment',
-			'api/service'
+			'api/service',
+			'api/rating'
 		);
 
 

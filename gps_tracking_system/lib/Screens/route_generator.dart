@@ -25,6 +25,7 @@ import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.da
 import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/edit_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/manage_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/rating_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
@@ -51,7 +52,7 @@ import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
 
-  static bool ADMIN_MODE = false;
+  static bool ADMIN_MODE = true;
 
 
   static Scaffold buildScaffold(Widget widget,
@@ -186,6 +187,10 @@ class RouteGenerator {
         case "/payment":
           if (args is Map<String, dynamic>)
             return _buildRoute(PaymentScreen(args));
+          break;
+
+        case "/rating_worker":
+          if(args is Admin) return _buildRoute(RatingWorkerScreen(args));
           break;
         case "/manage_appointment":
           return _buildRoute(ManageAppointmentScreen());

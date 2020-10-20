@@ -52,7 +52,8 @@ class ControllerStartupPermission extends Controller {
 				'api/setting',
 				'api/holiday',
 				'api/user_group',
-				'api/service'
+				'api/service',
+				'api/rating'
 			);
 
 			
