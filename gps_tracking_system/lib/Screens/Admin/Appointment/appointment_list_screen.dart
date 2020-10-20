@@ -165,16 +165,37 @@ class _AppointmentListState extends State<AppointmentListScreen> {
   }
 
   Icon _getStatusIcon(Status status){
+    // ignore: missing_enum_constant_in_switch
     switch(status) {
       case Status.ACCEPTED:
-        return Icon(Icons.access_alarm, color: Colors.amber);
+        return Icon(Icons.access_alarm, color:_getStatusColor(status));
       case Status.CANCELLED:
-        return Icon(Icons.cancel, color: Colors.redAccent);
+        return Icon(Icons.cancel, color: _getStatusColor(status));
       case Status.CLOSE:
-        return Icon(Icons.done, color: Colors.greenAccent);
+        return Icon(Icons.done, color: _getStatusColor(status));
       case Status.ONGOING:
-        return Icon(Icons.directions_car, color: primaryColor,);
+        return Icon(Icons.directions_car, color: _getStatusColor(status),);
+      case Status.SERVICING:
+        return Icon(Icons.build, color: _getStatusColor(status),);
     }
+    return null;
+  }
+
+  Color _getStatusColor(Status status){
+    // ignore: missing_enum_constant_in_switch
+    switch(status) {
+      case Status.ACCEPTED:
+        return Colors.greenAccent;
+      case Status.CANCELLED:
+        return  Colors.redAccent;
+      case Status.CLOSE:
+        return Colors.greenAccent;
+      case Status.ONGOING:
+        return primaryColor;
+      case Status.SERVICING:
+        return Colors.amber;
+    }
+    return null;
   }
 
   Container _buildAppointmentListByDate() {
