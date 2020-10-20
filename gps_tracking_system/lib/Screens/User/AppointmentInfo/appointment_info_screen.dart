@@ -99,7 +99,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   }
 
   void requestAppointmentTimeDistance() async {
-    LatLng origin = MapHelper.positionToLatLng(await getCurrentPosition());
+    LatLng origin = LatLng(_workerLocation.latitude, _workerLocation.longitude);
     LatLng destination = await MapHelper.addressToLatLng(appointment.address);
     Map<String, int> timeDestinationMap =
         await MapHelper.getRouteTimeDistance([origin, destination]);
@@ -163,7 +163,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                   padding: EdgeInsets.only(top: 5),
                   child: RatingBar(
                     ignoreGestures: true,
-                    initialRating: 3,
+                    initialRating: appointment.workerRating,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
@@ -447,6 +447,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude) {
+    _workerLocation.latitude = latitude;
+    _workerLocation.longitude = longitude;
+    requestAppointmentTimeDistance();
+    
     _googleMapKey.currentState
         .updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
     _isWorkerReady = true;
