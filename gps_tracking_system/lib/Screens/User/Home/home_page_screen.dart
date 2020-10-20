@@ -69,7 +69,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Expanded(
-                          child: Text("RM $creditAmount",
+                          child: Text("RM ${creditAmount.toStringAsFixed(2)}",
                               style: TextStyleFactory.heading1(
                                   fontSize: 30, color: primaryLightColor))),
                       RawMaterialButton(

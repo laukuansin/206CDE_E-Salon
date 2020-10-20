@@ -12,6 +12,7 @@ import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_respons
 import 'package:gps_tracking_system/Utility/RestApi/admin_qr_code_data.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
+import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:skeleton_text/skeleton_text.dart';
@@ -75,7 +76,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                               style: TextStyleFactory.p(
                                   fontWeight: FontWeight.bold)),
                         ),
-                        Text("RM  ${_calcTotalPrice()}",
+                        Text("RM  ${_calcTotalPrice().toStringAsFixed(2)}",
                             style: TextStyleFactory.p(
                                 fontWeight: FontWeight.bold,
                                 color: primaryColor))
@@ -154,7 +155,7 @@ class PaymentScreenState extends State<PaymentScreen> {
             ),
             title: _customerDetail == null
                 ? skeletonMaker()
-                : Text(_customerDetail.date),
+                : Text(DateFormat("yyyy-MM-dd hh:mm a").format(DateFormat("yyyy-MM-dd hh:mm:ss").parse(_customerDetail.date))),
           ),
           ListTile(
             dense: true,
@@ -293,7 +294,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        (element.servicePrice * element.quantity).toString()))))
+                        (element.servicePrice * element.quantity).toStringAsFixed(2)))))
           ]));
       });
 
@@ -312,7 +313,7 @@ class PaymentScreenState extends State<PaymentScreen> {
       DataCell(Container(
           width: (size.width - MARGIN * 2) * 0.2,
           child: Align(
-              alignment: Alignment.centerRight, child: Text(_calcTotalPrice().toString()))))
+              alignment: Alignment.centerRight, child: Text(_calcTotalPrice().toStringAsFixed(2)))))
     ]));
 
     return DataTable(

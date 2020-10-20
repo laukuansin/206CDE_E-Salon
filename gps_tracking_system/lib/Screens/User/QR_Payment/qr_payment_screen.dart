@@ -81,7 +81,7 @@ class QRCodePaymentScreenState extends State<QRCodePaymentScreen> {
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),
-                      child: Text("RM$_creditAmount", style: TextStyleFactory.p(color: primaryTextColor),),
+                      child: Text("RM${_creditAmount.toStringAsFixed(2)}", style: TextStyleFactory.p(color: primaryTextColor),),
                     )
                   ],
                 ),

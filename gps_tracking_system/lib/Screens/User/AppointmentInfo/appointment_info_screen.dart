@@ -392,7 +392,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        (element.servicePrice * element.quantity).toString()))))
+                        (element.servicePrice * element.quantity).toStringAsFixed(2)))))
           ]));
       });
 
@@ -412,7 +412,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           width: (size.width - MARGIN * 2) * 0.2,
           child: Align(
               alignment: Alignment.centerRight,
-              child: Text(_calcTotalPrice().toString()))))
+              child: Text(_calcTotalPrice().toStringAsFixed(2)))))
     ]));
 
     return DataTable(

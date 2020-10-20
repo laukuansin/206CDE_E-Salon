@@ -42,7 +42,7 @@ class RatingList {
   factory RatingList.fromJson(Map<String, dynamic> json) => RatingList(
     customerName: json["customer_name"],
     rating: json["rating"],
-    review: json["review"],
+    review: json["review"]??"",
   );
 
   Map<String, dynamic> toJson() => {
