@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gps_tracking_system/Components/toast_widget';
 import 'package:gps_tracking_system/Factory/text_style_factory.dart';
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Screens/route_generator.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_worker_rating_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
 import 'package:gps_tracking_system/color.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gps_tracking_system/Components/toast_widget';
 
 class RatingWorkerScreen extends StatefulWidget {
   final Admin user;
@@ -28,11 +28,10 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     fToast = FToast();
     fToast.init(context);
     requestWorkerRating();
+    super.initState();
   }
 
   @override
@@ -55,11 +54,7 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                              child: Text(
-                                  "Name: " +
-                                      user.firstName +
-                                      " " +
-                                      user.lastName,
+                              child: Text(user.firstName + " " + user.lastName,
                                   style: TextStyleFactory.p(
                                     fontWeight: FontWeight.bold,
                                   )),
@@ -82,19 +77,21 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
                       ),
                       leading: CircleAvatar(
                         radius: 30.0,
-                        backgroundImage: NetworkImage(
-                            "http://192.168.8.103/image/cache/catalog/profile-pic-250x250.png"),
+                        backgroundImage: NetworkImage(user.image),
                         backgroundColor: Colors.transparent,
                       ),
                     ),
                     // padding: EdgeInsets.all(10),
                   ),
-                  padding: EdgeInsets.all(20)),
-                  Padding(
-                    child: Text("Rating List",style: TextStyleFactory.p(),textAlign: TextAlign.end,),
-                    padding: EdgeInsets.only(left: 20),
-                  )
-                  ,
+                  padding: EdgeInsets.all(16)),
+              Padding(
+                child: Text(
+                  "Ratings",
+                  style: TextStyleFactory.p(),
+                  textAlign: TextAlign.end,
+                ),
+                padding: EdgeInsets.only(left: 16),
+              ),
               () {
                 return _ratingReviewList.length > 0
                     ? Expanded(
@@ -103,23 +100,28 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
                             itemCount: _ratingReviewList.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                  child: ListTile(
-                                    leading: Text(
-                                        _ratingReviewList[index].customerName),
-                                    title: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
+                                        Text(_ratingReviewList[index]
+                                            .customerName),
                                         RatingBar(
                                           ignoreGestures: true,
-                                          initialRating: _ratingReviewList[index]
-                                              .rating
-                                              .toDouble(),
+                                          initialRating:
+                                              _ratingReviewList[index]
+                                                  .rating
+                                                  .toDouble(),
                                           direction: Axis.horizontal,
                                           allowHalfRating: false,
                                           itemCount: 5,
                                           itemSize: 20,
-                                          itemPadding:
-                                          EdgeInsets.symmetric(horizontal: 1.0),
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 1.0),
                                           itemBuilder: (context, _) => Icon(
                                             Icons.star,
                                             color: Colors.amber,
@@ -127,16 +129,13 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
                                           onRatingUpdate: (double value) {},
                                         ),
                                         Padding(
-                                          child: Text("Review: "+_ratingReviewList[index].review),
+                                          child: Text("Review: " +
+                                              _ratingReviewList[index].review),
                                           padding: EdgeInsets.only(top: 10),
                                         )
-
                                       ],
-                                    )
-
-
+                                    ),
                                   ),
-                                  margin: EdgeInsets.all(10),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -145,10 +144,10 @@ class RatingWorkerScreenState extends State<RatingWorkerScreen> {
                                           color: primaryDeepLightColor)));
                             }),
                       )
-                    : Text(
-                        "No Review",
+                    :  Container(margin: EdgeInsets.symmetric(horizontal: 16), child:Text(
+                        "No review available",
                         style: TextStyleFactory.p(),
-                      );
+                      ));
               }()
             ],
           ),

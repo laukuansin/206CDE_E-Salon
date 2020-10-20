@@ -17,7 +17,7 @@ class GetWorkerRatingResponse {
 
   factory GetWorkerRatingResponse.fromJson(Map<String, dynamic> json) => GetWorkerRatingResponse(
     ratingList: List<RatingList>.from(json["rating_list"].map((x) => RatingList.fromJson(x))),
-    averageRating: json["average_rating"],
+    averageRating: json["average_rating"].toDouble(),
     response: Response.fromJson(json["response"]),
   );
 

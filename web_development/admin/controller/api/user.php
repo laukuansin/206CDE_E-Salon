@@ -430,15 +430,22 @@ class ControllerApiUser extends Controller {
 
 
         $results = $this->model_user_user->getUsers($filter_data);
+        $this->load->model('tool/image');
 
         foreach ($results as $result) {
+            if (is_file(DIR_IMAGE . $result['image'])) {
+                $image = $this->model_tool_image->resize($result['image'], 250, 250);
+            } else {
+                $image = $this->model_tool_image->resize('profile.png', 250, 250);
+            }
+
             $json['users'][] = array(
                 'user_id'    => $result['user_id'],
                 'username'   => $result['username'],
                 'firstname'  => $result['firstname'],
                 'lastname'   => $result['lastname'],
                 'email'      => $result['email'],
-                'image'      => $result['image'],
+                'image'      => $image,
                 'telephone'  => $result['telephone'],
                 'user_group_id'=> $result['user_group_id'],
                 'status_name'=> ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
