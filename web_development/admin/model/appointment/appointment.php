@@ -141,7 +141,7 @@
 		}
 
 		public function servicingAppointment($appointmentId){
-			$this->udpateAppointmentStatus($appointmentId, 6);
+			$this->udpateAppointmentStatus($appointmentId, 7);
 		}
 
 
