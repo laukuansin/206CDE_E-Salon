@@ -55,6 +55,7 @@ class _ManageWorkerScreenState extends State<ManageWorkerScreen>{
 
   DataTable _buildWorkerDataTable(){
     return DataTable(
+      showCheckboxColumn: false,
       columns: [
         DataColumn(
           label: Text(
@@ -100,7 +101,13 @@ class _ManageWorkerScreenState extends State<ManageWorkerScreen>{
                 },
               )
           ),
-        ]
+        ],onSelectChanged: (click)
+          {
+            if(click)
+              {
+                Navigator.of(context).pushNamed("/rating_worker",arguments: _userList[index]);
+              }
+          },
       ))
     );
   }

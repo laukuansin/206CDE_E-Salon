@@ -153,4 +153,17 @@ class ModelUserUser extends Model {
 
 		return $query->row['total'];
 	}
+
+	public function getRatingByWorkerID($worker_id)
+	{
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "user_rating` WHERE user_id='".(int)$worker_id."'");
+
+		return $query->rows;
+	}
+	public function getAverageRatingOfWorker($worker_id)
+	{
+		$query = $this->db->query("SELECT AVG(customer_rating) AS average FROM `" . DB_PREFIX . "user_rating` WHERE user_id='".(int)$worker_id."'");
+
+		return $query->row['average'];
+	}
 }

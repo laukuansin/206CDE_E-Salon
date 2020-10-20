@@ -10,6 +10,7 @@ import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_worker_rating_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/get_worker_detail_response.dart';
@@ -50,7 +51,7 @@ import 'package:path/path.dart' as p;
 // Emulator
 // 10.0.2.2
 
-const tempDomainName = "http://192.168.68.107/";
+const tempDomainName = "http://192.168.8.103/";
 
 
 class RestApi
@@ -437,6 +438,16 @@ class _Admin {
     log("Calling get services API : " + url);
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
+  }
+
+  Future<GetWorkerRatingResponse> getWorkerRating(String workerID) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/getWorkerRating&api_key=" + LoggedUser.getToken();
+    log("Calling get wroker rating API : " + url);
+    var response = await http.post(url,
+    body: {
+      'worker_id':workerID
+    });
+    return getWorkerRatingResponseFromJson(response.body);
   }
 }
 
