@@ -55,6 +55,7 @@
 						'worker_name'		=> $appointmentResult['user_name'],
 						'worker_image'		=> $image,
 						'worker_telephone'  => $appointmentResult['worker_telephone'],
+						'worker_rating'		=> (float)$appointmentResult['average_rating'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],
 						'status'			=> $appointmentResult['status'],

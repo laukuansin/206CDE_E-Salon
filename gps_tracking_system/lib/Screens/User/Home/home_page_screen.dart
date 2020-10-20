@@ -156,7 +156,7 @@ class HomePageScreenState extends State<HomePageScreen> {
                                           padding: EdgeInsets.only(top: 5),
                                           child: RatingBar(
                                             ignoreGestures: true,
-                                            initialRating: 3,
+                                            initialRating: _appointmentList[index].workerRating,
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             allowHalfRating: false,

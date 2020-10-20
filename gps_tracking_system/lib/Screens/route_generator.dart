@@ -52,7 +52,7 @@ import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
 
-  static bool ADMIN_MODE = true;
+  static bool ADMIN_MODE = false;
 
 
   static Scaffold buildScaffold(Widget widget,
@@ -103,14 +103,14 @@ class RouteGenerator {
                         ),
                       );
               }()),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home Page"),
-            onTap: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/home_page", (Route<dynamic> route) => false);
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.home),
+          //   title: Text("Home Page"),
+          //   onTap: () {
+          //     Navigator.of(context).pushNamedAndRemoveUntil(
+          //         "/home_page", (Route<dynamic> route) => false);
+          //   },
+          // ),
           Visibility(
             child: ListTile(
               leading: Icon(Icons.people),
