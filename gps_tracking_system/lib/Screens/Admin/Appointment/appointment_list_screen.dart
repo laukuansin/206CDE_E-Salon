@@ -141,15 +141,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   ),
                   () {
                     return timeTaken.isEmpty
-                        ? (appointment.status == Status.ONGOING || LoggedUser.getRole() == Role.WORKER) ? SkeletonAnimation(
-                            child: Container(
-                              height: 15,
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.grey[300]),
-                            ),
-                          ) : Text("-")
+                        ? Text(appointment.getStatusName(), style: TextStyle(color:_getStatusColor(appointment.status)),)
                         : Text(timeTaken);
                   }()
                 ]),
@@ -163,6 +155,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
           )
         ]));
   }
+
 
   Icon _getStatusIcon(Status status){
     // ignore: missing_enum_constant_in_switch
