@@ -28,7 +28,7 @@ class ManageAppointmentScreenState extends State<ManageAppointmentScreen> {
     fToast.init(context);
     requestGetAppointments();
   }
-
+//testing
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
