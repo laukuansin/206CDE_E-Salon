@@ -69,7 +69,7 @@ class AddServiceScreenState extends State<AddServiceScreen>{
                   color: primaryLightColor,
                   margin: EdgeInsets.only(bottom: 2),
                   child:ListTile(
-                    trailing: Text("RM ${_serviceSelection[index].servicePrice}"),
+                    trailing: Text("RM ${_serviceSelection[index].servicePrice.toStringAsFixed(2)}"),
                     title: Text(_serviceSelection[index].serviceName),
                     leading: serviceQty > 0
                         ? Text(serviceQty.toString(), style: TextStyleFactory.heading4(color: primaryColor),)
@@ -101,7 +101,7 @@ class AddServiceScreenState extends State<AddServiceScreen>{
         children:[
           Text(_calcSumOfServices().toString()),
           SizedBox(width: 10,),
-          Text("RM ${_calcSumOfPrice()}")
+          Text("RM ${_calcSumOfPrice().toStringAsFixed(2)}")
         ],
       ),
       duration: Duration(days: 1),

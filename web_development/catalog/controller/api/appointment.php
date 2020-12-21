@@ -55,6 +55,7 @@
 						'worker_name'		=> $appointmentResult['user_name'],
 						'worker_image'		=> $image,
 						'worker_telephone'  => $appointmentResult['worker_telephone'],
+						'worker_rating'		=> (float)$appointmentResult['average_rating'],
 						'telephone'			=> $appointmentResult['telephone'],
 						'address'			=> $appointmentResult['appointment_address'],
 						'status'			=> $appointmentResult['status'],
@@ -74,6 +75,35 @@
 			}
 
 			$this->response->setOutput(json_encode($json));
+		}
+
+		public function getAppointmentSales(){
+			$json = array();
+	        if(!$this->customer->isLogged()) {
+	            $json['response'] = array(
+	                'status' => -1,
+	                'msg' => 'Invalid token'
+	            );
+	            $this->response->setOutput(json_encode($json));
+	            return;
+	        }  
+
+	        $this->load->model('appointment/appointment');
+	        $appointmentSalesResults = $this->model_appointment_appointment->getCustomerAppointmentSales($this->customer->getId());
+
+	        $json['appointment_sales'] = array();
+
+			foreach($appointmentSalesResults as $appointmentSalesResult){
+				$json['appointment_sales'][] = $appointmentSalesResult['appointment_id'];
+			}
+
+
+		  	$json['response'] = array(
+                'status' => 1,
+                'msg' => 'Get appointment sales successfully'
+            );
+
+            $this->response->setOutput(json_encode($json));
 		}
 
 

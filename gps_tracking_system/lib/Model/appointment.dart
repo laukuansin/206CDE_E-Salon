@@ -33,6 +33,7 @@ class Appointment {
     this.workerName,
     this.workerImage,
     this.workerTelephone,
+    this.workerRating,
     this.telephone,
     this.address,
     this.status,
@@ -50,6 +51,7 @@ class Appointment {
   String workerName;
   String workerImage;
   String workerTelephone;
+  double workerRating;
   String telephone;
   String address;
   Status status;
@@ -80,6 +82,7 @@ class Appointment {
       workerName: json["worker_name"],
       workerImage: json['worker_image'] == null? "" : json["worker_image"],
       workerTelephone: json['worker_telephone'] == null? '': json['worker_telephone'],
+      workerRating:json['worker_rating'] == null? 0.0 : json['worker_rating'].toDouble(),
       telephone: json["telephone"],
       address: json["address"],
       status: Status.values[json["status_id"].toInt()],

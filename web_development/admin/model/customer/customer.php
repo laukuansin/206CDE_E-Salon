@@ -76,6 +76,14 @@ class ModelCustomerCustomer extends Model {
 
 		return $query->row;
 	}
+
+    public function getCustomerCredit($customerID)
+    {
+        $sql = "SELECT SUM(credit)AS total_credit 
+    			FROM oc_customer_credit 
+    			WHERE customer_id='" . $customerID . "' ";
+        return $this->db->query($sql)->row;
+    }
 	
 	public function getCustomers($data = array()) {
 		$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . "customer c LEFT JOIN " . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id)";
@@ -489,5 +497,11 @@ class ModelCustomerCustomer extends Model {
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "customer_api` WHERE `customer_token` = '" . $this->db->escape($token) . "'");
 
 		return $query->row;
+	}
+
+	public function payService($data)
+	{
+		$this->db->query("INSERT INTO " . DB_PREFIX . "customer_credit SET credit = '" . (float)$data['credit'] . "', description = '" . $data['description'] . "', customer_id = '" . (int)$data['customer_id'] . "', reference = '" . $this->db->escape($data['reference']) . "', date_added = NOW()");
+
 	}
 }

@@ -204,9 +204,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         ]));
   }
 
-  Widget buildPanelInfo(Size screenSize, IconData icon, String text) {
+  Widget buildPanelInfo(Size screenSize, IconData icon, String text,  {Function()func}) {
     return Container(
         child: ListTile(
+          onTap: func,
           leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -227,7 +228,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           )
               : Text(
             text,
-            style: TextStyleFactory.p(),
+            style: func != null?TextStyleFactory.a():TextStyleFactory.p(),
           ),
         ));
   }
@@ -260,7 +261,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(screenSize, Icons.access_time,
               appointment.getAppointmentDateStringJM()),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.telephone),
+              screenSize, Icons.contacts, appointment.telephone, func:(){AppLauncher.openPhonePad(appointment.telephone);}),
           buildPanelInfo(
               screenSize, Icons.location_on, appointment.address),
           SizedBox(
@@ -277,7 +278,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(
               screenSize, Icons.person, appointment.workerName),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.workerTelephone),
+              screenSize, Icons.contacts, appointment.workerTelephone, func:(){AppLauncher.openPhonePad(appointment.workerTelephone);}),
           SizedBox(
             height: screenSize.height * 0.015,
           )
@@ -486,8 +487,11 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         });
       case Status.SERVICING:
         return createContainer(Icons.attach_money, "Payment", Colors.greenAccent, ()async{
-          Navigator.of(context).pushNamed("/payment", arguments: {"appointment": appointment, "services": services});
-          // await requestUpdateAppointmentStatusNLog(Status.CLOSE);
+          Navigator.of(context).pushNamed("/payment", arguments: {"appointment": appointment, "services": services}).then((value) async {
+            if(value == 1){
+              await requestUpdateAppointmentStatusNLog(Status.CLOSE);
+            }
+          });
         });
       default:
         return Container();
@@ -530,7 +534,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        (element.servicePrice * element.quantity).toString()))))
+                        (element.servicePrice * element.quantity).toStringAsFixed(2)))))
           ]));
       });
 
@@ -550,7 +554,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           width: (size.width - MARGIN * 2) * 0.2,
           child: Align(
               alignment: Alignment.centerRight,
-              child: Text(_calcTotalPrice().toString()))))
+              child: Text(_calcTotalPrice().toStringAsFixed(2)))))
     ]));
 
     return DataTable(

@@ -66,7 +66,7 @@ class ModelAppointmentAppointment extends Model{
 	public function getCustomerAppointmentList($data = array()){
 		$sql = "
 				SELECT 
-					oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, oc_user.image, oc_user.telephone AS worker_telephone ,CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
+					oc_appointment.appointment_id, oc_appointment.appointment_date,oc_appointment_status.status,oc_appointment_status.status_id, oc_appointment.appointment_address, oc_user.user_id, oc_user.image, oc_user.telephone AS worker_telephone ,CONCAT(oc_user.firstname, ' ', oc_user.lastname) as user_name, rating.average_rating,oc_customer.customer_id, CONCAT(oc_customer.firstname, ' ', oc_customer.lastname) as customer_name, oc_customer.telephone, GROUP_CONCAT(oc_service.service_name) as services, GROUP_CONCAT(oc_service.service_id) as services_id
 				FROM 
 					oc_appointment
 				LEFT JOIN oc_appointment_status ON oc_appointment.status_id = oc_appointment_status.status_id
@@ -74,6 +74,9 @@ class ModelAppointmentAppointment extends Model{
 				LEFT JOIN oc_customer ON oc_customer.customer_id = oc_appointment.customer_id
 				LEFT JOIN oc_service ON oc_service.service_id = oc_appointment_service.service_id
                 LEFT JOIN oc_user ON oc_user.user_id = oc_appointment.user_id
+                LEFT JOIN (
+					SELECT AVG(oc_user_rating.customer_rating) AS average_rating, oc_user_rating.user_id FROM oc_user_rating 
+				) rating ON rating.user_id = oc_appointment.user_id
 				%s
 				GROUP BY oc_appointment_service.appointment_id
 			";
@@ -116,6 +119,10 @@ class ModelAppointmentAppointment extends Model{
 		}
 
 		return $this->db->query($sql)->rows;
+	}
+
+	public function getCustomerAppointmentSales($customerId){
+		return $this->db->query("SELECT * FROM oc_appointment_sales WHERE customer_id = $customerId")->rows;
 	}
 
 	public function acceptAppointment($appointmentId){

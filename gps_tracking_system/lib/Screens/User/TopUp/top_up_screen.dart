@@ -82,7 +82,7 @@ class TopUpScreenState extends State<TopUpScreen> {
                                 children: <TextSpan>[
                                   TextSpan(text: "Top Up(RM): "),
                                   TextSpan(
-                                      text: _creditAmount.toString(),
+                                      text: _creditAmount.toStringAsFixed(2),
                                       style: TextStyleFactory.heading5(
                                           color: primaryColor)),
                                 ]),

@@ -141,15 +141,7 @@ class _AppointmentListState extends State<AppointmentListScreen> {
                   ),
                   () {
                     return timeTaken.isEmpty
-                        ? (appointment.status == Status.ONGOING || LoggedUser.getRole() == Role.WORKER) ? SkeletonAnimation(
-                            child: Container(
-                              height: 15,
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.grey[300]),
-                            ),
-                          ) : Text("-")
+                        ? Text(appointment.getStatusName(), style: TextStyle(color:_getStatusColor(appointment.status)),)
                         : Text(timeTaken);
                   }()
                 ]),
@@ -164,17 +156,39 @@ class _AppointmentListState extends State<AppointmentListScreen> {
         ]));
   }
 
+
   Icon _getStatusIcon(Status status){
+    // ignore: missing_enum_constant_in_switch
     switch(status) {
       case Status.ACCEPTED:
-        return Icon(Icons.access_alarm, color: Colors.amber);
+        return Icon(Icons.access_alarm, color:_getStatusColor(status));
       case Status.CANCELLED:
-        return Icon(Icons.cancel, color: Colors.redAccent);
+        return Icon(Icons.cancel, color: _getStatusColor(status));
       case Status.CLOSE:
-        return Icon(Icons.done, color: Colors.greenAccent);
+        return Icon(Icons.done, color: _getStatusColor(status));
       case Status.ONGOING:
-        return Icon(Icons.directions_car, color: primaryColor,);
+        return Icon(Icons.directions_car, color: _getStatusColor(status),);
+      case Status.SERVICING:
+        return Icon(Icons.build, color: _getStatusColor(status),);
     }
+    return null;
+  }
+
+  Color _getStatusColor(Status status){
+    // ignore: missing_enum_constant_in_switch
+    switch(status) {
+      case Status.ACCEPTED:
+        return Colors.greenAccent;
+      case Status.CANCELLED:
+        return  Colors.redAccent;
+      case Status.CLOSE:
+        return Colors.greenAccent;
+      case Status.ONGOING:
+        return primaryColor;
+      case Status.SERVICING:
+        return Colors.amber;
+    }
+    return null;
   }
 
   Container _buildAppointmentListByDate() {

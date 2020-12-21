@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:gps_tracking_system/Components/rating_dialog.dart';
 import 'package:gps_tracking_system/Model/appointment.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_appointment_route_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_appointment_log.dart';
@@ -8,9 +10,12 @@ import 'package:gps_tracking_system/Utility/RestApi/admin_edit_setting_response.
 import 'package:gps_tracking_system/Model/admin.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_users_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_edit_user_info_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/admin_get_worker_rating_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_payment_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_setting_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/get_worker_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/admin_get_holiday_response.dart';
+import 'package:gps_tracking_system/Utility/RestApi/user_appointment_sales_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_detail_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_change_password_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/user_customer_detail_response.dart';
@@ -46,6 +51,7 @@ import 'package:path/path.dart' as p;
 
 // Emulator
 // 10.0.2.2
+
 
 const tempDomainName = "http://35.240.241.182/";
 
@@ -404,17 +410,13 @@ class _Admin {
     return paymentDetailResponseFromJson(response.body);
   }
 
-  Future<CommonResponse> scanQRCode(String token) async {
-    String url = DOMAIN_NAME +
-        "index.php?route=api/payment/scanCustomerQRCode&api_key=" +
-        LoggedUser.getToken();
+  Future<CommonResponse> scanQRCode(String token, String appointmentId, List<Service>services) async {
+    String url = DOMAIN_NAME + "index.php?route=api/payment/scanCustomerQRCode&api_key=" + LoggedUser.getToken();
     log("Calling getPaymentDetail API : " + url);
 
-    var response = await http.post(url, body: {
-      "token":token
-    });
+    var body = json.encode({"services": services, "appointment_id": appointmentId, "token":token, "description":"Pay for services"});
+    var response = await http.post(url,headers: {"Content-Type": "application/json"},body: body);
     log(response.body);
-
     return commonResponseFromJson(response.body);
   }
 
@@ -434,6 +436,16 @@ class _Admin {
     log("Calling get services API : " + url);
     var response = await http.get(url);
     return getServicesResponseFromJson(response.body);
+  }
+
+  Future<GetWorkerRatingResponse> getWorkerRating(String workerID) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/getWorkerRating&api_key=" + LoggedUser.getToken();
+    log("Calling get wroker rating API : " + url);
+    var response = await http.post(url,
+    body: {
+      'worker_id':workerID
+    });
+    return getWorkerRatingResponseFromJson(response.body);
   }
 }
 
@@ -546,6 +558,14 @@ class _Customer{
     return appointmentListResponseFromJson(response.body);
   }
 
+  Future<AppointmentListResponse> getPaymentAppointmentList() async{
+    String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
+    url += "&status_id=1,6,7,5";
+    log("Calling get accepted appointment list API : " + url);
+    var response = await http.get(url);
+    return appointmentListResponseFromJson(response.body);
+  }
+
   Future<AppointmentListResponse> getAppointmentList() async{
     String url= DOMAIN_NAME + "index.php?route=api/appointment/getCustomerAppointments&api_key="+LoggedUser.getToken();
     log("Calling get all appointment list API : " + url);
@@ -604,6 +624,36 @@ class _Customer{
     });
 
     return commonResponseFromJson(response.body);
+  }
+
+  Future<GetWorkerDetailResponse> getWorkerDetail(String workerID) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/getWorkerDetail&api_key=" + LoggedUser.getToken();
+    log("Calling getWorkerDetail API : " + url);
+
+    var response = await http.post(url, body: {
+      "worker_id": workerID,
+    });
+    return getWorkerDetailResponseFromJson(response.body);
+  }
+
+  Future<CommonResponse> submitRating(String workerID,Rating rating) async{
+    String url = DOMAIN_NAME + "index.php?route=api/rating/submitRating&api_key=" + LoggedUser.getToken();
+    log("Calling submitRating API : " + url);
+
+    var response = await http.post(url, body: {
+      "worker_id": workerID,
+      "rating": rating.ratingStar.toString(),
+      "feedback": rating.feedback,
+    });
+    return commonResponseFromJson(response.body);
+  }
+
+  Future<AppointmentSalesResponse> getAppointmentSales() async{
+    String url = DOMAIN_NAME + "index.php?route=api/appointment/getAppointmentSales&api_key=" + LoggedUser.getToken();
+    log("Calling get appointment sales API : " + url);
+
+    var response = await http.get(url);
+    return appointmentSalesResponseFromJson(response.body);
   }
 
 }

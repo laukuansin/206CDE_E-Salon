@@ -216,7 +216,7 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        (element.servicePrice * element.quantity).toString()))))
+                        (element.servicePrice * element.quantity).toStringAsFixed(2)))))
           ]));
       });
 
@@ -241,7 +241,7 @@ class AddAppointmentScreenState extends State<AddAppointmentScreen> {
             width: (size.width - MARGIN * 2) * 0.2,
             child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(_calcTotalPrice().toString())
+                child: Text(_calcTotalPrice().toStringAsFixed(2))
             )))
       ]
 

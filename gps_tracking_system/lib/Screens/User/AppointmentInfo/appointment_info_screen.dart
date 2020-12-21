@@ -15,6 +15,7 @@ import 'package:gps_tracking_system/Utility/RestApi/common_appointment_list_resp
 import 'package:gps_tracking_system/Utility/RestApi/common_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/common_get_services_response.dart';
 import 'package:gps_tracking_system/Utility/RestApi/rest_api.dart';
+import 'package:gps_tracking_system/Utility/app_launcher.dart';
 import 'package:gps_tracking_system/Utility/map_helper.dart';
 import 'package:gps_tracking_system/color.dart';
 import 'package:skeleton_text/skeleton_text.dart';
@@ -98,7 +99,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   }
 
   void requestAppointmentTimeDistance() async {
-    LatLng origin = MapHelper.positionToLatLng(await getCurrentPosition());
+    LatLng origin = LatLng(_workerLocation.latitude, _workerLocation.longitude);
     LatLng destination = await MapHelper.addressToLatLng(appointment.address);
     Map<String, int> timeDestinationMap =
         await MapHelper.getRouteTimeDistance([origin, destination]);
@@ -162,7 +163,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                   padding: EdgeInsets.only(top: 5),
                   child: RatingBar(
                     ignoreGestures: true,
-                    initialRating: 3,
+                    initialRating: appointment.workerRating,
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
@@ -183,9 +184,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
         ]));
   }
 
-  Widget buildPanelInfo(Size screenSize, IconData icon, String text) {
+  Widget buildPanelInfo(Size screenSize, IconData icon, String text, {Function()func}) {
     return Container(
         child: ListTile(
+          onTap: func,
       leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -206,7 +208,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
             )
           : Text(
               text,
-              style: TextStyleFactory.p(),
+              style: func != null?TextStyleFactory.a():TextStyleFactory.p(),
             ),
     ));
   }
@@ -229,7 +231,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           buildPanelInfo(screenSize, Icons.access_time,
               appointment.getAppointmentDateStringJM()),
           buildPanelInfo(
-              screenSize, Icons.contacts, appointment.workerTelephone),
+              screenSize, Icons.contacts, appointment.workerTelephone, func:(){AppLauncher.openPhonePad(appointment.workerTelephone);}),
           SizedBox(
             height: screenSize.height * 0.015,
           )
@@ -385,7 +387,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                        (element.servicePrice * element.quantity).toString()))))
+                        (element.servicePrice * element.quantity).toStringAsFixed(2)))))
           ]));
       });
 
@@ -405,7 +407,7 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
           width: (size.width - MARGIN * 2) * 0.2,
           child: Align(
               alignment: Alignment.centerRight,
-              child: Text(_calcTotalPrice().toString()))))
+              child: Text(_calcTotalPrice().toStringAsFixed(2)))))
     ]));
 
     return DataTable(
@@ -445,6 +447,10 @@ class _AppointmentInfoState extends State<AppointmentInfo> {
   // Firebase will invoke the listener once even there is no changing. Hence, when the first value returned by firebase,
   // we need to animate the camera
   void onLocationReceived(double latitude, double longitude) {
+    _workerLocation.latitude = latitude;
+    _workerLocation.longitude = longitude;
+    requestAppointmentTimeDistance();
+    
     _googleMapKey.currentState
         .updateWorkerLocation(_isWorkerReady, LatLng(latitude, longitude));
     _isWorkerReady = true;

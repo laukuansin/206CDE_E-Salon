@@ -141,7 +141,7 @@
 		}
 
 		public function servicingAppointment($appointmentId){
-			$this->udpateAppointmentStatus($appointmentId, 6);
+			$this->udpateAppointmentStatus($appointmentId, 7);
 		}
 
 
@@ -246,7 +246,7 @@
 		$sql = "INSERT INTO oc_appointment_route(appointment_id, route_taken) VALUES($appointmentId, '".$this->db->escape($route)."')";
 		$this->db->query($sql);
 	}
-}
+}	
 
 
 

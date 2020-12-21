@@ -44,4 +44,10 @@ class AppLauncher
       }
     }
   }
+  static void openPhonePad(String workerPhoneNo)
+  {
+    launch("tel://$workerPhoneNo");
+  }
+
+
 }

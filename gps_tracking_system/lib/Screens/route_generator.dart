@@ -25,6 +25,7 @@ import 'package:gps_tracking_system/Screens/Admin/Setting/setting_page_screen.da
 import 'package:gps_tracking_system/Screens/Admin/Worker/add_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/edit_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Admin/Worker/manage_worker_screen.dart';
+import 'package:gps_tracking_system/Screens/Admin/Worker/rating_worker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/LocationPicker/location_picker_screen.dart';
 import 'package:gps_tracking_system/Screens/Common/SplashScreen/splash_screen.dart';
 import 'package:gps_tracking_system/Screens/User/Account/account_screen.dart';
@@ -41,6 +42,7 @@ import 'package:gps_tracking_system/Screens/User/Login/login_screen.dart'
     as UserLogin;
 import 'package:gps_tracking_system/Screens/User/NotificationAppointments/notification_appointments.dart';
 import 'package:gps_tracking_system/Screens/User/QR_Payment/qr_payment_screen.dart';
+import 'package:gps_tracking_system/Screens/User/Rating/rating_screen.dart';
 import 'package:gps_tracking_system/Screens/User/SignUp/sign_up_screen.dart';
 import 'package:gps_tracking_system/Screens/User/TopUp/top_up_screen.dart';
 import 'package:gps_tracking_system/color.dart';
@@ -49,7 +51,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'Admin/Account/edit_info_screen.dart';
 
 class RouteGenerator {
+
   static bool ADMIN_MODE = false;
+
 
   static Scaffold buildScaffold(Widget widget,
           {Key key,
@@ -99,14 +103,14 @@ class RouteGenerator {
                         ),
                       );
               }()),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home Page"),
-            onTap: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  "/home_page", (Route<dynamic> route) => false);
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.home),
+          //   title: Text("Home Page"),
+          //   onTap: () {
+          //     Navigator.of(context).pushNamedAndRemoveUntil(
+          //         "/home_page", (Route<dynamic> route) => false);
+          //   },
+          // ),
           Visibility(
             child: ListTile(
               leading: Icon(Icons.people),
@@ -184,6 +188,10 @@ class RouteGenerator {
           if (args is Map<String, dynamic>)
             return _buildRoute(PaymentScreen(args));
           break;
+
+        case "/rating_worker":
+          if(args is Admin) return _buildRoute(RatingWorkerScreen(args));
+          break;
         case "/manage_appointment":
           return _buildRoute(ManageAppointmentScreen());
         case "/home_page":
@@ -237,6 +245,8 @@ class RouteGenerator {
           return _buildRoute(EditInfoScreen());
         case "/home_page":
           return _buildRoute(UserHome.HomePageScreen());
+        case  "/rating":
+          return _buildRoute(RatingPageScreen());
         case "/login":
           return _buildRoute(UserLogin.LoginScreen());
         case "/location_picker":
